@@ -1,0 +1,49 @@
+#macro( tablehead )
+
+#end
+
+<table>
+#set ( $cnt = 0 )
+<tr>
+	<th rowspan="2">Станция
+	<th rowspan="2">Посл.опрос
+	<th colspan="4">Основной насос
+	<th colspan="4">Резервный насос
+	<th colspan="2">Сост.
+	<th rowspan="2">Ур.,%
+	<th rowspan="2">Связь
+<tr>
+	<th>U <th>Ia <th>Ib <th>Ic
+	<th>U <th>Ia <th>Ib <th>Ic
+	<th>Осн.<th>Рез.
+</tr>
+#foreach( $r in $channels )
+<tr>
+	#set ( $cnt = $cnt + 1 )
+	<td>СП-$r.Id
+	#if ( $r.LastMessage )
+	<td class="list" nowrap>$_dtf.format( $r.LastMessage.Date )</td>
+	<td class="list" colspan="4">
+	<td class="list" colspan="4">
+	<td class="list">
+	<td class="list">
+	<td>
+		<span #if ( $r.LastMessage.Tank.LevelFail ) style="color: red" #end>
+			#set ( $level = $r.LastMessage.Tank.Level * 25 )
+			<b>$level</b>
+		</span>
+	#else 
+		<td colspan="12">&nbsp;</td>
+	#end
+	<td>
+		#if ( $r.Connected )
+			<span style="color: green"><b>Да</b></span>
+		#else
+			<span style="color: red"><b>Нет</b></span>
+		#end
+</tr>
+#end
+#if ( $cnt == 0 )
+	#tablehead
+#end
+</table>

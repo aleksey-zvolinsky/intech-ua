@@ -1,0 +1,24 @@
+<form action="ch.edit" method="post">
+<table>
+<tr><td class="list">Станция</td><td><input type="hidden" name="id" value="$ci.id">$ci.id</td></tr>
+<tr><td class="list">Тип</td><td>
+	<select name="type">
+		<option value="" #if ( $ci.Type.Name == "" ) selected #end>
+		<option value="zelio" #if ( $ci.Type.Name == "zelio" ) selected #end>Zelio
+		<option value="kinco" #if ( $ci.Type.Name == "kinco" ) selected #end>Kinco
+	</select>
+#foreach( $p in [0..3] )
+	<tr><td class="list">НА$velocityCount</td><td>
+	#set ( $state = $ci.getPumpState( $p ).id() )
+	<select name="pump$p">
+		<option value="0" #if ( $state == 0 ) selected #end>Отсутствует
+		<option value="1" #if ( $state == 1 ) selected #end>Выключен
+		<option value="2" #if ( $state == 2 ) selected #end>Включен
+	</select>
+#end
+<tr><td colspan="2">
+	<input type="submit" value="Сохранить">
+	<input type="button" value="  Отмена " onclick="window.location='ch.list'">
+</table>
+</table>
+</form>

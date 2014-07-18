@@ -1,0 +1,173 @@
+BODY {
+	BACKGROUND-COLOR: #009999; FONT-SIZE: 14px;
+}
+TD {
+	FONT-FAMILY: arial,helvetica;
+	FONT-SIZE: 14pt;
+}
+
+td.failureon1 {
+	background-color: red;
+}
+td.failureoff {
+	background-color: #00D300;
+}
+
+TD.alert {
+	FONT-FAMILY: arial,helvetica;
+	FONT-SIZE: 14pt;
+	COLOR: red;
+	BACKGROUND-COLOR: #eeeeee;
+}
+
+td.tabsel {
+	background-color: #ffffff; border: 1px solid black; text-align: center
+}
+td.tab {
+	background-color: #cccccc; border: 1px solid black; text-align: center
+}
+td a.tab {
+	display: inline-block; height:100%; width:100%; TEXT-DECORATION: none
+}
+
+TR.list th.list {
+	background-color: #cccccc; border: 1px solid black
+}
+TR.list td.list {
+	background-color: white; border: 1px solid black
+}
+TR.list:hover td.list {
+	background-color: #eeeeff; border: 1px solid black
+}
+TR.listh td.list {
+	BACKGROUND-COLOR: #eeffee;
+}
+TR.listh:hover td.list {
+	BACKGROUND-COLOR: #eeffff;
+}
+TH {
+	FONT-FAMILY: arial,helvetica;
+	FONT-SIZE: 14pt;
+	BACKGROUND-COLOR: #cccccc
+}
+A {
+	COLOR: #0000ff; TEXT-DECORATION:none
+}
+A:visited {
+	COLOR: #0000ff; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ff0000; TEXT-DECORATION: underline
+}
+#odd {
+	BACKGROUND-COLOR: #ffffff
+}
+#even {
+	BACKGROUND-COLOR: #ffffff
+}
+#total {
+	BACKGROUND-COLOR: #ffffff; font-weight: bold;
+	border-bottom: 2px solid #cccccc
+}
+
+#toptable {
+	BACKGROUND-COLOR: #eeeeee;
+}
+
+#toptable11 {
+	BACKGROUND-COLOR: #FF9933;
+}
+#chState {
+	vertical-align: middle;
+}
+
+.sortcol {
+	cursor: pointer;
+	padding-right: 20px;
+	background-repeat: no-repeat;
+	background-position: right center;
+	background-image: url(sort.gif);
+}
+.sortasc {
+	background-color: #DDFFAC;
+	background-image: url(up.gif);
+}
+.sortdesc {
+	background-color: #B9DDFF;
+	background-image: url(down.gif);
+}
+.nosort {
+	cursor: default;
+}
+
+
+/* begin css tabs */
+/* http://unraveled.com/publications/css_tabs/ */
+
+ul#tabnav { /* general settings */
+text-align: left; /* set to left, right or center */
+margin: 1em 0 1em 0; /* set margins as desired */
+font: bold 11px verdana, arial, sans-serif; /* set font as desired */
+border-bottom: 1px solid #000000; /* set border COLOR as desired */
+list-style-type: none;
+padding: 3px 10px 3px 10px; /* THIRD number must change with respect to padding-top (X) below */
+}
+
+ul#tabnav li { /* do not change */
+display: inline;
+}
+
+ul#tabnav li.tab a { /* settings for all tab links */
+padding: 3px 4px; /* set padding (tab size) as desired; FIRST number must change with respect to padding-top (X) above */
+border: 1px solid #000000; /* set border COLOR as desired; usually matches border color specified in #tabnav */
+background-color: #bbbbbb; /* set unselected tab background color as desired */
+color: #333; /* set unselected tab link color as desired */
+margin-right: 0px; /* set additional spacing between tabs as desired */
+text-decoration: none;
+border-bottom: none;
+}
+
+ul#tabnav li.tabsel a { /* settings for all tab links */
+padding: 3px 4px; /* set padding (tab size) as desired; FIRST number must change with respect to padding-top (X) above */
+border: 1px solid #000000; /* set border COLOR as desired; usually matches border color specified in #tabnav */
+background-color: #e0e0e0; /* set unselected tab background color as desired */
+color: #000000; /* set unselected tab link color as desired */
+margin-right: 0px; /* set additional spacing between tabs as desired */
+text-decoration: none;
+border-bottom: 1px solid #e0e0e0; /* set border color to page background color */
+position: relative;
+top: 1px;
+padding-top: 4px; /* must change with respect to padding (X) above and below */
+}
+
+ul#tabnav li.tab a:hover { /* settings for hover effect */
+background: #fff; /* set desired hover color */
+}
+
+/* end css tabs */
+
+#popitmenu{
+	position: absolute;
+	background-color: white;
+	border:1px solid black;
+	font: normal 12px Verdana;
+	line-height: 18px;
+	z-index: 100;
+	visibility: hidden;
+}
+
+#popitmenu a{
+	text-decoration: none;
+	padding-left: 6px;
+	color: black;
+	display: block;
+}
+
+#popitmenu a:hover{ /*hover background color*/
+	background-color: #CCFF9D;
+}
+
+OPTION.articleprefix {
+	background-color: #BBBBBB;
+	color: black;
+}

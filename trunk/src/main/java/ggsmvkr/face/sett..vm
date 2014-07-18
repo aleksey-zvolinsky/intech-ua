@@ -1,0 +1,10 @@
+<a href="/">Вернуться</a><br>
+<br>
+<a href="ch.list">Станции</a><br>
+<a href="op.list">Операторы</a><br>
+<br>
+Настройки:<br>
+<table>
+<tr class="list"><td>Звук. сигнализация<td class="list">#if ( $alarm ) Вкл #else Выкл #end
+</table>
+<a href="/sett/edit">Изменить</a>
