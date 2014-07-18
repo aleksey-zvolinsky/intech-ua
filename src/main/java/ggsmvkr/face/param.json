@@ -1,0 +1,21 @@
+{
+"channels": [#foreach( $r in $channels )
+	{
+		"id": $r.Id,
+		"connected": $r.connected,
+		"submit_required": $r.submitRequired,
+		"obsolete": $r.obsolete,
+		#if ( $r.LastMessage )
+			"msg": {
+				"date": "$_dtf.format( $r.LastMessage.Date )",
+				"failure": $r.LastMessage.Failure
+			}
+		#else
+			"msg": null
+		#end
+	}#if( $foreach.hasNext ),#end
+#end],
+"settings": {
+	"alarm_enabled": $alarm
+}
+}

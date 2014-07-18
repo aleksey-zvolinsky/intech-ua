@@ -1,0 +1,107 @@
+<script type="text/javascript" src="/js/howler.min.js"></script>
+<script type="text/javascript">
+	var page = 0
+	var channels = [ #foreach ( $ch in $channels ) $ch.id, #end ]
+	function changePage( newpage ) {
+		if ( newpage >=0 && newpage < 2 ) {
+			page = newpage;
+			for ( i=1; i<=10; i++ ) {
+				idx = newpage*10 + i - 1;
+				if ( idx < channels.length ) {
+					$('frame'+i).src='view?id='+channels[idx];
+				} else {
+					$('frame'+i).src='empty';
+				}
+			}
+		}
+	}
+	var alarm_audio = new Howl({
+		urls: ['/alarm.mp3'],
+		loop: true,
+		autoplay: true
+	});
+	alarm_audio.mute();
+	function refreshStatus(pe) {
+		new Ajax.Request('/param?json=1', {
+			method:'get',
+			onSuccess: function(transport){
+				var param = transport.responseText.evalJSON();
+				var failure = false;
+				for ( var s=0; s<param.channels.length; s++ ) {
+					var status = param.channels[s];
+					var el = $('ch'+status.id);
+					var color = '';
+					if ( status.submit_required ) {
+						color = 'red';
+						failure = true;
+					} else if ( status.connected && !status.obsolete) {
+						color = 'green';
+					} else {
+						color = 'gray';
+					}
+					//if ( status.msg ) {
+					//	color = ( status.msg.failure ? 'red' : 'green' );
+					//	if ( status.msg.failure ) failure = true;
+					//}
+					el.style.backgroundColor = color;
+				}
+				if ( failure && param.settings.alarm_enabled ) {
+					alarm_audio.unmute();
+				} else {
+					alarm_audio.mute();
+				}
+			}
+		});
+	}
+	function refreshStatusFirst(pe) {
+		refreshStatus(pe);
+		pe.stop();
+		new PeriodicalExecuter( refreshStatus, 5 );
+	}
+	new PeriodicalExecuter( refreshStatusFirst, 0.1 );
+</script>
+
+<table width="1900px" style="padding: 0" cellspacing="0">
+<tr><td width="1700px" style="border: 1px solid black">
+
+<table>
+
+#foreach ( $ch in $channels ) #if ( $velocityCount < 11 )
+    #set ( $ccc = $velocityCount % 4 )
+    #if ( $ccc == 1 ) <tr valign="top"> #end
+    <td><iframe id="frame$velocityCount" width="420" height="250" src="view?id=$ch.id" style="padding-top: 0; margin-top: 0; border: 2px solid black; overflow:hidden" scrolling="no"></iframe></td>
+    #if ( $ccc == 0 ) </tr> #end
+#end #end
+</table>
+
+</td>
+<td valign="top" align="center" width="200px" style="border: 1px solid black;">
+
+$!operator.Name<br><br>
+
+<table>
+#foreach ( $ch in $channels ) 
+	#set( $ccc = $velocityCount % 2 )
+	#if ( $ccc == 1 )
+		<tr><td><input type="button" id="ch$ch.id" value="σπ-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td>
+	#else
+		<td><input type="button" id="ch$ch.id" value="σπ-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td></tr>
+	#end
+#end
+</table>
+<br>
+<br>
+##<input type="button" value="παςανετςω" onclick="var newtab = window.open( '/param', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="ηςαζιλι" onclick="var newtab = window.open( '/table', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="φυςξαμ" onclick="var newtab = window.open( '/journal', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="ξαστςοκλι" onclick="var newtab = window.open( '/sett/', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="1" onclick="changePage(0)" style="width: 80px">
+<input type="button" value="2" onclick="changePage(1)" style="width: 80px"><br>
+<span style="font-size: 8pt">
+&nbsp;<br>
+<img src="img/logo.png"><br>
+&nbsp;<br>
+<a href="http://eneteh.com.ua" target="_blank" style="font-size: 13pt">http://eneteh.com.ua</a>
+</span>
+</td>
+</table>

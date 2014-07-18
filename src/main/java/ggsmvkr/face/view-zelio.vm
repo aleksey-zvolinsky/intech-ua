@@ -1,0 +1,181 @@
+<script type="text/javascript">
+	function setVisible( elname, value ) {
+		if ( value ) {
+			$(elname+'1').show();
+			$(elname+'0').hide();
+		} else {
+			$(elname+'1').hide();
+			$(elname+'0').show();
+		}
+	}
+	function setPumpFailure( el, failure ) {
+		el.removeClassName('failure'+(failure?'off':'on'));
+		el.removeClassName('failure'+(failure?'off1':'on1'));
+		el.addClassName('failure'+(failure?'on':'off'));
+	}
+	function setEnabled( elname, value ) {
+		$('cmd_'+elname).disabled = !value;
+	}
+	function refreshStatus(pe) {
+		new Ajax.Request('/status?json=1&id=$ch.id', {
+			method:'get',
+			onSuccess: function(transport){
+				var status = transport.responseText.evalJSON();
+				$('connected').writeAttribute( 'src', status.connected ? 'img/flag-link-on.png' : 'img/flag-link-off.png' );
+				$('journalize').disabled = !status.submit_required;
+				if ( status.msg ) {
+					$('voltage').writeAttribute( 'src', status.msg.voltage_ok ? 'img/flag-voltage-on.png' : 'img/flag-voltage-off.png' );
+					$('failure').writeAttribute( 'src', status.msg.failure ? 'img/flag-failure-on.png' : 'img/flag-failure-off.png' );
+					$('mode').writeAttribute( 'src', status.msg.automatic_mode ? 'img/flag-mode-run.png' : 'img/flag-mode-stop.png' );
+					$('date').update( status.msg.date );
+					var tank = '0';
+					if ( status.msg.tank.failure ) {
+						tank = 'fail';
+					} else {
+						tank = ''+status.msg.tank.level;
+					}
+					$('tank').writeAttribute( 'src', 'img/tank-big-'+tank+'.png' );
+					for ( var p=0; p<4; p++ ) {
+						var state = 'none';
+						if ( status.msg.pumps[p] ) {
+							var pump = status.msg.pumps[p];
+							if ( pump.failure ) {
+								state = 'fail';
+							} else if ( pump.working ) {
+								state = 'on';
+							} else {
+								state = 'off';
+							}
+							var modetxt = '';
+							//var modeimg = 'none';
+							if ( pump.manual_mode && pump.automatic_mode ) {
+								modetxt = "АВАРИЯ";
+							} else if ( pump.manual_mode && !pump.automatic_mode ) {
+								modetxt = "РУЧНОЙ";
+							//	modeimg = 'manual'
+							} else if ( !pump.manual_mode && pump.automatic_mode ) {
+								modetxt = "АВТОМАТИЧ.";
+							//	modeimg = 'automatic'
+							} else {
+								modetxt = "НЕ ЗАДАН";
+							}
+							$('pump'+p+'_wm').update( modetxt );
+							//$('pump'+p+'mode').writeAttribute( 'src', 'img/pump'+p+'-mode-'+modeimg+'.png' );
+							setPumpFailure( $('pump'+p+'_fe'), pump.engine_failure );
+							setPumpFailure( $('pump'+p+'_fs'), pump.start_failure );
+						}
+						$('pump'+p).writeAttribute( 'src', 'img/pump-big-'+state+'.png' );
+					}
+				} else {
+					$('date').update( '--' );
+				}
+			}
+		});
+	}
+	function refreshStatusFirst(pe) {
+		refreshStatus(pe);
+		pe.stop();
+		new PeriodicalExecuter( refreshStatus, 5 );
+	}
+	function blink(pe) {
+		$$('td.failureon').each( function( el ) {
+			el.toggleClassName( "failureon1" );
+		} );
+		//$$('td.failureoff').each( function( el ) {
+		//	el.toggleClassName( "failureoff1" );
+		//} );
+	}
+	new PeriodicalExecuter( refreshStatusFirst, 0.1 );
+	new PeriodicalExecuter( blink, 1 );
+</script>
+
+<form action="/journalize" method="post">
+
+#if ( $ch.getPumpState(2).id() == 0 && $ch.getPumpState(3).id() == 0 )
+	#set ( $backgroundImage = "img/pipes-big-12.png" )
+#elseif ( $ch.getPumpState(3).id() == 0 )
+	#set ( $backgroundImage = "img/pipes-big-123.png" )
+#elseif ( $ch.getPumpState(0).id() == 0 && $ch.getPumpState(1).id() == 0 )
+	#set ( $backgroundImage = "img/pipes-big-34.png" )
+#else
+	#set ( $backgroundImage = "img/pipes-big-1234.png" )
+#end
+
+<table width="1200px" style="padding-top: 0; border-collapse:collapse; background-image: url('$backgroundImage'); background-attachment: local; background-repeat:no-repeat; background-position: 270 305;" cellspacing="0" border="0">
+
+<tr height="180px">
+	<td width="260px" align="center">
+		<font size="+5">СП-$ch.id</font>
+		<div style="height: 10px"></div>
+		<input type="button" onclick="window.location='/journal?id=$ch.id'" value="Журнал" style="font-size: 1.2em; line-height:1.2em ">
+		<div style="height: 10px"></div>
+		Последний удачный опрос <br>
+		<span id="date">--</span>
+	<td rowspan="2">&nbsp;</td>
+	<td rowspan="2" colspan="3">
+		<table style="border: 1px solid black; border-collapse:collapse;">
+			<tr>
+				<th style="border: 1px solid black" width="240px"><font size="+1"><b>Название</b></font></td>
+				#if ( $ch.getPumpState(0).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>Насос 1</b></font></td>#end
+				#if ( $ch.getPumpState(1).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>Насос 2</b></font></td>#end
+				#if ( $ch.getPumpState(2).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>Насос 3</b></font></td>#end
+			</tr>
+			<tr>
+				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>Режим работы</b></font></td>
+				#if ( $ch.getPumpState(0).id() != 0 )<td style="border: 1px solid black"><font size="+1"><b><span id="pump0_wm">&nbsp;</span></b></font>#end
+				#if ( $ch.getPumpState(1).id() != 0 )<td style="border: 1px solid black"><font size="+1"><b><span id="pump1_wm">&nbsp;</span></b></font>#end
+				#if ( $ch.getPumpState(2).id() != 0 )<td style="border: 1px solid black"><font size="+1"><b><span id="pump2_wm">&nbsp;</span></b></font>#end
+			</td>
+			<tr>
+				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>Авария плавного пуска</b></font></td>
+				#if ( $ch.getPumpState(0).id() != 0 )<td id="pump0_fs" style="border: 1px solid black">&nbsp;#end
+				#if ( $ch.getPumpState(1).id() != 0 )<td id="pump1_fs" style="border: 1px solid black">&nbsp;#end
+				#if ( $ch.getPumpState(2).id() != 0 )<td id="pump2_fs" style="border: 1px solid black">&nbsp;#end
+			</td>
+			<tr>
+				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>Авария двигателя</b></font></td>
+				#if ( $ch.getPumpState(0).id() != 0 )<td id="pump0_fe" style="border: 1px solid black">&nbsp;#end
+				#if ( $ch.getPumpState(1).id() != 0 )<td id="pump1_fe" style="border: 1px solid black">&nbsp;#end
+				#if ( $ch.getPumpState(2).id() != 0 )<td id="pump2_fe" style="border: 1px solid black">&nbsp;#end
+			</td>
+		</table>
+	</td>
+	<td rowspan="2">&nbsp;</td>
+<tr height="73px">
+	<td width="260px" nowrap valign="top" align="center">
+		<img id="connected" src="img/flag-link-off.png">
+		<img id="mode" src="img/flag-mode-none.png">
+		<img id="voltage" src="img/flag-voltage-none.png">
+		<img id="failure" src="img/flag-failure-off.png">
+</tr>
+<tr height="50px">
+	<td width="260px" nowrap valign="top" align="center">
+	<input id="journalize" type="button" value="Подтвердить" onclick="this.form.submit()" style="font-size: 1.5em; line-height:1.5em ">
+</tr>
+<tr height="52px">
+	<td width="260px" rowspan="5" valign="top" align="center"><img id="tank" src="img/tank-big-0.png">
+	<td colspan="5"></td>
+</tr>
+<tr height="144px">
+	<td width="126px">&nbsp;
+	<td width="262px"><img #if ( $ch.getPumpState(2).id() == 0 ) style="display:none" #end id="pump2" src="img/pump-big-none.png">
+	<td width="148px">&nbsp;
+	<td width="262px"><img #if ( $ch.getPumpState(3).id() == 0 ) style="display:none" #end id="pump3" src="img/pump-big-none.png">
+	<td>&nbsp;
+</tr>
+<tr height="130px">
+	<td colspan="5">&nbsp;</td>
+</tr>
+<tr height="144px">
+	<td width="126px">&nbsp;
+	<td width="262px"><img #if ( $ch.getPumpState(0).id() == 0 ) style="display:none" #end id="pump0" src="img/pump-big-none.png">
+	<td width="148px">&nbsp;
+	<td width="262px"><img #if ( $ch.getPumpState(1).id() == 0 ) style="display:none" #end id="pump1" src="img/pump-big-none.png">
+	<td>&nbsp;
+</tr>
+<tr>
+	<td colspan="5"></td>
+</tr>
+</table>
+<input type="hidden" name="id" value="$ch.id">
+</form>

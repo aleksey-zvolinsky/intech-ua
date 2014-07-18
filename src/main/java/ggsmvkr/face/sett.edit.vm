@@ -1,0 +1,16 @@
+<form action="edit" method="post">
+<table>
+<tr class="list"><td>Звуковой сигнал</td>
+	<td>
+		<select name="alarm">
+			<option value="true" #if ( $alarm ) selected #end>Да</option>
+			<option value="false" #if ( !$alarm ) selected #end>Нет</option>
+		</select>
+	</td>
+</tr>
+<tr><td colspan="2">
+	<input type="submit" value="Сохранить">
+	<input type="button" value="  Отмена " onclick="window.location='/sett/'">
+</table>
+</table>
+</form>
