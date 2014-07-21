@@ -1,0 +1,50 @@
+#if ( $ch  )
+<a href="/view-$ch.type.name?id=$ch.id">Pacets</a>&nbsp;&nbsp;
+<font size="+1">New-$ch.id</font>
+#else
+<font size="+1">New</font>
+#end
+
+#macro( jtablehead1 )
+<tr>
+	<th>Num
+	<th>Date
+	<th>power
+	<th>sensorPower
+	<th>flowmeterState1
+	<th>flowmeterState2
+	<th>flowmeterState3
+	<th>alert
+	<th>reserve1
+	<th>reserve2
+	<th>level1
+	<th>level2
+	<th>level3	
+</tr>
+#end
+
+<table>
+#foreach( $r in $list )
+	#if ( $velocityCount % 32 == 1 )
+		#jtablehead1
+	#end
+	<tr>
+	<td class="list" nowrap>$r.id</td>
+	<td class="list" nowrap>$r.date</td>
+	#if ( $r.power == false )<td class="list" nowrap>No</td> #else <td class="list" nowrap>Yes</td> #end
+	<td class="list" nowrap>$r.sensorPower</td>
+	<td class="list" nowrap>$r.flowmeterState1</td>
+	<td class="list" nowrap>$r.flowmeterState2</td>
+	<td class="list" nowrap>$r.flowmeterState3</td>
+	<td class="list" nowrap>$r.alert</td>
+	<td class="list" nowrap>$r.reserve1</td>
+	<td class="list" nowrap>$r.reserve2</td>
+	<td class="list" nowrap>$r.level1</td>
+	<td class="list" nowrap>$r.level2</td>	
+	<td class="list" nowrap>$r.level3</td>	
+</tr>
+#end
+#if ( $list.size() == 0 )
+	#jtablehead
+#end
+</table>

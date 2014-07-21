@@ -217,6 +217,20 @@ class Face
         }
       }
     });
+	Spark.get(new Route("/packets")  //FIXME 
+    {
+      @Override
+	public Object handle(Request request, Response response)
+      {
+        String sid = request.queryParams("id");
+        int id = sid == null ? 0 : Integer.parseInt(sid);
+        if (id > 0) {
+          request.attribute("ch", db.getPacketList(id));
+        }
+        request.attribute("list", db.getPacketList(id));
+        return null;
+      }
+    });   //FIXME
     Spark.get(new Route("/journal")
     {
       @Override

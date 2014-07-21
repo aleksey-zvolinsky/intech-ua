@@ -72,6 +72,7 @@ public class Server
 		}
 		db = new DB("db");
 		rrds = new RRDs(db);
+
 		processor = new Processor(db, rrds);
 		if (!debug)
 		{
@@ -131,7 +132,7 @@ public class Server
 	static class Communicator extends Thread
 	{
 		Stream ss;
-
+		int idPacket;
 		Communicator(Stream _ss)
 		{
 			this.ss = _ss;
@@ -140,8 +141,42 @@ public class Server
 		@Override
 		public void run()
 		{
+			int lenBuff = 8;
+			byte[] newBuffRead = new byte[lenBuff];
+			byte   newByteRead;
+			byte   valCRC=0;
+			StringBuilder sb = new StringBuilder();
 			try
 			{
+				//TODO how
+				//byte[] = this.ss.readPacket();
+				//verify CRC
+				this.ss.logger.beginLog("Reading packet: ");
+				for (int i=0; i<lenBuff; i++) {
+					newBuffRead[i] = this.ss.read();	
+					sb.append(String.format("%02X", newBuffRead[i]));
+					if (i != (lenBuff-1)) valCRC = (byte) (valCRC ^ newBuffRead[i]);
+				}
+				sb.append(String.format("CRC=%02X", valCRC));
+				this.ss.logger.log(": " + sb.toString() + ": " + String.format("CRC=%02X", valCRC));
+				
+				idPacket++;
+				//String strEntry = new String(newBuffRead); 
+
+				this.ss.logger.log( "puPacket: idPacket=" + idPacket + " strEntry=:" + sb  + ":");
+				db.putPacket(idPacket, sb.toString());
+				this.ss.logger.log("getPacket: "+ db.getPacketString(0));
+				
+				if (valCRC == newBuffRead[lenBuff-1])
+				{// compared CRC
+					this.ss.logger.endLog("OK");
+				} else
+				{// NOT compared CRC
+					this.ss.logger.endLog("CRC Error");
+				}
+				db.getPacketString(0);
+				//TODO how
+				
 				if (this.ss.readAndCheckWelcome())
 				{
 					int[] version = this.ss.readVersion();
