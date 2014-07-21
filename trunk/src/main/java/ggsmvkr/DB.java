@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +38,270 @@ class DB
 	Database[] connectionDb;
 	Database settingDb;
 	Database rrdDb;
+	
+	Database packetDb;  //FIXME begin 1
+	
+	public class PacketEntry {
 
+		Date date;
+		int id;
+		
+	//  B1
+//		bit7 Электропитание в норме
+//		bit6 Электропитание датчиков в норме
+//		bit5 Состояние расходомера №1
+//		bit4 Состояние расходомера №2
+//		bit3 Состояние расходомера №3
+//		bit2 Обобщенный сигнал Авария
+//		bit1 Резерв
+//		bit0 Резерв
+
+		boolean power;
+		boolean sensorPower;
+		boolean flowmeterState1;
+		boolean flowmeterState2;
+		boolean flowmeterState3;
+		boolean alert;
+		boolean reserve1;
+		boolean reserve2;
+
+		int level1;
+		int level2;
+		int level3;
+		
+		public int getLevel1() {
+			return level1;
+		}
+
+		public void setLevel1(int level1) {
+			this.level1 = level1;
+		}
+
+		public int getLevel2() {
+			return level2;
+		}
+
+		public void setLevel2(int level2) {
+			this.level2 = level2;
+		}
+
+		public int getLevel3() {
+			return level3;
+		}
+
+		public void setLevel3(int level3) {
+			this.level3 = level3;
+		}
+
+		public void setDate(Date date) {
+			this.date = date;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public Date getDate() {
+			return this.date;
+		}
+
+		public int getId() {
+			return this.id;
+		}
+
+		public boolean isPower() {
+			return power;
+		}
+
+		public void setPower(boolean power) {
+			this.power = power;
+		}
+
+		public boolean isSensorPower() {
+			return sensorPower;
+		}
+
+		public void setSensorPower(boolean sensorPower) {
+			this.sensorPower = sensorPower;
+		}
+
+		public boolean isFlowmeterState1() {
+			return flowmeterState1;
+		}
+
+		public void setFlowmeterState1(boolean flowmeterState1) {
+			this.flowmeterState1 = flowmeterState1;
+		}
+
+		public boolean isFlowmeterState2() {
+			return flowmeterState2;
+		}
+
+		public void setFlowmeterState2(boolean flowmeterState2) {
+			this.flowmeterState2 = flowmeterState2;
+		}
+
+		public boolean isFlowmeterState3() {
+			return flowmeterState3;
+		}
+
+		public void setFlowmeterState3(boolean flowmeterState3) {
+			this.flowmeterState3 = flowmeterState3;
+		}
+
+		public boolean isAlert() {
+			return alert;
+		}
+
+		public void setAlert(boolean alert) {
+			this.alert = alert;
+		}
+
+		public boolean isReserve1() {
+			return reserve1;
+		}
+
+		public void setReserve1(boolean reserve1) {
+			this.reserve1 = reserve1;
+		}
+
+		public boolean isReserve2() {
+			return reserve2;
+		}
+
+		public void setReserve2(boolean reserve2) {
+			this.reserve2 = reserve2;
+		}
+
+	}
+	
+	public void putPacket(int id, String value)
+	{
+		long timeAndId = new Date().getTime();
+		timeAndId &= 0xFFFFFF00;
+		timeAndId |= id;
+		
+		DatabaseEntry keyEntry = new DatabaseEntry();
+		LongBinding.longToEntry(timeAndId, keyEntry);
+		
+		DatabaseEntry dataEntry = new DatabaseEntry();
+		StringBinding.stringToEntry(value, dataEntry);
+		OperationStatus status = this.packetDb.put(null, keyEntry, dataEntry);
+		//OperationStatus status = db.put(null, keyEntry, dataEntry);
+		if (status == OperationStatus.SUCCESS)
+		{
+			this.dataEnv.sync();
+		}
+	}
+	
+	public void getPacketKey (String key)  //FIXME  TODO 1
+	{
+		DatabaseEntry keyEntry = new DatabaseEntry();
+		StringBinding.stringToEntry(key, keyEntry);
+		DatabaseEntry dataEntry = new DatabaseEntry();
+		OperationStatus status = packetDb.get(null, keyEntry, dataEntry, null);
+		if (status == OperationStatus.SUCCESS)
+		{
+			//return dataEntry;
+		}
+		//return null;
+	}
+	public List<PacketEntry> getPacketList(int id)
+	{	
+		List<PacketEntry> list = new ArrayList(30000);
+		Date packetDate;
+		int packetId=0;
+		String strPacket = ""; 
+		String strByte = "";
+		byte bytePacket, bytePacketHigh, bytePacketLow;
+		int intValue;
+
+		Cursor cursor = this.packetDb.openCursor(null, null);
+		DatabaseEntry foundKey = new DatabaseEntry();
+		DatabaseEntry foundData = new DatabaseEntry();
+		while (cursor.getPrev(foundKey, foundData, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+		{
+			PacketEntry pe = new PacketEntry();
+			long time = LongBinding.entryToLong(foundKey);
+			if ((time & 0xFFFFFF00) != 0L)
+			{
+				packetDate = new Date(time);
+				SimpleDateFormat formatter5=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String formatDate = formatter5.format(time);
+				
+				packetId = ((int) (time & 0xFF));
+				if ((id == 0) || (id == packetId))
+				{
+					pe.date = packetDate;
+					pe.id = packetId;
+					strPacket = StringBinding.entryToString(foundData);
+					intValue = Integer.parseInt(strPacket.substring(0, 2), 16);  
+//					bit7 Электропитание в норме
+//					bit6 Электропитание датчиков в норме
+//					bit5 Состояние расходомера №1
+//					bit4 Состояние расходомера №2
+//					bit3 Состояние расходомера №3
+//					bit2 Обобщенный сигнал Авария
+//					bit1 Резерв
+//					bit0 Резерв
+
+					pe.power= ((intValue & 0x80) > 0 ? true : false);
+					pe.sensorPower = ((intValue & 0x40) > 0 ? true : false);
+					pe.flowmeterState1 = ((intValue & 0x20) > 0 ? true : false);
+					pe.flowmeterState2 = ((intValue & 0x10) > 0 ? true : false);
+					pe.flowmeterState3 = ((intValue & 0x08) > 0 ? true : false);
+					pe.alert = ((intValue & 0x04) > 0 ? true : false);
+					pe.reserve1 = ((intValue & 0x02) > 0 ? true : false);
+					pe.reserve2 = ((intValue & 0x01) > 0 ? true : false);
+					
+					pe.level1 = Integer.parseInt(strPacket.substring(2, 6), 16);
+					pe.level2 = Integer.parseInt(strPacket.substring(6, 10), 16);
+					pe.level3 = Integer.parseInt(strPacket.substring(10, 14), 16);
+
+					list.add(pe);
+				}
+			}
+		}
+		cursor.close();
+		return list; 
+	}								
+
+	public String getPacketString(int id)
+	{	
+		Date packetDate;
+		int packetId=0;
+		String strPacket = ""; 
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("");
+		Cursor cursor = this.packetDb.openCursor(null, null);
+		DatabaseEntry foundKey = new DatabaseEntry();
+		DatabaseEntry foundData = new DatabaseEntry();
+		while (cursor.getPrev(foundKey, foundData, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+		{
+			JournalEntry je = new JournalEntry();
+			long time = LongBinding.entryToLong(foundKey);
+			if ((time & 0xFFFFFF00) != 0L)
+			{
+				packetDate = new Date(time);
+				SimpleDateFormat formatter5=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String formatDate = formatter5.format(time);
+				
+
+				packetId = ((int) (time & 0xFF));
+				if ((id == 0) || (id == packetId))
+				{
+					strPacket = StringBinding.entryToString(foundData);
+					sb.append(formatDate + ": ");
+					sb.append(packetId);
+					sb.append(" /" + strPacket + "/ ");
+				}
+			}
+		}
+		cursor.close();
+		return sb.toString();
+	}								//FIXME end 1
+	
 	public class ConnectionEntry
 	{
 		Date date;
@@ -272,6 +536,7 @@ class DB
 		this.journalDb = this.dataEnv.openDatabase(null, "journal", dbConfig);
 		this.settingDb = this.dataEnv.openDatabase(null, "setting", dbConfig);
 		this.rrdDb = this.dataEnv.openDatabase(null, "rrd", dbConfig);
+		this.packetDb = this.dataEnv.openDatabase(null, "packetDb", dbConfig);  //FIXME 2
 		RrdBackendFactory
 				.registerAndSetAsDefaultFactory(new RrdBerkeleyDbBackendFactory(
 						this.rrdDb));
@@ -848,6 +1113,7 @@ class DB
 		this.settingDb.close();
 		this.rrdDb.close();
 		this.dataEnv.close();
+		this.packetDb.close();	//FIXME 3
 	}
 
 	static abstract interface MessageProcessor
