@@ -46,7 +46,7 @@ class DB
 		Date date;
 		int id;
 		
-	//  B1
+//  	B1
 //		bit7 Электропитание в норме
 //		bit6 Электропитание датчиков в норме
 //		bit5 Состояние расходомера №1
@@ -194,7 +194,7 @@ class DB
 		}
 	}
 	
-	public void getPacketKey (String key)  //FIXME  TODO 1
+	public void getPacketKey (String key)  //FIXME  need TODO 1
 	{
 		DatabaseEntry keyEntry = new DatabaseEntry();
 		StringBinding.stringToEntry(key, keyEntry);

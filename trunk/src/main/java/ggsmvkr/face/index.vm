@@ -61,8 +61,28 @@
 	new PeriodicalExecuter( refreshStatusFirst, 0.1 );
 </script>
 
+<table>
+#foreach( $r in $list )
+	<tr>
+	<td class="list" nowrap>$r.id</td>
+	<td class="list" nowrap>$r.date</td>
+	<td class="list" nowrap>$r.power</td>
+	#if ( $r.power == false )<td class="list" nowrap>No</td> #else <td class="list" nowrap>Yes</td> #end
+	<td class="list" nowrap>$r.flowmeterState1</td>
+	<td class="list" nowrap>$r.flowmeterState2</td>
+	<td class="list" nowrap>$r.flowmeterState3</td>
+	<td class="list" nowrap>$r.alert</td>
+	<td class="list" nowrap>$r.reserve1</td>
+	<td class="list" nowrap>$r.reserve2</td>
+	<td class="list" nowrap>$r.level1</td>
+	<td class="list" nowrap>$r.level2</td>	
+	<td class="list" nowrap>$r.level3</td>	
+</tr>
+#end
+</table>
+
 <table width="1900px" style="padding: 0" cellspacing="0">
-<tr><td width="1700px" style="border: 1px solid black">
+    <tr><td width="1700px" style="border: 1px solid black">
 
 <table>
 
