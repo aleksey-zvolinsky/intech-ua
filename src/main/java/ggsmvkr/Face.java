@@ -61,21 +61,33 @@ class Face
         }
       });
     }
-    Spark.get(new Route("/")
+    Spark.get(new Route("/")  //FIXME
     {
-      @Override
-	public Object handle(Request request, Response response)
+     @Override
+	// public Object handle(Request request, Response response)
+      // {
+        // List<ChannelInfo> channels = new ArrayList();
+        // for (Iterator i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
+        // {
+          // int cid = ((Integer)i$.next()).intValue();
+          // channels.add(db.getChannelInfo(cid));
+        // }
+        // request.attribute("channels", channels);
+        // return null;
+      // }
+    // });	
+		public Object handle(Request request, Response response)
       {
-        List<ChannelInfo> channels = new ArrayList();
-        for (Iterator i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
-        {
-          int cid = ((Integer)i$.next()).intValue();
-          channels.add(db.getChannelInfo(cid));
+        String sid = request.queryParams("id");
+        int id = sid == null ? 0 : Integer.parseInt(sid);
+        if (id > 0) {
+          request.attribute("ch", db.getPacketList(id));
         }
-        request.attribute("channels", channels);
+        request.attribute("list", db.getPacketList(id));
         return null;
       }
-    });
+    });   //FIXME
+	
     Spark.get(new Route("/view")
     {
       @Override

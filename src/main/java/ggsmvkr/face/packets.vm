@@ -45,6 +45,6 @@
 </tr>
 #end
 #if ( $list.size() == 0 )
-	#jtablehead
+	#jtablehead1
 #end
 </table>
