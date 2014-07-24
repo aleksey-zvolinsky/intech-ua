@@ -31,12 +31,28 @@ public class RRDs {
          }
 
          this.updateTank(id, ctime, msg.tank);
+         this.updatePacket(id, ctime, msg.packet);         //FEXME
       } catch (Exception var6) {
          var6.printStackTrace();
       }
 
    }
 
+   void updatePacket(int id, long time,  Message.Packet packet) throws IOException { // FEXME
+	      String rrdName = "packet";
+	      if(!this.db.isRrdExists(rrdName)) {
+	         this.createPacketRrd(rrdName);
+	      }
+
+	      RrdDb rrd = new RrdDb(rrdName);
+	      Sample sample = rrd.createSample(time);
+	      sample.setValue(0, packet.getLevel1());
+	      sample.setValue(1, packet.getLevel2());
+	      sample.setValue(2, packet.getLevel3());
+	      sample.update();
+	      rrd.close();
+	   }
+   
    void updatePump(int id, long time, int p, Message.Pump pump) throws IOException {
       String rrdName = id + "/" + p;
       if(!this.db.isRrdExists(rrdName)) {
@@ -66,20 +82,34 @@ public class RRDs {
       rrd.close();
    }
 
-   void createPumpRrd(String name) throws IOException {
+   void createPacketRrd(String name) throws IOException {  //FEXME
+	      RrdDef rrdDef = new RrdDef(name, 60L);    // Expect new data every 60 seconds = 1 minute
+	      rrdDef.addDatasource("level1", DsType.GAUGE, 300L, 0.0D, Double.NaN); //every 300 sec=5 min
+	      rrdDef.addDatasource("level2", DsType.GAUGE, 300L, 0.0D, Double.NaN); //minvalue = 0
+	      rrdDef.addDatasource("level3", DsType.GAUGE, 300L, 0.0D, Double.NaN); //max value = Double.NaN
+	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1, '\ue100'); //каждые 1 минут * 57600dec see http://www.fileformat.info/info/unicode/char/e100/index.htm
+	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 12, 4800);    //каждые 12 минут -- 40 дней
+	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 60, 2400);    //каждые 1 час -- 100 дней
+	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 240, 1200);   //каждые 4 часа -- 200 дней
+	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1440, 600);   //каждые 24 часа = 1 день -- 600 дней
+	      RrdDb rrdDb = new RrdDb(rrdDef);
+	      rrdDb.close();
+	   }
+   
+   void createPumpRrd(String name) throws IOException { 
       RrdDef rrdDef = new RrdDef(name, 60L);
       rrdDef.addDatasource("v", DsType.GAUGE, 300L, 0.0D, 600.0D);
       rrdDef.addDatasource("l1", DsType.GAUGE, 300L, 0.0D, 300.0D);
       rrdDef.addDatasource("l2", DsType.GAUGE, 300L, 0.0D, 300.0D);
-      rrdDef.addDatasource("l3", DsType.GAUGE, 300L, 0.0D, 300.0D);
-      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1, '\ue100');
-      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 12, 4800);
-      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 60, 2400);
-      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 240, 600);
-      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1440, 600);
+      rrdDef.addDatasource("l3", DsType.GAUGE, 300L, 0.0D, 300.0D);  
+      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1, '\ue100'); 	
+      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 12, 4800);    	
+      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 60, 2400);		
+      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 240, 600);		
+      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1440, 600);	
       RrdDb rrdDb = new RrdDb(rrdDef);
       rrdDb.close();
-   }
+   } 
 
    void createTankRrd(String name) throws IOException {
       RrdDef rrdDef = new RrdDef(name, 60L);
