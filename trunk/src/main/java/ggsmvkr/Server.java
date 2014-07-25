@@ -94,38 +94,36 @@ public class Server
 		Face.init(db, processor, rrds, noauth);
 
 		beginLog("Starting server:");
-		ServerSocket welcomeSocket;
-		try
+		try(ServerSocket welcomeSocket = new ServerSocket(8129))
 		{
-			welcomeSocket = new ServerSocket(8129);
 			endLog("OK");
-		} catch (BindException e)
+
+			for (;;)
+			{
+				log("Waiting connection");
+				Socket connectionSocket = welcomeSocket.accept();
+				beginLog("Connection from "
+						+ connectionSocket.getRemoteSocketAddress() + ":");
+				Stream ss;
+				try
+				{
+					connectionSocket.setSoTimeout(240000);
+	
+					ss = new Stream(connectionSocket);
+					new Communicator(ss).start();
+					endLog("OK");
+				}
+				catch (Exception e)
+				{
+					endLog("Fail (" + e.getMessage() + ")");
+				}
+				continue;
+			}
+		}
+		catch (BindException e)
 		{
 			endLog("Fail (" + e.getMessage() + ")");
 			return;
-		}
-		for (;;)
-		{
-			log("Waiting connection");
-			Socket connectionSocket = welcomeSocket.accept();
-			beginLog("Connection from "
-					+ connectionSocket.getRemoteSocketAddress() + ":");
-			Stream ss;
-			try
-			{
-				connectionSocket.setSoTimeout(240000);
-
-				ss = new Stream(connectionSocket);
-				new Communicator(ss).start();
-				endLog("OK");
-			} catch (Exception e)
-			{
-				endLog("Fail (" + e.getMessage() + ")");
-			}
-			continue;
-
-			// FIXME
-			// new Communicator(ss).start();
 		}
 	}
 
