@@ -31,15 +31,15 @@ public class RRDs {
          }
 
          this.updateTank(id, ctime, msg.tank);
-         this.updatePacket(id, ctime, msg.packet);         //FEXME
+//         this.updatePacket(id, ctime, msg.packet);         //FEXME
       } catch (Exception var6) {
          var6.printStackTrace();
       }
 
    }
 
-   void updatePacket(int id, long time,  Message.Packet packet) throws IOException { // FEXME
-	      String rrdName = "packet";
+   void updatePacket(int id, long time,  PacketMessage packet) throws IOException { // FEXME
+	      String rrdName = "packet1";
 	      if(!this.db.isRrdExists(rrdName)) {
 	         this.createPacketRrd(rrdName);
 	      }
@@ -49,6 +49,12 @@ public class RRDs {
 	      sample.setValue(0, packet.getLevel1());
 	      sample.setValue(1, packet.getLevel2());
 	      sample.setValue(2, packet.getLevel3());
+	      println("== Last info was: " + rrd.getInfo());
+	      println("== RRD ");
+	      println(rrd.dump());
+	      println("==  sample ");
+	      println(sample.dump());
+	      println("==  sample ");	      
 	      sample.update();
 	      rrd.close();
 	   }
@@ -84,6 +90,7 @@ public class RRDs {
 
    void createPacketRrd(String name) throws IOException {  //FEXME
 	      RrdDef rrdDef = new RrdDef(name, 60L);    // Expect new data every 60 seconds = 1 minute
+	      rrdDef.setVersion(2);
 	      rrdDef.addDatasource("level1", DsType.GAUGE, 300L, 0.0D, Double.NaN); //every 300 sec=5 min
 	      rrdDef.addDatasource("level2", DsType.GAUGE, 300L, 0.0D, Double.NaN); //minvalue = 0
 	      rrdDef.addDatasource("level3", DsType.GAUGE, 300L, 0.0D, Double.NaN); //max value = Double.NaN
@@ -93,10 +100,27 @@ public class RRDs {
 	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 240, 1200);   //каждые 4 часа -- 200 дней
 	      rrdDef.addArchive(ConsolFun.AVERAGE, 0.5D, 1440, 600);   //каждые 24 часа = 1 день -- 600 дней
 	      RrdDb rrdDb = new RrdDb(rrdDef);
+	        // Create and check the database
+	        println(rrdDef.dump());
+	        println("Estimated file size: " + rrdDef.getEstimatedSize());
+	        println("== RRD file created.");
+	        if (rrdDb.getRrdDef().equals(rrdDef)) {
+	            println("Checking RRD file structure... OK");
+	        } else {
+	            println("Invalid RRD file created. This is a serious bug, bailing out");
+	            return;
+	        }
+
 	      rrdDb.close();
 	   }
    
-   void createPumpRrd(String name) throws IOException { 
+   private void println(String dump) {
+       System.out.println(dump);
+
+	
+}
+
+void createPumpRrd(String name) throws IOException { 
       RrdDef rrdDef = new RrdDef(name, 60L);
       rrdDef.addDatasource("v", DsType.GAUGE, 300L, 0.0D, 600.0D);
       rrdDef.addDatasource("l1", DsType.GAUGE, 300L, 0.0D, 300.0D);

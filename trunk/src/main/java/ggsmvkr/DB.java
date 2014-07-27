@@ -284,7 +284,7 @@ class DB
 			if ((time & 0xFFFFFF00) != 0L)
 			{
 				packetDate = new Date(time);
-				SimpleDateFormat formatter5=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat formatter5=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
 				String formatDate = formatter5.format(time);
 				
 
