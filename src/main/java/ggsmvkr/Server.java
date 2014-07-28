@@ -2,6 +2,8 @@ package ggsmvkr;
 
 
 
+import static org.rrd4j.ConsolFun.AVERAGE;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +11,7 @@ import java.io.PrintStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -16,17 +19,13 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
-import org.rrd4j.DsType;
 import org.rrd4j.core.FetchData;
 import org.rrd4j.core.FetchRequest;
 import org.rrd4j.core.RrdDb;
-import org.rrd4j.core.RrdDef;
 import org.rrd4j.core.Sample;
 import org.rrd4j.core.Util;
 import org.rrd4j.graph.RrdGraph;
 import org.rrd4j.graph.RrdGraphDef;
-
-import static org.rrd4j.ConsolFun.AVERAGE;
 
 public class Server
 {
@@ -198,15 +197,29 @@ public class Server
 				
 				idPacket++;
 				//String strEntry = new String(newBuffRead); 
+				
+				
+				//read manual timestamp
+				StringBuilder timestampsb = new StringBuilder();
+				byte[] timestampBuffRead = new byte[lenBuff];
+				for (int i=0; i<lenBuff; i++) 
+				{
+					timestampBuffRead[i] = this.ss.read();
+					timestampsb.append(String.format("%02X", timestampBuffRead[i]));
+				}
+				
+				Date date = new Date(ByteBuffer.wrap(timestampBuffRead).getLong());
+				this.ss.logger.log("Needed date time is " + df.format(date));
 
-				this.ss.logger.log( "puPacket: idPacket=" + idPacket + " strEntry=:" + sb  + ":");
+				this.ss.logger.log("putPacket: idPacket=" + idPacket + " strEntry=:" + sb  + ":");
 				db.putPacket(idPacket, sb.toString());
 				this.ss.logger.log("getPacket: "+ db.getPacketString(0));
 				
 				if (valCRC == newBuffRead[lenBuff-1])
 				{// compared CRC
 					this.ss.logger.endLog("OK");
-				} else
+				}
+				else
 				{// NOT compared CRC
 					this.ss.logger.endLog("CRC Error");
 				}
