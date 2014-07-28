@@ -62,19 +62,19 @@
 /* 	width: 148px; */
 }
 
-#main .power .on
+#main .power.on
 {
 	background-image: url(../img/rhgvon.png);
 }
 
 
-#main .error, #main .error .on 
+#main .error, #main .error.on 
 {
 	background-image: url(../img/rhgfon.png);
 	background-repeat: no-repeat;
 }
 
-#main .error .off
+#main .error.off
 {
 	background-image: url(../img/rhgfoff.png);
 }
@@ -136,7 +136,7 @@
 	padding-bottom: 20px;
 }
 
-#main .all .power, #main .all .power .off
+#main .all .power, #main .all .power.off
 {
 	background-image: url(../img/topvoff.png);
 	background-repeat: no-repeat;
@@ -145,13 +145,13 @@
 	float: left;
 }
 
-#main .all .power .on
+#main .all .power.on
 {
 	background-image: url(../img/topvon.png);
 }
 
 
-#main .all .general_alert, #main .all .general_alert .off
+#main .all .general_alert, #main .all .general_alert.off
 {
 	background-image: url(../img/toplloff.png);
 	background-repeat: no-repeat;
@@ -160,7 +160,7 @@
 	float: left;
 }
 
-#main .all .general_alert .on
+#main .all .general_alert.on
 {
 	background-image: url(../img/topllon.png);
 }
@@ -177,7 +177,7 @@
 }
 
 
-#main .all .voice, #main .all .voice .off
+#main .all .voice, #main .all .voice.off
 {
 	background-image: url(../img/topsoff.png);
 	background-repeat: no-repeat;
@@ -186,7 +186,7 @@
 	float: right;
 }
 
-#main .all .voice .on
+#main .all .voice.on
 {
 	background-image: url(../img/topson.png);
 }
