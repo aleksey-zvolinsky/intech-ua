@@ -1,12 +1,13 @@
-@font-face {
-    font-family: LetsGoDigital;
-    src: url(lets_go_digital_regular.ttf);
+@font-face
+{
+	font-family: 'Lets go Digital Regular';
+	src: url(http://www.fontsaddict.com/fontface/lets-go-digital-regular.ttf);
 }
 
 #main 
 {
 	width: 100%;
-	min-width: 
+	min-width:1px; 
 	background-color: white;
 	font-family: Arial, Helvetica, sans-serif;
 }
@@ -58,8 +59,6 @@
 {
 	background-image: url(../img/rhgvoff.png);
 	background-repeat: no-repeat;
-/* 	height: 103px; */
-/* 	width: 148px; */
 }
 
 #main .power.on
@@ -189,4 +188,25 @@
 #main .all .voice.on
 {
 	background-image: url(../img/topson.png);
+}
+
+#main .image .value, 
+#main .level .value
+{
+	font-family: 'Lets go Digital Regular';
+	font-size: 50pt;
+	text-align: right;
+	position: relative;
+}
+
+#main .image .value
+{
+	top: 143px;
+	right: 122px;
+}
+
+#main .level .value
+{
+	right: 25px;
+	top: -2px;
 }
