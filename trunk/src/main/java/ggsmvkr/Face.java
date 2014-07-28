@@ -20,13 +20,13 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
-import com.google.gson.Gson;
-
 import spark.Filter;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.Spark;
+
+import com.google.gson.Gson;
 
 class Face
 {
@@ -256,17 +256,13 @@ class Face
 			@Override
 			public Object handle(Request request, Response response)
 			{
-				//FIXME get latest packet
-				//List<PacketEntry> list = db.getPacketList(0);
-				PacketEntry packet;// = list.get(list.size());
-				
-				packet = db.getPacketEntryInstance();
-				packet.setLevel1(33);
-				packet.setLevel2(55);
-				packet.setLevel3(66);
+				List<PacketEntry> list = db.getPacketList(0);
+				PacketEntry packet = list.get(0);
+
 				Gson gson = new Gson();
 				String gsonPacket = gson.toJson(packet);
 				request.attribute("packet", gsonPacket);
+
 				return null;
 			}
 		});
@@ -535,17 +531,26 @@ class Face
 				}
 				String vmName = null;
 				String mime = "text/html; charset=utf-8";
-				if (path.startsWith("css/"))
+				if(path.endsWith(".ttf"))
+				{
+					vmName = path.substring(4);
+					mime = "font/opentype";
+				}
+				else if (path.startsWith("css/"))
 				{
 					vmName = path.substring(4);
 					mime = "text/css";
-				} else if (path.startsWith("js/"))
+				}
+				else if (path.startsWith("js/"))
 				{
 					vmName = path.substring(3);
-				} else if (path.startsWith("img/"))
+					mime = "application/javascript";
+				}
+				else if (path.startsWith("img/"))
 				{
 					mime = "image/jpeg";
-				} else if (path.startsWith("rrd"))
+				}
+				else if (path.startsWith("rrd"))
 				{
 					mime = "image/png";
 				} else if (path.startsWith("favicon.ico"))

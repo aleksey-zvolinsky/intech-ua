@@ -43,6 +43,19 @@ class DB
 	
 	public class PacketEntry {
 
+		@Override
+		public String toString()
+		{
+			return "PacketEntry [date=" + date + ", id=" + id + ", power="
+					+ power + ", sensorPower=" + sensorPower
+					+ ", flowmeterState1=" + flowmeterState1
+					+ ", flowmeterState2=" + flowmeterState2
+					+ ", flowmeterState3=" + flowmeterState3 + ", alert="
+					+ alert + ", reserve1=" + reserve1 + ", reserve2="
+					+ reserve2 + ", level1=" + level1 + ", level2=" + level2
+					+ ", level3=" + level3 + "]";
+		}
+
 		Date date;
 		int id;
 		
@@ -797,6 +810,7 @@ class DB
 		long timet = cal.getTime().getTime();
 		processMessages(id, timef, timet, new MessageProcessor()
 		{
+			@Override
 			public void process(Message msg)
 			{
 				list.add(msg);
@@ -896,6 +910,7 @@ class DB
 		final ChannelAvgs ca = new ChannelAvgs(id);
 		processMessages(id, dayTime, ctime, new MessageProcessor()
 		{
+			@Override
 			public void process(Message msg)
 			{
 				if (msg.date.getTime() >= minTime)
