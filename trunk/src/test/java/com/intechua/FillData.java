@@ -44,14 +44,15 @@ public class FillData
 	private static byte[] makePacket(String line)
 	{
 		int lenBuff = 8;
-		byte[] newBuffRead = new byte[lenBuff];
+		byte[] newBuffRead = new byte[lenBuff+8];
 		newBuffRead[0] = 0b01111111;
 		newBuffRead[0] = 0b01111111;
 		String[] values = line.split("\t");
 		int number = Integer.parseInt(values[0]);
+		Date date = null;
 		try
 		{
-			Date date = df.parse(values[1]);
+			date = df.parse(values[1]);
 		} 
 		catch (ParseException e)
 		{
@@ -82,6 +83,13 @@ public class FillData
 		
 		newBuffRead[7] = valCRC;
 		
+		byte[] timestamp = ByteBuffer.allocate(8).putLong(date.getTime()).array();
+		
+		for (int i=0; i<8; i++) 
+		{
+			newBuffRead[8+i] = timestamp[0+i];
+		}
+
 		return newBuffRead;
 	}
 }
