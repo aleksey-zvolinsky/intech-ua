@@ -68,7 +68,33 @@
 			onSuccess: function(transport)
 			{
 				var param = transport.responseText.evalJSON();
+				var packet = param.last_packet;
+				if(packet.flowmeterState1)
+				{
+					$$("#column1 .error").invoke('addClassName','on');
+				}
+				else
+				{
+					$$("#column1 .error").invoke('removeClassName','on');
+				}
 				
+				if(packet.flowmeterState2)
+				{
+					$$("#column2 .error").invoke('addClassName','on');
+				}
+				else
+				{
+					$$("#column2 .error").invoke('removeClassName','on');
+				}
+				
+				if(packet.flowmeterState3)
+				{
+					$$("#column3 .error").invoke('addClassName','on');
+				}
+				else
+				{
+					$$("#column3 .error").invoke('removeClassName','on');
+				}
 				/*
 				{
 					last_packet: {
