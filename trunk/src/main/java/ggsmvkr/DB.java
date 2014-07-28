@@ -206,9 +206,15 @@ class DB
 		}
 		//return null;
 	}
+	
+	public PacketEntry getPacketEntryInstance()
+	{
+		return new PacketEntry();
+	}
+	
 	public List<PacketEntry> getPacketList(int id)
 	{	
-		List<PacketEntry> list = new ArrayList(30000);
+		List<PacketEntry> list = new ArrayList<PacketEntry>(30000);
 		Date packetDate;
 		int packetId=0;
 		String strPacket = ""; 

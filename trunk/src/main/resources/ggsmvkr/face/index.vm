@@ -21,39 +21,87 @@
 		autoplay: true
 	});
 	alarm_audio.mute();
+// 	function refreshStatus(pe) {
+// 		new Ajax.Request('/param?json=1', {
+// 			method:'get',
+// 			onSuccess: function(transport){
+// 				var param = transport.responseText.evalJSON();
+// 				var failure = false;
+// 				for ( var s=0; s<param.channels.length; s++ ) {
+// 					var status = param.channels[s];
+// 					var el = $('ch'+status.id);
+// 					var color = '';
+// 					if ( status.submit_required ) {
+// 						color = 'red';
+// 						failure = true;
+// 					} else if ( status.connected && !status.obsolete) {
+// 						color = 'green';
+// 					} else {
+// 						color = 'gray';
+// 					}
+// 					//if ( status.msg ) {
+// 					//	color = ( status.msg.failure ? 'red' : 'green' );
+// 					//	if ( status.msg.failure ) failure = true;
+// 					//}
+// 					el.style.backgroundColor = color;
+// 				}
+// 				if ( failure && param.settings.alarm_enabled ) {
+// 					alarm_audio.unmute();
+// 				} else {
+// 					alarm_audio.mute();
+// 				}
+// 			}
+// 		});
+// 	}
+// 	function refreshStatusFirst(pe) {
+// 		refreshStatus(pe);
+// 		pe.stop();
+// 		new PeriodicalExecuter( refreshStatus, 5 );
+// 	}
+// 	new PeriodicalExecuter( refreshStatusFirst, 0.1 );
+	
+	
 	function refreshStatus(pe) {
-		new Ajax.Request('/param?json=1', {
+		new Ajax.Request('/param2?json=1', 
+		{
 			method:'get',
-			onSuccess: function(transport){
+			onSuccess: function(transport)
+			{
 				var param = transport.responseText.evalJSON();
-				var failure = false;
-				for ( var s=0; s<param.channels.length; s++ ) {
-					var status = param.channels[s];
-					var el = $('ch'+status.id);
-					var color = '';
-					if ( status.submit_required ) {
-						color = 'red';
-						failure = true;
-					} else if ( status.connected && !status.obsolete) {
-						color = 'green';
-					} else {
-						color = 'gray';
+				
+				/*
+				{
+					last_packet: {
+						id: 0,
+						power: false,
+						sensorPower: false,
+						flowmeterState1: false,
+						flowmeterState2: false,
+						flowmeterState3: false,
+						alert: false,
+						reserve1: false,
+						reserve2: false,
+						level1: 33,
+						level2: 55,
+						level3: 66
 					}
-					//if ( status.msg ) {
-					//	color = ( status.msg.failure ? 'red' : 'green' );
-					//	if ( status.msg.failure ) failure = true;
-					//}
-					el.style.backgroundColor = color;
-				}
-				if ( failure && param.settings.alarm_enabled ) {
+				} */
+				
+				//$$("#column1 .power").invoke('removeClassName','on');
+				
+				if ( failure && param.settings.alarm_enabled )
+				{
 					alarm_audio.unmute();
-				} else {
+				}
+				else
+				{
 					alarm_audio.mute();
 				}
 			}
 		});
 	}
-	function refreshStatusFirst(pe) {
+	function refreshStatusFirst(pe) 
+	{
 		refreshStatus(pe);
 		pe.stop();
 		new PeriodicalExecuter( refreshStatus, 5 );
@@ -81,6 +129,65 @@
 #end
 </table>
 
+<table id="main">
+	<tr class="all">
+		<td class="column"></td>
+		<td class="column" id="central_column">
+			<div>
+				<div class="power"></div>
+				<div class="general_alert"></div>
+			</div>
+		</td>
+		<td class="column">
+			<div class="voice"></div>
+		</td>
+	</tr>
+	<tr> 
+		<td class="column" id="column1">
+			<div class="title">РАСХОДОМЕР ХЛОРГАЗ 1</div>
+			<div class="image"></div>
+			<div class="indicators">
+				<div class="level"></div>
+				<div class="power"></div>
+				<div class="error"></div>
+				<div class="journal"><button type="button" onclick="#">ЖУРНАЛ</button></div>
+				<div class="open"><button type="button" onclick="#">РАЗВЕРНУТЬ</button></div>
+			</div>
+			<div class="graph">
+				<img src="/img/graph.png" />
+			</div>
+		</td>
+		<td class="column" id="column2">
+			<div class="title">РАСХОДОМЕР ХЛОРГАЗ 2</div>
+			<div class="image"></div>
+			<div class="indicators">
+				<div class="level"></div>
+				<div class="power"></div>
+				<div class="error"></div>
+				<div class="journal"><button type="button" onclick="#">ЖУРНАЛ</button></div>
+				<div class="open"><button type="button" onclick="#">РАЗВЕРНУТЬ</button></div>
+			</div>
+			<div class="graph">
+				<img src="/img/graph.png" />
+			</div>
+		</td>
+		<td class="column" id="column3">
+			<div class="title">РАСХОДОМЕР ГИПОХЛОРИТ</div>
+			<div class="image"></div>
+			<div class="indicators">
+				<div class="level hidden"></div>
+				<div class="power"></div>
+				<div class="error"></div>
+				<div class="journal"><button type="button" onclick="#">ЖУРНАЛ</button></div>
+				<div class="open"><button type="button" onclick="#">РАЗВЕРНУТЬ</button></div>
+			</div>
+			<div class="graph">
+				<img src="/img/graph.png" />
+			</div>
+		</td>
+	</tr>
+</table>
+
 <table width="1900px" style="padding: 0" cellspacing="0">
     <tr><td width="1700px" style="border: 1px solid black">
 
@@ -103,19 +210,19 @@ $!operator.Name<br><br>
 #foreach ( $ch in $channels ) 
 	#set( $ccc = $velocityCount % 2 )
 	#if ( $ccc == 1 )
-		<tr><td><input type="button" id="ch$ch.id" value="��-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td>
+		<tr><td><input type="button" id="ch$ch.id" value="��-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td>
 	#else
-		<td><input type="button" id="ch$ch.id" value="��-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td></tr>
+		<td><input type="button" id="ch$ch.id" value="��-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td></tr>
 	#end
 #end
 </table>
 <br>
 <br>
-##<input type="button" value="���������" onclick="var newtab = window.open( '/param', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="�������" onclick="var newtab = window.open( '/table', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="1������11" onclick="var newtab = window.open( '/journal', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+##<input type="button" value="���������" onclick="var newtab = window.open( '/param', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="Таблица" onclick="var newtab = window.open( '/table', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="Журнал" onclick="var newtab = window.open( '/journal', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
 <input type="button" value="PACKETS" onclick="var newtab = window.open( '/packets', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="���������" onclick="var newtab = window.open( '/sett/', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="Настройки" onclick="var newtab = window.open( '/sett/', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
 <input type="button" value="1" onclick="changePage(0)" style="width: 80px">
 <input type="button" value="2" onclick="changePage(1)" style="width: 80px"><br>
 <span style="font-size: 8pt">
