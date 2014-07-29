@@ -341,6 +341,20 @@ class Face
 				return null;
 			}
 		});
+	    Spark.get(new Route("/graphslevel")
+	    {
+	      @Override
+		public Object handle(Request request, Response response)
+	      {
+	        String speriod = request.queryParams("period");
+	        char period = (speriod == null) ? 'h' : speriod.charAt(0);
+
+	        String strGraphImgInfo= rrds.makeLevel1Graph(period);
+	        
+			request.attribute("attrGraphImgInfo", strGraphImgInfo);
+	        return null;
+	      }
+	    });
 		Spark.get(new Route("/graphs")
 		{
 			@Override

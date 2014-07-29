@@ -1,5 +1,7 @@
 package ggsmvkr;
 
+import static org.rrd4j.ConsolFun.AVERAGE;
+
 import java.awt.Color;
 import java.io.IOException;
 
@@ -49,12 +51,12 @@ public class RRDs {
 	      sample.setValue(0, packet.getLevel1());
 	      sample.setValue(1, packet.getLevel2());
 	      sample.setValue(2, packet.getLevel3());
-	      println("== Last info was: " + rrd.getInfo());
-	      println("== RRD ");
-	      println(rrd.dump());
-	      println("==  sample ");
-	      println(sample.dump());
-	      println("==  sample ");	      
+//	      println("== Last info was: " + rrd.getInfo());
+//	      println("== RRD ");
+//	      println(rrd.dump());
+//	      println("==  sample ");
+//	      println(sample.dump());
+//	      println("==  sample ");	      
 	      sample.update();
 	      rrd.close();
 	   }
@@ -146,7 +148,34 @@ void createPumpRrd(String name) throws IOException {
       RrdDb rrdDb = new RrdDb(rrdDef);
       rrdDb.close();
    }
-
+   
+   String makeLevel1Graph(char type) {
+       println("== Creating graph 1 page");
+       RrdGraphDef gDef1 = new RrdGraphDef();
+       gDef1.setWidth(600);
+       gDef1.setHeight(400);
+       String img1Path = Server.FILE + "1_" + type + "." + Server.FILE_FORMAT;
+       gDef1.setFilename(img1Path);
+       gDef1.setStartTime(Server.START);
+       gDef1.setEndTime(Server.END);
+       gDef1.datasource("graphLevel1", "packet1", "level1", AVERAGE);
+       gDef1.line("graphLevel1", new Color(0xFF, 0x00, 0x00), "Level1");
+       gDef1.comment("Control Level1\\r");
+       gDef1.setImageInfo("<img src='%s' width='%d' height = '%d'>");
+       gDef1.setImageFormat(Server.FILE_FORMAT);
+       println("Rendering graph 1 page");
+       try {
+       RrdGraph graph1 = new RrdGraph(gDef1);
+       println(graph1.getRrdGraphInfo().getImgInfo());
+       println("== Graph 1 Page  created");
+       //RrdGraph e = new RrdGraph(graphDef);
+       return graph1.getRrdGraphInfo().getImgInfo();
+    	} catch (IOException var3) {
+    		var3.printStackTrace();
+       return null;
+    	}
+   }
+   
    byte[] makeTankGraph(int id, char type) {
       String rrdName = id + "/t";
       RrdGraphDef graphDef = this.makeGraphDef(type);
