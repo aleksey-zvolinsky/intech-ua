@@ -237,7 +237,8 @@ $!operator.Name<br><br>
 ##<input type="button" value="���������" onclick="var newtab = window.open( '/param', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
 <input type="button" value="Таблица" onclick="var newtab = window.open( '/table', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
 <input type="button" value="Журнал" onclick="var newtab = window.open( '/journal', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="PACKETS" onclick="var newtab = window.open( '/packets', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="Graphs" onclick="var newtab = window.open( '/graphslevel', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
+<input type="button" value="Packets" onclick="var newtab = window.open( '/packets', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
 <input type="button" value="Настройки" onclick="var newtab = window.open( '/sett/', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
 <input type="button" value="1" onclick="changePage(0)" style="width: 80px">
 <input type="button" value="2" onclick="changePage(1)" style="width: 80px"><br>
