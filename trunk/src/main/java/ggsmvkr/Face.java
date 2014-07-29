@@ -3,6 +3,10 @@ package ggsmvkr;
 import ggsmvkr.DB.ChannelAvgs;
 import ggsmvkr.DB.PacketEntry;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
@@ -341,20 +345,20 @@ class Face
 				return null;
 			}
 		});
-	    Spark.get(new Route("/graphslevel")
-	    {
-	      @Override
-		public Object handle(Request request, Response response)
-	      {
-	        String speriod = request.queryParams("period");
-	        char period = (speriod == null) ? 'h' : speriod.charAt(0);
+		Spark.get(new Route("/graphslevel")
+		{
+			@Override
+			public Object handle(Request request, Response response)
+			{
+				String speriod = request.queryParams("period");
+				char period = (speriod == null) ? 'h' : speriod.charAt(0);
 
-	        String strGraphImgInfo= rrds.makeLevel1Graph(period);
-	        
-			request.attribute("attrGraphImgInfo", strGraphImgInfo);
-	        return null;
-	      }
-	    });
+				String strGraphImgInfo = rrds.makeLevel1Graph(period);
+
+				request.attribute("attrGraphImgInfo", strGraphImgInfo);
+				return null;
+			}
+		});
 		Spark.get(new Route("/graphs")
 		{
 			@Override
@@ -553,6 +557,11 @@ class Face
 				{
 					mime = "application/octet-stream";
 				}
+				else if (path.startsWith("gimg/"))
+				{
+					request.attribute("png", readGraph(path));
+					mime = "image/png";
+				}
 				else if (path.startsWith("css/"))
 				{
 					vmName = path.substring(4);
@@ -650,6 +659,32 @@ class Face
 			}
 		});
 	}
+	
+	private static byte[] readGraph(String path)
+	{
+		File file = new File(path);
+		try (InputStream is = new FileInputStream(file); 
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream())
+		{
+
+			int nRead;
+			byte[] data = new byte[16384];
+
+			while ((nRead = is.read(data, 0, data.length)) != -1)
+			{
+				buffer.write(data, 0, nRead);
+			}
+
+			buffer.flush();
+
+			return buffer.toByteArray();
+		}
+		catch (IOException e1)
+		{
+			throw new RuntimeException("Failed to read " + path + " file", e1);
+		}
+	}
+	
 
 	public static class CurrStatus
 	{
