@@ -124,8 +124,8 @@ public class Server
 		}
 		Face.init(db, processor, rrds, noauth);
 
-		beginLog("Starting server:");
-		try(ServerSocket welcomeSocket = new ServerSocket(8129))
+		beginLog("Starting server on "+ Setup.get().getPacketServerPort() +" port: ");
+		try(ServerSocket welcomeSocket = new ServerSocket(Setup.get().getPacketServerPort()))
 		{
 			endLog("OK");
 

@@ -1,5 +1,6 @@
 package ggsmvkr;
 
+import ggsmvkr.DB.ChannelAvgs;
 import ggsmvkr.DB.PacketEntry;
 
 import java.io.InputStream;
@@ -31,14 +32,17 @@ import com.google.gson.Gson;
 class Face
 {
 	private static final String ENCODING = "UTF-8";
+
 	static void init(final DB db, final Processor processor, final RRDs rrds, boolean noauth)
 	{
 		Velocity.setProperty("resource.loader", "class");
 		Velocity.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		Velocity.setProperty("runtime.log.logsystem.log4j.logger", "org.apache.velocity.runtime.log.Log4JLogChute");
 		Velocity.init();
+		
+		
 
-		Spark.setPort(8030);
+		Spark.setPort(Setup.get().getWebServerPort());
 		if (!noauth)
 		{
 			Spark.before(new Filter()
@@ -191,7 +195,7 @@ class Face
 					request.attribute("id", Integer.valueOf(id));
 					request.attribute("day", Face.df.format(day));
 
-					ArrayList<String> days = new ArrayList();
+					ArrayList<String> days = new ArrayList<String>();
 					Calendar cal = new GregorianCalendar();
 					cal.setTime(new Date());
 					for (int i = 0; i < 18; i++)
@@ -240,8 +244,8 @@ class Face
 			@Override
 			public Object handle(Request request, Response response)
 			{
-				List<Object> channels = new ArrayList();
-				for (Iterator i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
+				List<Object> channels = new ArrayList<Object>();
+				for (Iterator<?> i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
 				{
 					int id = ((Integer) i$.next()).intValue();
 					channels.add(new Face.CurrStatus(id, db.getLastMessage(id), processor.isConnected(id), processor.isSubmitRequired(id)));
@@ -286,7 +290,7 @@ class Face
 					}
 					request.attribute("id", Integer.valueOf(id));
 					request.attribute("day", Face.df.format(day));
-					ArrayList<String> days = new ArrayList();
+					ArrayList<String> days = new ArrayList<String>();
 					Calendar cal = new GregorianCalendar();
 					cal.setTime(new Date());
 					for (int i = 0; i < 18; i++)
@@ -360,7 +364,7 @@ class Face
 				request.attribute("period", period);
 				if ((type.equals("l")) || (type.equals("v")))
 				{
-					List<Integer> pumps = new ArrayList();
+					List<Integer> pumps = new ArrayList<Integer>();
 					for (int p = 0; p < 4; p++)
 					{
 						if (rrds.isPumpExists(id, p))
@@ -381,8 +385,8 @@ class Face
 			@Override
 			public Object handle(Request request, Response response)
 			{
-				List<DB.ChannelAvgs> result = new ArrayList(30);
-				for (Iterator i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
+				List<DB.ChannelAvgs> result = new ArrayList<ChannelAvgs>(30);
+				for (Iterator<?> i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
 				{
 					int id = ((Integer) i$.next()).intValue();
 					result.add(db.getChannelAvgs(id));
@@ -459,7 +463,7 @@ class Face
 			@Override
 			public Object handle(Request request, Response response)
 			{
-				ArrayList<ChannelInfo> al = new ArrayList();
+				ArrayList<ChannelInfo> al = new ArrayList<ChannelInfo>();
 				for (int id = 1; id <= 24; id++)
 				{
 					al.add(db.getChannelInfo(id));
@@ -533,8 +537,7 @@ class Face
 				String mime = "text/html; charset=utf-8";
 				if(path.endsWith(".ttf"))
 				{
-					vmName = path.substring(4);
-					mime = "font/opentype";
+					mime = "application/octet-stream";
 				}
 				else if (path.startsWith("css/"))
 				{
@@ -553,13 +556,16 @@ class Face
 				else if (path.startsWith("rrd"))
 				{
 					mime = "image/png";
-				} else if (path.startsWith("favicon.ico"))
+				}
+				else if (path.startsWith("favicon.ico"))
 				{
 					mime = "mage/x-icon";
-				} else if (path.startsWith("alarm.mp3"))
+				}
+				else if (path.startsWith("alarm.mp3"))
 				{
 					mime = "audio/mpeg";
-				} else
+				}
+				else
 				{
 					if (path.length() == 0)
 					{
@@ -600,7 +606,8 @@ class Face
 						Velocity.getTemplate("ggsmvkr/face/_tail.vm", ENCODING).merge(new VelocityContext(), sw);
 					}
 					response.body(sw.toString());
-				} else
+				}
+				else
 				{
 					try
 					{
@@ -611,12 +618,14 @@ class Face
 
 							StreamUtils.copy(fis, response.raw().getOutputStream());
 							fis.close();
-						} else
+						}
+						else
 						{
 							response.raw().getOutputStream().write(png);
 						}
 						response.body("");
-					} catch (Exception e)
+					}
+					catch (Exception e)
 					{
 						System.out.println(e);
 						halt(404);
