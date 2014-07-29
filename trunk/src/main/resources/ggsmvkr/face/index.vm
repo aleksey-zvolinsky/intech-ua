@@ -100,6 +100,12 @@
 				$("value2").update(packet.level2);
 				$("value3").update(packet.level3);
 				
+				$w($("image1").className).each(function(a){if(a != "image")$("image1").removeClassName(a);});
+				$("image1").addClassName("l"+Math.round(packet.level1/10)*10);
+				
+				$w($("image2").className).each(function(a){if(a != "image")$("image2").removeClassName(a);});
+				$("image2").addClassName("l"+Math.round(packet.level2/10)*10);
+				//;
 				
 				/*
 				{
@@ -118,8 +124,6 @@
 						level3: 66
 					}
 				} */
-				
-				//$$("#column1 .power").invoke('removeClassName','on');
 				
 				if ( failure && param.settings.alarm_enabled )
 				{
@@ -157,7 +161,7 @@
 	<tr> 
 		<td class="column" id="column1">
 			<div class="title">РАСХОДОМЕР ХЛОРГАЗ 1</div>
-			<div class="image"></div>
+			<div class="image" id="image1"></div>
 			<div class="indicators">
 				<div class="level"><div class="value" id="value1">123</div></div>
 				<div class="power"></div>
@@ -171,7 +175,7 @@
 		</td>
 		<td class="column" id="column2">
 			<div class="title">РАСХОДОМЕР ХЛОРГАЗ 2</div>
-			<div class="image"></div>
+			<div class="image" id="image2"></div>
 			<div class="indicators">
 				<div class="level"><div class="value" id="value2">123</div></div>
 				<div class="power"></div>

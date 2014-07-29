@@ -1,7 +1,7 @@
 @font-face
 {
 	font-family: 'Lets go Digital Regular';
-	src: url(http://www.fontsaddict.com/fontface/lets-go-digital-regular.ttf);
+	src: url(../lets-go-digital-regular.ttf);
 }
 
 #main 
@@ -20,13 +20,68 @@
 	padding-right: 40px;
 }
 
-#main .image
+#main .image, #main .image.l0
 {
 	background-image: url(../img/rhg0.png);
 	background-repeat: no-repeat;
 	float: left;
 	height: 379px;
 	width: 236px;
+}
+
+#main .image.l10
+{
+	background-image: url(../img/rhg10.png);
+}
+
+#main .image.l20
+{
+	background-image: url(../img/rhg20.png);
+}
+
+#main .image.l30
+{
+	background-image: url(../img/rhg30.png);
+}
+
+#main .image.l40
+{
+	background-image: url(../img/rhg40.png);
+}
+
+#main .image.l50
+{
+	background-image: url(../img/rhg50.png);
+}
+
+#main .image.l60
+{
+	background-image: url(../img/rhg60.png);
+}
+
+#main .image.l70
+{
+	background-image: url(../img/rhg70.png);
+}
+
+#main .image.l80
+{
+	background-image: url(../img/rhg80.png);
+}
+
+#main .image.l90
+{
+	background-image: url(../img/rhg90.png);
+}
+
+#main .image.l100
+{
+	background-image: url(../img/rhg100.png);
+}
+
+#main .image.l110
+{
+	background-image: url(../img/rhg110.png);
 }
 
 #main #column3 .image
