@@ -1,10 +1,10 @@
-<a href="/">Вернуться</a><br>
+<a href="/">п▓п╣я─п╫я┐я┌я▄я│я▐</a><br>
 <br>
-<a href="ch.list">Станции</a><br>
-<a href="op.list">Операторы</a><br>
+<a href="ch.list">п║я┌п╟п╫я├п╦п╦</a><br>
+<a href="op.list">п·п©п╣я─п╟я┌п╬я─я▀</a><br>
 <br>
-Настройки:<br>
+п²п╟я│я┌я─п╬п╧п╨п╦:<br>
 <table>
-<tr class="list"><td>Звук. сигнализация<td class="list">#if ( $alarm ) Вкл #else Выкл #end
+<tr class="list"><td>п≈п╡я┐п╨. я│п╦пЁп╫п╟п╩п╦п╥п╟я├п╦я▐<td class="list">#if ( $alarm ) п▓п╨п╩ #else п▓я▀п╨п╩ #end
 </table>
-<a href="/sett/edit">Изменить</a>
+<a href="/sett/edit">п≤п╥п╪п╣п╫п╦я┌я▄</a>

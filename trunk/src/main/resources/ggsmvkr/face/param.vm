@@ -5,22 +5,22 @@
 <table>
 #set ( $cnt = 0 )
 <tr>
-	<th rowspan="2">Станция
-	<th rowspan="2">Посл.опрос
-	<th colspan="4">Основной насос
-	<th colspan="4">Резервный насос
-	<th colspan="2">Сост.
-	<th rowspan="2">Ур.,%
-	<th rowspan="2">Связь
+	<th rowspan="2">п║я┌п╟п╫я├п╦я▐
+	<th rowspan="2">п÷п╬я│п╩.п╬п©я─п╬я│
+	<th colspan="4">п·я│п╫п╬п╡п╫п╬п╧ п╫п╟я│п╬я│
+	<th colspan="4">п═п╣п╥п╣я─п╡п╫я▀п╧ п╫п╟я│п╬я│
+	<th colspan="2">п║п╬я│я┌.
+	<th rowspan="2">пёя─.,%
+	<th rowspan="2">п║п╡я▐п╥я▄
 <tr>
 	<th>U <th>Ia <th>Ib <th>Ic
 	<th>U <th>Ia <th>Ib <th>Ic
-	<th>Осн.<th>Рез.
+	<th>п·я│п╫.<th>п═п╣п╥.
 </tr>
 #foreach( $r in $channels )
 <tr>
 	#set ( $cnt = $cnt + 1 )
-	<td>СП-$r.Id
+	<td>п║п÷-$r.Id
 	#if ( $r.LastMessage )
 	<td class="list" nowrap>$_dtf.format( $r.LastMessage.Date )</td>
 	<td class="list" colspan="4">
@@ -37,9 +37,9 @@
 	#end
 	<td>
 		#if ( $r.Connected )
-			<span style="color: green"><b>Да</b></span>
+			<span style="color: green"><b>п■п╟</b></span>
 		#else
-			<span style="color: red"><b>Нет</b></span>
+			<span style="color: red"><b>п²п╣я┌</b></span>
 		#end
 </tr>
 #end

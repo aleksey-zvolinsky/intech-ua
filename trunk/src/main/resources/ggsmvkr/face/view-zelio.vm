@@ -49,15 +49,15 @@
 							var modetxt = '';
 							//var modeimg = 'none';
 							if ( pump.manual_mode && pump.automatic_mode ) {
-								modetxt = "АВАРИЯ";
+								modetxt = "п░п▓п░п═п≤п╞";
 							} else if ( pump.manual_mode && !pump.automatic_mode ) {
-								modetxt = "РУЧНОЙ";
+								modetxt = "п═пёп╖п²п·п≥";
 							//	modeimg = 'manual'
 							} else if ( !pump.manual_mode && pump.automatic_mode ) {
-								modetxt = "АВТОМАТИЧ.";
+								modetxt = "п░п▓п╒п·п°п░п╒п≤п╖.";
 							//	modeimg = 'automatic'
 							} else {
-								modetxt = "НЕ ЗАДАН";
+								modetxt = "п²п∙ п≈п░п■п░п²";
 							}
 							$('pump'+p+'_wm').update( modetxt );
 							//$('pump'+p+'mode').writeAttribute( 'src', 'img/pump'+p+'-mode-'+modeimg+'.png' );
@@ -105,35 +105,35 @@
 
 <tr height="180px">
 	<td width="260px" align="center">
-		<font size="+5">СП-$ch.id</font>
+		<font size="+5">п║п÷-$ch.id</font>
 		<div style="height: 10px"></div>
-		<input type="button" onclick="window.location='/journal?id=$ch.id'" value="Журнал" style="font-size: 1.2em; line-height:1.2em ">
+		<input type="button" onclick="window.location='/journal?id=$ch.id'" value="п√я┐я─п╫п╟п╩" style="font-size: 1.2em; line-height:1.2em ">
 		<div style="height: 10px"></div>
-		Последний удачный опрос <br>
+		п÷п╬я│п╩п╣п╢п╫п╦п╧ я┐п╢п╟я┤п╫я▀п╧ п╬п©я─п╬я│ <br>
 		<span id="date">--</span>
 	<td rowspan="2">&nbsp;</td>
 	<td rowspan="2" colspan="3">
 		<table style="border: 1px solid black; border-collapse:collapse;">
 			<tr>
-				<th style="border: 1px solid black" width="240px"><font size="+1"><b>Название</b></font></td>
-				#if ( $ch.getPumpState(0).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>Насос 1</b></font></td>#end
-				#if ( $ch.getPumpState(1).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>Насос 2</b></font></td>#end
-				#if ( $ch.getPumpState(2).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>Насос 3</b></font></td>#end
+				<th style="border: 1px solid black" width="240px"><font size="+1"><b>п²п╟п╥п╡п╟п╫п╦п╣</b></font></td>
+				#if ( $ch.getPumpState(0).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>п²п╟я│п╬я│ 1</b></font></td>#end
+				#if ( $ch.getPumpState(1).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>п²п╟я│п╬я│ 2</b></font></td>#end
+				#if ( $ch.getPumpState(2).id() != 0 )<th style="border: 1px solid black" width="130px"><font size="+1"><b>п²п╟я│п╬я│ 3</b></font></td>#end
 			</tr>
 			<tr>
-				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>Режим работы</b></font></td>
+				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>п═п╣п╤п╦п╪ я─п╟п╠п╬я┌я▀</b></font></td>
 				#if ( $ch.getPumpState(0).id() != 0 )<td style="border: 1px solid black"><font size="+1"><b><span id="pump0_wm">&nbsp;</span></b></font>#end
 				#if ( $ch.getPumpState(1).id() != 0 )<td style="border: 1px solid black"><font size="+1"><b><span id="pump1_wm">&nbsp;</span></b></font>#end
 				#if ( $ch.getPumpState(2).id() != 0 )<td style="border: 1px solid black"><font size="+1"><b><span id="pump2_wm">&nbsp;</span></b></font>#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>Авария плавного пуска</b></font></td>
+				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>п░п╡п╟я─п╦я▐ п©п╩п╟п╡п╫п╬пЁп╬ п©я┐я│п╨п╟</b></font></td>
 				#if ( $ch.getPumpState(0).id() != 0 )<td id="pump0_fs" style="border: 1px solid black">&nbsp;#end
 				#if ( $ch.getPumpState(1).id() != 0 )<td id="pump1_fs" style="border: 1px solid black">&nbsp;#end
 				#if ( $ch.getPumpState(2).id() != 0 )<td id="pump2_fs" style="border: 1px solid black">&nbsp;#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>Авария двигателя</b></font></td>
+				<td style="background-color: white; border: 1px solid black"><font size="+1"><b>п░п╡п╟я─п╦я▐ п╢п╡п╦пЁп╟я┌п╣п╩я▐</b></font></td>
 				#if ( $ch.getPumpState(0).id() != 0 )<td id="pump0_fe" style="border: 1px solid black">&nbsp;#end
 				#if ( $ch.getPumpState(1).id() != 0 )<td id="pump1_fe" style="border: 1px solid black">&nbsp;#end
 				#if ( $ch.getPumpState(2).id() != 0 )<td id="pump2_fe" style="border: 1px solid black">&nbsp;#end
@@ -150,7 +150,7 @@
 </tr>
 <tr height="50px">
 	<td width="260px" nowrap valign="top" align="center">
-	<input id="journalize" type="button" value="Подтвердить" onclick="this.form.submit()" style="font-size: 1.5em; line-height:1.5em ">
+	<input id="journalize" type="button" value="п÷п╬п╢я┌п╡п╣я─п╢п╦я┌я▄" onclick="this.form.submit()" style="font-size: 1.5em; line-height:1.5em ">
 </tr>
 <tr height="52px">
 	<td width="260px" rowspan="5" valign="top" align="center"><img id="tank" src="img/tank-big-0.png">

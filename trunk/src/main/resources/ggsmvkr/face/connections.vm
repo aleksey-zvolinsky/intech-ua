@@ -1,8 +1,8 @@
 <form action="/connections" method="get">
-##<a href="/">Вернуться</a>
-<font size="+1">>СП-$id</font>
+##<a href="/">п▓п╣я─п╫я┐я┌я▄я│я▐</a>
+<font size="+1">>п║п÷-$id</font>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<font size="+1">Дата</font>&nbsp;<select name="day" onchange="this.form.submit()">
+<font size="+1">п■п╟я┌п╟</font>&nbsp;<select name="day" onchange="this.form.submit()">
 #foreach ( $d in $days )
 <option value="$d" #if ( $d == $day ) selected #end>$d</option>
 #end
@@ -13,8 +13,8 @@
 
 #macro( ctablehead )
 <tr>
-	<th>Время</th>
-	<th>Парам.</th>
+	<th>п▓я─п╣п╪я▐</th>
+	<th>п÷п╟я─п╟п╪.</th>
 </tr>
 #end
 

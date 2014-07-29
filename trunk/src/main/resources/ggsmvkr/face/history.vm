@@ -1,16 +1,16 @@
 <form action="/history" method="get">
-##<a href="/">˜≈“Œ’‘ÿ”—</a>
-<font size="+1">Û-$id</font>
+##<a href="/">–í–µ—Ä–Ω—É—Ç—å—Å—è</a>
+<font size="+1">–°–ü-$id</font>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<font size="+1">‰¡‘¡</font>&nbsp;<select name="day" onchange="this.form.submit()">
+<font size="+1">–î–∞—Ç–∞</font>&nbsp;<select name="day" onchange="this.form.submit()">
 #foreach ( $d in $days )
 <option value="$d" #if ( $d == $day ) selected #end>$d</option>
 #end
 
 </select>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-##<font size="+1">œÃŒ¡—: </font><input type="checkbox" name="full" #if ( $full ) checked #end onclick="this.form.submit()">
-##<input type="submit" value="œÀ¡⁄¡‘ÿ">
+##<font size="+1">–ü–æ–ª–Ω–∞—è: </font><input type="checkbox" name="full" #if ( $full ) checked #end onclick="this.form.submit()">
+##<input type="submit" value="–ü–æ–∫–∞–∑–∞—Ç—å">
 <input type="hidden" name="id" value="$id">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -20,13 +20,13 @@
 
 #macro( htablehead )
 <tr>
-	<th>˜“≈Õ—
-	<th colspan="3">Û‘
-	<th>‚¡À
-	<th colspan="6">Ó·1
-	<th colspan="6">Ó·2
-	<th colspan="6">Ó·3
-	<th colspan="6">Ó·4
+	<th>–í—Ä–µ–º—è
+	<th colspan="3">–°—Ç
+	<th>–ë–∞–∫
+	<th colspan="6">–ù–ê1
+	<th colspan="6">–ù–ê2
+	<th colspan="6">–ù–ê3
+	<th colspan="6">–ù–ê4
 	<th>
 </tr>
 #end
@@ -43,7 +43,7 @@
 	<td class="list" nowrap>$_tf.format( $r.Date )</td>
 	<td class="list">#if ( $r.VoltageOK ) &nbsp; #else <span style="color: red">VF</span> #end
 	<td class="list">#if ( $r.Failure ) <span style="color: red">F</span> #else &nbsp; #end
-	<td class="list">#if ( $r.AutomaticMode ) ·Ú #else ÚÚ #end
+	<td class="list">#if ( $r.AutomaticMode ) –ê–† #else –†–† #end
 	<td class="list">
 		<span #if ( $r.Tank.LevelFail ) style="color: red" #end>
 			#set ( $level = $r.Tank.Level * 25 )
@@ -51,9 +51,9 @@
 		</span>
 	#foreach ( $pump in $r.Pumps )
 		#if ( $pump )
-			<td class="list">#if ( $pump.ManualMode ) ÚÚ #else &nbsp; #end
-			<td class="list">#if ( $pump.AutomaticMode ) ·Ú #else &nbsp; #end
-			<td class="list">#if ( $pump.Working ) Ú #else &nbsp; #end
+			<td class="list">#if ( $pump.ManualMode ) –†–† #else &nbsp; #end
+			<td class="list">#if ( $pump.AutomaticMode ) –ê–† #else &nbsp; #end
+			<td class="list">#if ( $pump.Working ) –† #else &nbsp; #end
 			<td class="list">#if ( $pump.Failure ) <span style="color: red">F</span> #else &nbsp; #end
 			<td class="list">#if ( $pump.EngineFailure ) <span style="color: red">EF</span> #else &nbsp; #end
 			<td class="list">#if ( $pump.StartFailure ) <span style="color: red">SF</span> #else &nbsp; #end
