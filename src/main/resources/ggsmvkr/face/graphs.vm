@@ -5,48 +5,48 @@
 <form action="graphs" method="get">
 <table width="1800px">
 <tr class="list">
-	<td width="100px" class="tabsel"><a href="/table" class="tab">Таблица</a>
+	<td width="100px" class="tabsel"><a href="/table" class="tab">п╒п╟п╠п╩п╦я├п╟</a>
 	<td width="50px">
 	<td width="120px" class=#if ( $type == "t" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, "t", $period) class="tab">Бак</a>
+		<a href=#gotourl( $ch.id, "t", $period) class="tab">п▒п╟п╨</a>
 	<td width="120px" class=#if ( $type == "v" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, "v", $period) class="tab">Напряжения</a>
+		<a href=#gotourl( $ch.id, "v", $period) class="tab">п²п╟п©я─я▐п╤п╣п╫п╦я▐</a>
 	<td width="120px" class=#if ( $type == "l" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, "l", $period) class="tab">Токи</a>
+		<a href=#gotourl( $ch.id, "l", $period) class="tab">п╒п╬п╨п╦</a>
 	<td>
 	<td width="80px" class=#if ( $period == "h" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, $type, "h") class="tab">Часы</a>
+		<a href=#gotourl( $ch.id, $type, "h") class="tab">п╖п╟я│я▀</a>
 	<td width="80px" class=#if ( $period == "d" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, $type, "d") class="tab">Сутки</a>
+		<a href=#gotourl( $ch.id, $type, "d") class="tab">п║я┐я┌п╨п╦</a>
 	<td width="80px" class=#if ( $period == "w" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, $type, "w") class="tab">Неделя</a>
+		<a href=#gotourl( $ch.id, $type, "w") class="tab">п²п╣п╢п╣п╩я▐</a>
 	<td width="80px" class=#if ( $period == "m" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, $type, "m") class="tab">Месяц</a>
+		<a href=#gotourl( $ch.id, $type, "m") class="tab">п°п╣я│я▐я├</a>
 	<td width="80px" class=#if ( $period == "y" )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $ch.id, $type, "y") class="tab">Год</a>
+		<a href=#gotourl( $ch.id, $type, "y") class="tab">п⌠п╬п╢</a>
 <tr><td>&nbsp;
 #foreach ( $cch in $channels )
 	<tr>
 	<td width="100px" height="24px" class=#if ( $cch == $ch.id )"tabsel"#else"tab"#end>
-		<a href=#gotourl( $cch, $type, $period) class="tab">СП-$cch</a>
+		<a href=#gotourl( $cch, $type, $period) class="tab">п║п÷-$cch</a>
 	#if ( $velocityCount == 1 )
 		#set ( $rspan = $channels.size() + 1 )
 		<td colspan="10" rowspan="$rspan" valign="top">
 		#if ( $type == "t" )
 			#if ( $tank )
-			Бак<br>
+			п▒п╟п╨<br>
 			<img src="/rrd?id=$ch.id&period=$period"><br><br>
 			#end
 		#elseif ( $type == "v" )
 			#foreach ( $p in $pumps )
 			#set ( $pp = $p + 1 )
-			НА $pp<br>
+			п²п░ $pp<br>
 			<img src="/rrd?id=$ch.id&period=$period&pump=$p"><br><br>
 			#end
 		#elseif ( $type == "l" )
 			#foreach ( $p in $pumps )
 			#set ( $pp = $p + 1 )
-			НА $pp<br>
+			п²п░ $pp<br>
 			<img src="/rrd?id=$ch.id&period=$period&pump=$p&type=111"><br><br>
 			#end
 		#end

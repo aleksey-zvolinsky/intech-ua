@@ -61,7 +61,7 @@
 			form.cmd.value='setpoint';
 			form.submit();
 		} else {
-			alert( 'Неверное значения уставки' );
+			alert( 'п²п╣п╡п╣я─п╫п╬п╣ п╥п╫п╟я┤п╣п╫п╦я▐ я┐я│я┌п╟п╡п╨п╦' );
 		}
 	}
 	function cmdStart(form) {
@@ -92,8 +92,8 @@
 </script>
 
 <form action="/execute" method="post">
-<span style="width:88px; position:fixed; top: 10px; left: 10px"><center><b><font size="+2">СП-$ch.id</font></b></center></span>
-<input type="button" value="История" onclick="var newtab = window.open(); newtab.location='/history?id=$ch.id'" style="width: 120">
+<span style="width:88px; position:fixed; top: 10px; left: 10px"><center><b><font size="+2">п║п÷-$ch.id</font></b></center></span>
+<input type="button" value="п≤я│я┌п╬я─п╦я▐" onclick="var newtab = window.open(); newtab.location='/history?id=$ch.id'" style="width: 120">
 <img id="tank" src="img/tank-small-0.png" style="position:fixed; top: 40px; left: 10px">
 <img #if ( $ch.getPumpState(0).id() == 0 ) style="display:none" #end id="pump0" src="img/pump-small-none.png" style="position:fixed; top: 176px; left :150px">
 <img #if ( $ch.getPumpState(1).id() == 0 ) style="display:none" #end id="pump1" src="img/pump-small-none.png" style="position:fixed; top: 176px; left :312px">

@@ -47,41 +47,41 @@
 							var pump = status.msg.pumps[p];
 							var statetxt = '';
 							//if ( pump.failure ) { // = 3
-							//	statetxt = "Работа";
+							//	statetxt = "п═п╟п╠п╬я┌п╟";
 							//	state = 'on';
 							//} else if ( pump.working ) { // = 2
-							//	statetxt = "Стоп";
+							//	statetxt = "п║я┌п╬п©";
 							//	state = 'off';
 							//} else if ( pump.modbus1_failure ) { // = 0
-							//	statetxt = "Вiдс.зв'язок";
+							//	statetxt = "п▓iп╢я│.п╥п╡'я▐п╥п╬п╨";
 							//	state = 'none';
 							//} else { // = 1
 							//	statetxt = "";
 							//	state = 'fail';
 							//}
 							if ( pump.failure ) {
-								statetxt = "Авария";
+								statetxt = "п░п╡п╟я─п╦я▐";
 								state = 'fail';
 							} else if ( pump.working ) {
-								statetxt = "Работа";
+								statetxt = "п═п╟п╠п╬я┌п╟";
 								state = 'on';
 							} else if ( pump.modbus1_failure ) {
-								statetxt = "Нет связи";
+								statetxt = "п²п╣я┌ я│п╡я▐п╥п╦";
 								state = 'none';
 							} else {
-								statetxt = "Стоп";
+								statetxt = "п║я┌п╬п©";
 								state = 'off';
 							}
 							
 							var modetxt = '';
 							if ( pump.modbus2_failure ) {
-								modetxt = "Нет связи";
+								modetxt = "п²п╣я┌ я│п╡я▐п╥п╦";
 							} else if ( pump.manual_mode && !pump.automatic_mode ) {
-								modetxt = "Ручной";
+								modetxt = "п═я┐я┤п╫п╬п╧";
 							} else if ( !pump.manual_mode && pump.automatic_mode ) {
-								modetxt = "Автомат.";
+								modetxt = "п░п╡я┌п╬п╪п╟я┌.";
 							} else {
-								modetxt = "Не выбран";
+								modetxt = "п²п╣ п╡я▀п╠я─п╟п╫";
 							}
 							
 							
@@ -157,48 +157,48 @@
 
 <tr height="180px">
 	<td width="260px" align="center">
-		<font size="+5">СП-$ch.id</font>
+		<font size="+5">п║п÷-$ch.id</font>
 		<div style="height: 10px"></div>
-		<input type="button" onclick="window.location='/journal?id=$ch.id'" value="Журнал" style="font-size: 1.2em; line-height:1.2em ">
+		<input type="button" onclick="window.location='/journal?id=$ch.id'" value="п√я┐я─п╫п╟п╩" style="font-size: 1.2em; line-height:1.2em ">
 		<div style="height: 10px"></div>
-		Последний удачный опрос <br>
+		п÷п╬я│п╩п╣п╢п╫п╦п╧ я┐п╢п╟я┤п╫я▀п╧ п╬п©я─п╬я│ <br>
 		<span id="date">--</span>
 	<td rowspan="2">&nbsp;</td>
 	<td rowspan="3" colspan="3">
 		<table style="border: 1px solid black; border-collapse:collapse;">
 			<tr>
-				<th style="border: 1px solid black; font-size: 0.9em" width="295px"><b>Название</b></td>
+				<th style="border: 1px solid black; font-size: 0.9em" width="295px"><b>п²п╟п╥п╡п╟п╫п╦п╣</b></td>
 				#foreach ( $p in [0..3] )
 					#set ( $pp = $p + 1 )
-					#if ( $ch.getPumpState($p).id() != 0 )<th style="border: 1px solid black; font-size: 0.9em" width="100px"><b>Насос $pp</b></td>#end
+					#if ( $ch.getPumpState($p).id() != 0 )<th style="border: 1px solid black; font-size: 0.9em" width="100px"><b>п²п╟я│п╬я│ $pp</b></td>#end
 				#end
 			</tr>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Ток L1 - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п╒п╬п╨ L1 - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_c1">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Ток L2 - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п╒п╬п╨ L2 - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_c2">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Ток L3 - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п╒п╬п╨ L3 - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_c3">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Напряжение - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п²п╟п©я─я▐п╤п╣п╫п╦п╣ - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_v">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Код аварии - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п п╬п╢ п╟п╡п╟я─п╦п╦ - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					
 					#if ( $ch.getPumpState($p).id() != 0 )
@@ -209,50 +209,50 @@
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Режим работы насоса</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п═п╣п╤п╦п╪ я─п╟п╠п╬я┌я▀ п╫п╟я│п╬я│п╟</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_wm">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Моточасы - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п°п╬я┌п╬я┤п╟я│я▀ - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_mh">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Состояние - плавный пуск</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п║п╬я│я┌п╬я▐п╫п╦п╣ - п©п╩п╟п╡п╫я▀п╧ п©я┐я│п╨</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td style="border: 1px solid black; font-size: 0.9em"><b><span id="pump${p}_st">&nbsp;</span></b>#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Авария плавного пуска</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п░п╡п╟я─п╦я▐ п©п╩п╟п╡п╫п╬пЁп╬ п©я┐я│п╨п╟</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td id="pump${p}_fs" style="border: 1px solid black">&nbsp;#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Авария РТС насоса</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п░п╡п╟я─п╦я▐ п═п╒п║ п╫п╟я│п╬я│п╟</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td id="pump${p}_fe" style="border: 1px solid black">&nbsp;#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Авария связи по Modbus с ПП</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п░п╡п╟я─п╦я▐ я│п╡я▐п╥п╦ п©п╬ Modbus я│ п÷п÷</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td id="pump${p}_fm" style="border: 1px solid black">&nbsp;#end
 				#end
 			</td>
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Превышение счетчика моточасов</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п÷я─п╣п╡я▀я┬п╣п╫п╦п╣ я│я┤п╣я┌я┤п╦п╨п╟ п╪п╬я┌п╬я┤п╟я│п╬п╡</b></td>
 				#foreach ( $p in [0..3] )
 					#if ( $ch.getPumpState($p).id() != 0 )<td id="pump${p}_hco" style="border: 1px solid black">&nbsp;#end
 				#end
 			</td>
 			#if ( $ch.getPumpState(3).id() != 0 )
 			<tr>
-				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>Авария автомата QF</b></td>
+				<td style="background-color: white; border: 1px solid black; font-size: 0.9em"><b>п░п╡п╟я─п╦я▐ п╟п╡я┌п╬п╪п╟я┌п╟ QF</b></td>
 				#foreach ( $p in [0..3] )
 					<td id="pump${p}_fqf" style="border: 1px solid black">&nbsp;
 				#end
@@ -275,7 +275,7 @@
 </tr>
 <tr height="50px">
 	<td width="280px" nowrap valign="top" align="center">
-	<input id="journalize" type="button" value="Подтвердить" onclick="this.form.submit()" style="font-size: 1.5em; line-height:1.5em ">
+	<input id="journalize" type="button" value="п÷п╬п╢я┌п╡п╣я─п╢п╦я┌я▄" onclick="this.form.submit()" style="font-size: 1.5em; line-height:1.5em ">
 </tr>
 <tr height="52px">
 	<td width="280px" rowspan="5" valign="top" align="center"><img id="tank" src="img/tank-big-0.png">

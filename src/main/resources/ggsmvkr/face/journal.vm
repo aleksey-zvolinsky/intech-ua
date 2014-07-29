@@ -1,16 +1,16 @@
 #if ( $ch  )
-<a href="/view-$ch.type.name?id=$ch.id">Вернуться</a>&nbsp;&nbsp;
-<font size="+1">Журнал по СП-$ch.id</font>
+<a href="/view-$ch.type.name?id=$ch.id">п▓п╣я─п╫я┐я┌я▄я│я▐</a>&nbsp;&nbsp;
+<font size="+1">п√я┐я─п╫п╟п╩ п©п╬ п║п÷-$ch.id</font>
 #else
-<font size="+1">Журнал</font>
+<font size="+1">п√я┐я─п╫п╟п╩</font>
 #end
 
 #macro( jtablehead )
 <tr>
-	<th>Ст.
-	<th>Время
-	<th>Тип
-	<th>Аварии
+	<th>п║я┌.
+	<th>п▓я─п╣п╪я▐
+	<th>п╒п╦п©
+	<th>п░п╡п╟я─п╦п╦
 </tr>
 #end
 
@@ -22,31 +22,31 @@
 	<tr>
 	<td class="list" nowrap>$r.Id</td>
 	<td class="list" nowrap>$_dtf.format( $r.Date )</td>
-	<td class="list">#if ( $r.Submit ) Подтв. $r.Operator #else авария #end
+	<td class="list">#if ( $r.Submit ) п÷п╬п╢я┌п╡. $r.Operator #else п╟п╡п╟я─п╦я▐ #end
 	<td class="list">
-		#if ( $r.Alert.Sys.VoltageFailure ) Напряжение 1 #end
-		#if ( $r.Alert.Sys.Voltage2Failure ) Напряжение 2 #end
-		#if ( $r.Alert.Sys.Failure ) Авария станции #end
-		#if ( $r.Alert.Sys.AdjPressed ) Нажат грибок #end
-		#if ( $r.Alert.Sys.ConnectFailure ) Нет связи по GMS #end
-		#if ( $r.Alert.Sys.ConnectOK ) Есть связь по GMS #end
-		#if ( $r.Alert.Tank.Failure ) Авария бака #end
-		#if ( $r.Alert.Tank.Level >= 0 ) Уровень бака $r.Alert.Tank.Level #end
+		#if ( $r.Alert.Sys.VoltageFailure ) п²п╟п©я─я▐п╤п╣п╫п╦п╣ 1 #end
+		#if ( $r.Alert.Sys.Voltage2Failure ) п²п╟п©я─я▐п╤п╣п╫п╦п╣ 2 #end
+		#if ( $r.Alert.Sys.Failure ) п░п╡п╟я─п╦я▐ я│я┌п╟п╫я├п╦п╦ #end
+		#if ( $r.Alert.Sys.AdjPressed ) п²п╟п╤п╟я┌ пЁя─п╦п╠п╬п╨ #end
+		#if ( $r.Alert.Sys.ConnectFailure ) п²п╣я┌ я│п╡я▐п╥п╦ п©п╬ GMS #end
+		#if ( $r.Alert.Sys.ConnectOK ) п∙я│я┌я▄ я│п╡я▐п╥я▄ п©п╬ GMS #end
+		#if ( $r.Alert.Tank.Failure ) п░п╡п╟я─п╦я▐ п╠п╟п╨п╟ #end
+		#if ( $r.Alert.Tank.Level >= 0 ) пёя─п╬п╡п╣п╫я▄ п╠п╟п╨п╟ $r.Alert.Tank.Level #end
 		#set ( $pn = 0 )
 		#foreach ( $p in $r.Alert.Pumps )
 			#set ( $pn = $pn + 1 )
 			#if ( $ch.type.name == "zelio" )
-				#if ( $p.EngineFailure ) Авария двигателя $pn #end
-				#if ( $p.StartFailure ) Авария ПП $pn #end
+				#if ( $p.EngineFailure ) п░п╡п╟я─п╦я▐ п╢п╡п╦пЁп╟я┌п╣п╩я▐ $pn #end
+				#if ( $p.StartFailure ) п░п╡п╟я─п╦я▐ п÷п÷ $pn #end
 			#else 
-				#if ( $p.Failure ) Состояние ПП $pn: Авария #end
-				#if ( $p.EngineFailure ) Авария РТС $pn #end
-				#if ( $p.StartFailure ) Авария ПП $pn #end
-				#if ( $p.HoursCounterOverflow ) Первышение счетчика моточасов $pn #end
-				#if ( $p.QFFailure ) Авария автомата QF $pn #end
-				#if ( $p.Modbus0Failure ) Авария связи с ПП $pn #end
-				#if ( $p.Modbus1Failure ) Состояние ПП $pn: Нет связи #end
-				#if ( $p.Modbus2Failure ) Режим работы $pn: Нет связи #end
+				#if ( $p.Failure ) п║п╬я│я┌п╬я▐п╫п╦п╣ п÷п÷ $pn: п░п╡п╟я─п╦я▐ #end
+				#if ( $p.EngineFailure ) п░п╡п╟я─п╦я▐ п═п╒п║ $pn #end
+				#if ( $p.StartFailure ) п░п╡п╟я─п╦я▐ п÷п÷ $pn #end
+				#if ( $p.HoursCounterOverflow ) п÷п╣я─п╡я▀я┬п╣п╫п╦п╣ я│я┤п╣я┌я┤п╦п╨п╟ п╪п╬я┌п╬я┤п╟я│п╬п╡ $pn #end
+				#if ( $p.QFFailure ) п░п╡п╟я─п╦я▐ п╟п╡я┌п╬п╪п╟я┌п╟ QF $pn #end
+				#if ( $p.Modbus0Failure ) п░п╡п╟я─п╦я▐ я│п╡я▐п╥п╦ я│ п÷п÷ $pn #end
+				#if ( $p.Modbus1Failure ) п║п╬я│я┌п╬я▐п╫п╦п╣ п÷п÷ $pn: п²п╣я┌ я│п╡я▐п╥п╦ #end
+				#if ( $p.Modbus2Failure ) п═п╣п╤п╦п╪ я─п╟п╠п╬я┌я▀ $pn: п²п╣я┌ я│п╡я▐п╥п╦ #end
 			#end
 		#end
 </tr>

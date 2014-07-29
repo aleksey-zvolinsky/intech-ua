@@ -560,7 +560,7 @@ class Face
 				}
 				else if (path.startsWith("js/"))
 				{
-					vmName = path.substring(3);
+					vmName = path;
 					mime = "application/javascript";
 				}
 				else if (path.startsWith("img/"))
@@ -641,7 +641,8 @@ class Face
 					}
 					catch (Exception e)
 					{
-						System.out.println(e);
+						System.out.println("Failed to read file: /ggsmvkr/face/" + path);
+						e.printStackTrace(System.out);
 						halt(404);
 					}
 				}

@@ -164,9 +164,6 @@ public class Server
 		int idPacket;  	//FIXME
 		//RRDs rrds;	 	//FIXME
 
-
-
-		
 		Communicator(Stream _ss)
 		{
 			this.ss = _ss;

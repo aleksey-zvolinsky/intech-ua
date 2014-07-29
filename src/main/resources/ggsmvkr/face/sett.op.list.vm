@@ -1,12 +1,12 @@
-<a href="/sett/">Вернуться</a>
+<a href="/sett/">п▓п╣я─п╫я┐я┌я▄я│я▐</a>
 <table>
-<tr><th>Логин<th>Имя</tr>
+<tr><th>п⌡п╬пЁп╦п╫<th>п≤п╪я▐</tr>
 #foreach( $op in $ops )
 <tr>
 <td class="list">$op.login</td>
 <td class="list">$!op.name</td>
-<td><a href="op.edit?login=$op.login">Ред</a></td>
+<td><a href="op.edit?login=$op.login">п═п╣п╢</a></td>
 </tr>
 #end
 </table>
-<a href="op.edit">Добавить</a></td>
+<a href="op.edit">п■п╬п╠п╟п╡п╦я┌я▄</a></td>

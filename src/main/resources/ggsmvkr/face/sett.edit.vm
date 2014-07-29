@@ -1,16 +1,16 @@
 <form action="edit" method="post">
 <table>
-<tr class="list"><td>Звуковой сигнал</td>
+<tr class="list"><td>п≈п╡я┐п╨п╬п╡п╬п╧ я│п╦пЁп╫п╟п╩</td>
 	<td>
 		<select name="alarm">
-			<option value="true" #if ( $alarm ) selected #end>Да</option>
-			<option value="false" #if ( !$alarm ) selected #end>Нет</option>
+			<option value="true" #if ( $alarm ) selected #end>п■п╟</option>
+			<option value="false" #if ( !$alarm ) selected #end>п²п╣я┌</option>
 		</select>
 	</td>
 </tr>
 <tr><td colspan="2">
-	<input type="submit" value="Сохранить">
-	<input type="button" value="  Отмена " onclick="window.location='/sett/'">
+	<input type="submit" value="п║п╬я┘я─п╟п╫п╦я┌я▄">
+	<input type="button" value="  п·я┌п╪п╣п╫п╟ " onclick="window.location='/sett/'">
 </table>
 </table>
 </form>

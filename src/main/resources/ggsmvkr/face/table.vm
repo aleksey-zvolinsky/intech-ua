@@ -10,16 +10,16 @@
 
 <table width="1800px" style="border: 1px solid black; border-collapse:collapse;">
 <tr class="list"><th rowspan="4" class="list">
-	<th colspan="17" class="list">Минута<th colspan="17" class="list">Час<th colspan="17" class="list">Сутки
+	<th colspan="17" class="list">п°п╦п╫я┐я┌п╟<th colspan="17" class="list">п╖п╟я│<th colspan="17" class="list">п║я┐я┌п╨п╦
 <tr class="list">
 	#foreach ( $d in [0..2] )
-		<th rowspan="3">Бак
-		#foreach ( $p in [1..4] ) <th class="list" colspan="4">Насос $p #end
+		<th rowspan="3">п▒п╟п╨
+		#foreach ( $p in [1..4] ) <th class="list" colspan="4">п²п╟я│п╬я│ $p #end
 	#end
 <tr class="list">
 	#foreach ( $d in [0..2] )
 		#foreach ( $p in [1..4] )
-			<th rowspan="2" class="list">U, В
+			<th rowspan="2" class="list">U, п▓
 			<th colspan="3" class="list">I, A
 		#end
 	#end
@@ -30,7 +30,7 @@
 		#end
 	#end
 #foreach ( $ch in $channels )
-<tr class="list"><td class="list"><a href="/graphs?id=$ch.id" style="display: inline-block; height:100%; width:100%;">СП-$ch.id
+<tr class="list"><td class="list"><a href="/graphs?id=$ch.id" style="display: inline-block; height:100%; width:100%;">п║п÷-$ch.id
 #outAvg($ch.ByMinAvg)
 #outAvg($ch.ByHourAvg)
 #outAvg($ch.ByDayAvg)

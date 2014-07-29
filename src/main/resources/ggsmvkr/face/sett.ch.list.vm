@@ -1,6 +1,6 @@
-<a href="/sett/">Вернуться</a>
+<a href="/sett/">п▓п╣я─п╫я┐я┌я▄я│я▐</a>
 <table>
-<tr><th>#<th>Тип<th>НА1<th>НА2<th>НА3<th>НА4
+<tr><th>#<th>п╒п╦п©<th>п²п░1<th>п²п░2<th>п²п░3<th>п²п░4
 #foreach( $ci in $cis )
 <tr>
 <td class="list"><a href="ch.edit?id=$ci.id">$ci.id</a></td>
@@ -10,9 +10,9 @@
 	<td class="list">
 	#if ( $state == 0 )
 	#elseif ( $state == 1 )
-		<span style="color:red">Выключен</span>
+		<span style="color:red">п▓я▀п╨п╩я▌я┤п╣п╫</span>
 	#elseif ( $state == 2 )
-		<span style="color:green">Включен</span>
+		<span style="color:green">п▓п╨п╩я▌я┤п╣п╫</span>
 	#end
 #end
 </tr>
