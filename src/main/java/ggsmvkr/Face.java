@@ -1,7 +1,6 @@
 package ggsmvkr;
 
 import ggsmvkr.DB.ChannelAvgs;
-import ggsmvkr.DB.PacketEntry;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,6 +31,10 @@ import spark.Route;
 import spark.Spark;
 
 import com.google.gson.Gson;
+import com.intechua.db.PacketsTable;
+import com.intechua.web.IndexStatus;
+import com.intechua.web.Input;
+import com.intechua.web.Journal;
 
 class Face
 {
@@ -75,6 +78,11 @@ class Face
 				}
 			});
 		}
+		
+		Spark.get(new Input());
+		Spark.get(new IndexStatus());
+		Spark.get(new Journal());
+		
 		Spark.get(new Route("/") // FIXME
 		{
 			@Override
@@ -264,11 +272,9 @@ class Face
 			@Override
 			public Object handle(Request request, Response response)
 			{
-				List<PacketEntry> list = db.getPacketList(0);
-				PacketEntry packet = list.get(0);
-
+				PacketsTable table = new PacketsTable();
 				Gson gson = new Gson();
-				String gsonPacket = gson.toJson(packet);
+				String gsonPacket = gson.toJson(table.getLastPacket());
 				request.attribute("packet", gsonPacket);
 
 				return null;

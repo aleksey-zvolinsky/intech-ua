@@ -228,11 +228,11 @@ class Stream
 		return salt;
 	}
 
-	List readParameters()
+	List<ParameterValue> readParameters()
 	{
 		byte cnt = this.read();
 		this.logger.log("Parameters count " + cnt);
-		ArrayList parameters = new ArrayList();
+		ArrayList<ParameterValue> parameters = new ArrayList<ParameterValue>();
 
 		for (byte i = 0; i < cnt; ++i)
 		{
@@ -242,11 +242,11 @@ class Stream
 		return parameters;
 	}
 
-	List readRegisters()
+	List<RegisterValue> readRegisters()
 	{
 		byte cnt = this.read();
 		this.logger.log("Registers count " + cnt);
-		ArrayList registers = new ArrayList();
+		ArrayList<RegisterValue> registers = new ArrayList<RegisterValue>();
 
 		for (byte i = 0; i < cnt; ++i)
 		{
