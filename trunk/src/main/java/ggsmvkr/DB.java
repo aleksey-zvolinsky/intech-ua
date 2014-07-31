@@ -16,6 +16,9 @@ import java.util.Set;
 
 import org.rrd4j.core.RrdBackendFactory;
 
+import com.google.gson.Gson;
+import com.intechua.db.beans.PacketEntry;
+import com.intechua.db.beans.PacketJournalEntry;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.je.Cursor;
@@ -29,6 +32,8 @@ import com.sleepycat.je.OperationStatus;
 
 class DB
 {
+	public static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	static final int CHANNELS = 24;
 	Environment dataEnv;
 	Database channelDb;
@@ -40,157 +45,13 @@ class DB
 	Database rrdDb;
 	
 	Database packetDb;  //FIXME begin 1
+	Database packetJournal;
 	
-	public class PacketEntry {
 
-		@Override
-		public String toString()
-		{
-			return "PacketEntry [date=" + date + ", id=" + id + ", power="
-					+ power + ", sensorPower=" + sensorPower
-					+ ", flowmeterState1=" + flowmeterState1
-					+ ", flowmeterState2=" + flowmeterState2
-					+ ", flowmeterState3=" + flowmeterState3 + ", alert="
-					+ alert + ", reserve1=" + reserve1 + ", reserve2="
-					+ reserve2 + ", level1=" + level1 + ", level2=" + level2
-					+ ", level3=" + level3 + "]";
-		}
-
-		Date date;
-		int id;
-		
-//  	B1
-//		bit7 Электропитание в норме
-//		bit6 Электропитание датчиков в норме
-//		bit5 Состояние расходомера №1
-//		bit4 Состояние расходомера №2
-//		bit3 Состояние расходомера №3
-//		bit2 Обобщенный сигнал Авария
-//		bit1 Резерв
-//		bit0 Резерв
-
-		boolean power;
-		boolean sensorPower;
-		boolean flowmeterState1;
-		boolean flowmeterState2;
-		boolean flowmeterState3;
-		boolean alert;
-		boolean reserve1;
-		boolean reserve2;
-
-		int level1;
-		int level2;
-		int level3;
-		
-		public int getLevel1() {
-			return level1;
-		}
-
-		public void setLevel1(int level1) {
-			this.level1 = level1;
-		}
-
-		public int getLevel2() {
-			return level2;
-		}
-
-		public void setLevel2(int level2) {
-			this.level2 = level2;
-		}
-
-		public int getLevel3() {
-			return level3;
-		}
-
-		public void setLevel3(int level3) {
-			this.level3 = level3;
-		}
-
-		public void setDate(Date date) {
-			this.date = date;
-		}
-
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		public Date getDate() {
-			return this.date;
-		}
-
-		public int getId() {
-			return this.id;
-		}
-
-		public boolean isPower() {
-			return power;
-		}
-
-		public void setPower(boolean power) {
-			this.power = power;
-		}
-
-		public boolean isSensorPower() {
-			return sensorPower;
-		}
-
-		public void setSensorPower(boolean sensorPower) {
-			this.sensorPower = sensorPower;
-		}
-
-		public boolean isFlowmeterState1() {
-			return flowmeterState1;
-		}
-
-		public void setFlowmeterState1(boolean flowmeterState1) {
-			this.flowmeterState1 = flowmeterState1;
-		}
-
-		public boolean isFlowmeterState2() {
-			return flowmeterState2;
-		}
-
-		public void setFlowmeterState2(boolean flowmeterState2) {
-			this.flowmeterState2 = flowmeterState2;
-		}
-
-		public boolean isFlowmeterState3() {
-			return flowmeterState3;
-		}
-
-		public void setFlowmeterState3(boolean flowmeterState3) {
-			this.flowmeterState3 = flowmeterState3;
-		}
-
-		public boolean isAlert() {
-			return alert;
-		}
-
-		public void setAlert(boolean alert) {
-			this.alert = alert;
-		}
-
-		public boolean isReserve1() {
-			return reserve1;
-		}
-
-		public void setReserve1(boolean reserve1) {
-			this.reserve1 = reserve1;
-		}
-
-		public boolean isReserve2() {
-			return reserve2;
-		}
-
-		public void setReserve2(boolean reserve2) {
-			this.reserve2 = reserve2;
-		}
-
-	}
 	
-	public void putPacket(int id, String value)
+	public void putPacket(long time, int id, String value)
 	{
-		long timeAndId = new Date().getTime();
+		long timeAndId = time;
 		timeAndId &= 0xFFFFFF00;
 		timeAndId |= id;
 		
@@ -220,11 +81,6 @@ class DB
 		//return null;
 	}
 	
-	public PacketEntry getPacketEntryInstance()
-	{
-		return new PacketEntry();
-	}
-	
 	public List<PacketEntry> getPacketList(int id)
 	{	
 		List<PacketEntry> list = new ArrayList<PacketEntry>(30000);
@@ -240,42 +96,22 @@ class DB
 		DatabaseEntry foundData = new DatabaseEntry();
 		while (cursor.getPrev(foundKey, foundData, LockMode.DEFAULT) == OperationStatus.SUCCESS)
 		{
-			PacketEntry pe = new PacketEntry();
+			
 			long time = LongBinding.entryToLong(foundKey);
 			if ((time & 0xFFFFFF00) != 0L)
 			{
 				packetDate = new Date(time);
-				SimpleDateFormat formatter5=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String formatDate = formatter5.format(time);
+				String formatDate = FORMATTER.format(time);
 				
 				packetId = ((int) (time & 0xFF));
 				if ((id == 0) || (id == packetId))
 				{
-					pe.date = packetDate;
-					pe.id = packetId;
-					strPacket = StringBinding.entryToString(foundData);
-					intValue = Integer.parseInt(strPacket.substring(0, 2), 16);  
-//					bit7 Электропитание в норме
-//					bit6 Электропитание датчиков в норме
-//					bit5 Состояние расходомера №1
-//					bit4 Состояние расходомера №2
-//					bit3 Состояние расходомера №3
-//					bit2 Обобщенный сигнал Авария
-//					bit1 Резерв
-//					bit0 Резерв
-
-					pe.power= ((intValue & 0x80) > 0 ? true : false);
-					pe.sensorPower = ((intValue & 0x40) > 0 ? true : false);
-					pe.flowmeterState1 = ((intValue & 0x20) > 0 ? true : false);
-					pe.flowmeterState2 = ((intValue & 0x10) > 0 ? true : false);
-					pe.flowmeterState3 = ((intValue & 0x08) > 0 ? true : false);
-					pe.alert = ((intValue & 0x04) > 0 ? true : false);
-					pe.reserve1 = ((intValue & 0x02) > 0 ? true : false);
-					pe.reserve2 = ((intValue & 0x01) > 0 ? true : false);
 					
-					pe.level1 = Integer.parseInt(strPacket.substring(2, 6), 16);
-					pe.level2 = Integer.parseInt(strPacket.substring(6, 10), 16);
-					pe.level3 = Integer.parseInt(strPacket.substring(10, 14), 16);
+					strPacket = StringBinding.entryToString(foundData);
+
+					PacketEntry pe = PacketEntry.fromString(strPacket);
+					pe.setDate ( packetDate);
+					pe.setId (packetId);
 
 					list.add(pe);
 				}
@@ -320,6 +156,73 @@ class DB
 		cursor.close();
 		return sb.toString();
 	}								//FIXME end 1
+	
+	public void putPacketJournal(int id, PacketJournalEntry value)
+	{
+		Gson gson = new Gson();
+		putPacketJournal(id, gson.toJson(value));
+	}
+	
+	
+	public void putPacketJournal(int id, String value)
+	{
+		long timeAndId = new Date().getTime();
+		timeAndId &= 0xFFFFFF00;
+		timeAndId |= id;
+		
+		DatabaseEntry keyEntry = new DatabaseEntry();
+		LongBinding.longToEntry(timeAndId, keyEntry);
+		
+		DatabaseEntry dataEntry = new DatabaseEntry();
+		StringBinding.stringToEntry(value, dataEntry);
+		OperationStatus status = this.packetJournal.put(null, keyEntry, dataEntry);
+		//OperationStatus status = db.put(null, keyEntry, dataEntry);
+		if (status == OperationStatus.SUCCESS)
+		{
+			this.dataEnv.sync();
+		}
+	}
+	
+	public List<PacketJournalEntry> getPacketJournalList(int id)
+	{	
+		Gson gson = new Gson();
+		List<PacketJournalEntry> list = new ArrayList<PacketJournalEntry>(30000);
+		Date packetDate;
+		int packetId=0;
+		String strPacket = ""; 
+		int intValue;
+
+		Cursor cursor = this.packetJournal.openCursor(null, null);
+		DatabaseEntry foundKey = new DatabaseEntry();
+		DatabaseEntry foundData = new DatabaseEntry();
+		while (cursor.getPrev(foundKey, foundData, LockMode.DEFAULT) == OperationStatus.SUCCESS)
+		{
+			PacketJournalEntry entry = new PacketJournalEntry();
+			long time = LongBinding.entryToLong(foundKey);
+			if ((time & 0xFFFFFF00) != 0L)
+			{
+				packetDate = new Date(time);
+				
+				String formatDate = FORMATTER.format(time);
+				
+				packetId = ((int) (time & 0xFF));
+				if ((id == 0) || (id == packetId))
+				{
+
+					strPacket = StringBinding.entryToString(foundData);
+					
+					entry = gson.fromJson(strPacket, PacketJournalEntry.class);
+					entry.setDate(packetDate);
+					entry.setId(packetId);
+
+					list.add(entry);
+				}
+			}
+		}
+		cursor.close();
+		return list; 
+	}	
+	
 	
 	public class ConnectionEntry
 	{
@@ -556,6 +459,7 @@ class DB
 		this.settingDb = this.dataEnv.openDatabase(null, "setting", dbConfig);
 		this.rrdDb = this.dataEnv.openDatabase(null, "rrd", dbConfig);
 		this.packetDb = this.dataEnv.openDatabase(null, "packetDb", dbConfig);  //FIXME 2
+		this.packetJournal = this.dataEnv.openDatabase(null, "journalDb", dbConfig);
 		RrdBackendFactory
 				.registerAndSetAsDefaultFactory(new RrdBerkeleyDbBackendFactory(
 						this.rrdDb));
@@ -619,7 +523,7 @@ class DB
 
 	public List<Operator> getOperators()
 	{
-		Set<String> logins = new HashSet();
+		Set<String> logins = new HashSet<String>();
 		Cursor cursor = this.operatorDb.openCursor(null, null);
 		DatabaseEntry foundKey = new DatabaseEntry();
 		DatabaseEntry foundData = new DatabaseEntry();
@@ -631,7 +535,7 @@ class DB
 			logins.add(skey[0]);
 		}
 		cursor.close();
-		ArrayList<Operator> result = new ArrayList(logins.size() * 2);
+		ArrayList<Operator> result = new ArrayList<Operator>(logins.size() * 2);
 		for (String login : logins)
 		{
 			result.add(getOperator(login));
@@ -675,7 +579,7 @@ class DB
 
 	public List<Integer> getWorkingChannels()
 	{
-		List<Integer> channels = new ArrayList(24);
+		List<Integer> channels = new ArrayList<Integer>(24);
 		for (int id = 1; id <= 24; id++)
 		{
 			if (getChannelInfoField(id, "type") != null)
@@ -794,7 +698,7 @@ class DB
 
 	public List<Message> getMessages(int id, Date day)
 	{
-		final List<Message> list = new ArrayList(30000);
+		final List<Message> list = new ArrayList<Message>(30000);
 		if ((id < 1) || (id > 24))
 		{
 			return list;
@@ -858,7 +762,7 @@ class DB
 	private static List<RegisterValue> registersFromBytes(byte[] data)
 	{
 		ByteBuffer bb = ByteBuffer.wrap(data);
-		List<RegisterValue> regs = new ArrayList();
+		List<RegisterValue> regs = new ArrayList<RegisterValue>();
 		while (bb.hasRemaining())
 		{
 			byte idd = bb.get();
@@ -941,9 +845,9 @@ class DB
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		baos.write((byte) params.size());
 		ParameterValue pv;
-		for (Iterator i$ = params.iterator(); i$.hasNext(); pv.toStream(baos))
+		for (Iterator<ParameterValue> i$ = params.iterator(); i$.hasNext(); pv.toStream(baos))
 		{
-			pv = (ParameterValue) i$.next();
+			pv = i$.next();
 		}
 		DatabaseEntry keyEntry = new DatabaseEntry();
 		DatabaseEntry dataEntry = new DatabaseEntry(baos.toByteArray());
@@ -956,7 +860,7 @@ class DB
 
 	public List<ConnectionEntry> getConnections(int id, Date day)
 	{
-		List<ConnectionEntry> list = new ArrayList(30000);
+		List<ConnectionEntry> list = new ArrayList<ConnectionEntry>(30000);
 		if ((id < 1) || (id > 24))
 		{
 			return list;
@@ -987,7 +891,7 @@ class DB
 				byte[] data = foundData.getData();
 				Date date = new Date(time);
 				ByteArrayInputStream bis = new ByteArrayInputStream(data);
-				List<ParameterValue> params = new ArrayList();
+				List<ParameterValue> params = new ArrayList<ParameterValue>();
 				int cnt = bis.read();
 				for (int i = 0; i < cnt; i++)
 				{
@@ -1052,7 +956,7 @@ class DB
 
 	public List<JournalEntry> getJournals(int id)
 	{
-		List<JournalEntry> list = new ArrayList(30000);
+		List<JournalEntry> list = new ArrayList<JournalEntry>(30000);
 		if ((id < 0) || (id > 24))
 		{
 			return list;
@@ -1135,6 +1039,8 @@ class DB
 		this.rrdDb.close();
 		this.dataEnv.close();
 		this.packetDb.close();	//FIXME 3
+
+		this.packetJournal.close();	
 	}
 
 	static abstract interface MessageProcessor

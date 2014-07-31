@@ -27,9 +27,18 @@ import org.rrd4j.core.Util;
 import org.rrd4j.graph.RrdGraph;
 import org.rrd4j.graph.RrdGraphDef;
 
+import com.intechua.HDatabase;
+import com.intechua.db.beans.PacketEntry;
+
 public class Server
 {
 	static SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	static HDatabase hdb;
+	public static HDatabase getHdb()
+	{
+		return hdb;
+	}
+
 	static DB db;
 	static RRDs rrds;
 	static Processor processor;
@@ -101,6 +110,8 @@ public class Server
 				return;
 			}
 		}
+		
+		hdb = new HDatabase("db/db");
 		db = new DB("db");
 		rrds = new RRDs(db);
 
@@ -163,6 +174,8 @@ public class Server
 		Stream ss;   	//FIXME
 		int idPacket;  	//FIXME
 		//RRDs rrds;	 	//FIXME
+		
+		int idPacketJournal;
 
 		Communicator(Stream _ss)
 		{
@@ -196,7 +209,7 @@ public class Server
 				//String strEntry = new String(newBuffRead); 
 				
 				
-				//read manual timestamp
+				//read manual timestamp - for testing purposes
 				StringBuilder timestampsb = new StringBuilder();
 				byte[] timestampBuffRead = new byte[lenBuff];
 				for (int i=0; i<lenBuff; i++) 
@@ -209,9 +222,36 @@ public class Server
 				this.ss.logger.log("Needed date time is " + df.format(date));
 
 				this.ss.logger.log("putPacket: idPacket=" + idPacket + " strEntry=:" + sb  + ":");
-				db.putPacket(idPacket, sb.toString());
+				PacketEntry pe = PacketEntry.fromString(sb.toString());
+				pe.setDate(new Date());
+				
+				db.putPacket(pe.getDate().getTime(), idPacket, sb.toString());
 				this.ss.logger.log("getPacket: "+ db.getPacketString(0));
 				
+//				PacketJournalEntry pje = new PacketJournalEntry();
+//				pje.setDate(pe.getDate());
+//				pje.setLevel(pe.getLevel1());
+//				pje.setPower(pe.isPower1());
+//				pje.setState(pe.isFlowmeterState1());
+//				
+//				db.putPacketJournal(idPacketJournal++, pje);
+//				
+//				pje = new PacketJournalEntry();
+//				pje.setDate(pe.getDate());
+//				pje.setLevel(pe.getLevel2());
+//				pje.setPower(pe.isPower2());
+//				pje.setState(pe.isFlowmeterState2());
+//				
+//				db.putPacketJournal(idPacketJournal++, pje);
+//				
+//				pje = new PacketJournalEntry();
+//				pje.setDate(pe.getDate());
+//				pje.setLevel(pe.getLevel2());
+//				pje.setPower(pe.isPower2());
+//				pje.setState(pe.isFlowmeterState2());
+//				
+//				db.putPacketJournal(idPacketJournal++, pje);
+//				
 				if (valCRC == newBuffRead[lenBuff-1])
 				{// compared CRC
 					this.ss.logger.endLog("OK");

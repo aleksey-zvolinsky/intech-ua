@@ -12,7 +12,7 @@ class Processor {
    RRDs rrds;
    Alert.State[] lastAlerts = new Alert.State[24];
    Alert.State[] submAlerts = new Alert.State[24];
-   Map connectedCounters = new ConcurrentHashMap();
+   Map<Integer, AtomicInteger> connectedCounters = new ConcurrentHashMap<Integer, AtomicInteger>();
 
 
    Processor(DB _db, RRDs _rrds) {
@@ -29,7 +29,7 @@ class Processor {
 
    }
 
-   public void onConnect(int id, List params) {
+   public void onConnect(int id, List<ParameterValue> params) {
       this.getConnectedCounter(id).incrementAndGet();
       this.db.putConnection(id, new Date(), params);
       Alert.State[] var3 = this.submAlerts;
@@ -55,10 +55,10 @@ class Processor {
    }
 
    AtomicInteger getConnectedCounter(int id) {
-      Map var2 = this.connectedCounters;
+      Map<Integer, AtomicInteger> var2 = this.connectedCounters;
       synchronized(this.connectedCounters) {
          if(this.connectedCounters.containsKey(Integer.valueOf(id))) {
-            return (AtomicInteger)this.connectedCounters.get(Integer.valueOf(id));
+            return this.connectedCounters.get(Integer.valueOf(id));
          } else {
             AtomicInteger ai = new AtomicInteger();
             this.connectedCounters.put(Integer.valueOf(id), ai);
@@ -67,7 +67,7 @@ class Processor {
       }
    }
 
-   public Message putRegisters(int id, List regs) {
+   public Message putRegisters(int id, List<RegisterValue> regs) {
       Message msg = this.db.putRegisters(id, regs);
       Alert.State[] var4 = this.submAlerts;
       synchronized(this.submAlerts) {

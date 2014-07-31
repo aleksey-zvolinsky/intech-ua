@@ -73,7 +73,7 @@ public class Boot
         } else {
           try
           {
-            List<URL> urls = new ArrayList();
+            List<URL> urls = new ArrayList<URL>();
             
             String rasaClassPath = attr.getValue("Rasa-Class-Path");
             if (rasaClassPath != null)
@@ -87,7 +87,8 @@ public class Boot
                   {
                     File[] files = dir.listFiles(new FilenameFilter()
                     {
-                      public boolean accept(File dir, String name)
+                      @Override
+					public boolean accept(File dir, String name)
                       {
                         return name.endsWith(".jar");
                       }
