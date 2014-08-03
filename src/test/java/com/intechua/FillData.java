@@ -20,30 +20,36 @@ public class FillData
 	public static void main(String[] args) throws IOException
 	{
 		//String fileName = "sample.txt";
-		String fileName = "24hours.txt";
-		try(InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName))
+		String[] fileNames = {"24hours.txt", "2days.txt", "5months.txt", "3years.txt"};
+		//String[] fileNames = {"3years.txt"};
+		//String[] fileNames = {"5months.txt"};
+		for(int i=0; i<fileNames.length; i++)
 		{
-			BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-			String line;
-		    int lineNumber = 0;
-		    br.readLine();// skip first line with headers
-		    while ((line = br.readLine()) != null) 
-		    {
-		    	URL url = new URL("http://localhost:8050/input?" + makeParams(line));
-		    	try(InputStream webstream = url.openStream())
-		    	{
-		    		
-		    	}
-		    	
-		    	System.out.printf("%04d: %s%n", ++lineNumber, line);
-		    }
-		}		
+			String fileName = fileNames[i];
+			try(InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName))
+			{
+				BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+				String line;
+			    int lineNumber = 0;
+			    br.readLine();// skip first line with headers
+			    while ((line = br.readLine()) != null) 
+			    {
+			    	URL url = new URL("http://localhost:8050/input?" + makeParams(line));
+			    	try(InputStream webstream = url.openStream())
+			    	{
+			    		
+			    	}
+			    	
+			    	System.out.printf("%06d: %s%n", ++lineNumber, line);
+			    }
+			}
+		}
 	}
 
 	private static String makeParams(String line)
 	{
 		String[] values = line.split("\t");
-		int number = Integer.parseInt(values[0]);
+//		int number = Integer.parseInt(values[0]);
 		Date date = null;
 		try
 		{

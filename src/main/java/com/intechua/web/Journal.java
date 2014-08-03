@@ -1,5 +1,7 @@
 package com.intechua.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import spark.Request;
@@ -12,9 +14,11 @@ import com.intechua.db.beans.PacketJournalEntry;
 
 public class Journal extends Route
 {
-	public Journal()
+	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public Journal(String path)
 	{
-		super("/packetjournal");
+		super(path);
 	}
 
 	@Override
@@ -22,14 +26,43 @@ public class Journal extends Route
 	{
 		JournalTable jtable = new JournalTable();
 		PacketJournalCriteria crit = new PacketJournalCriteria();
-		request.queryParams("dateFrom");
-		request.queryParams("dateTo");
-		request.queryParams("counter0");
-		request.queryParams("counter1");
-		request.queryParams("counter2");
+		try
+		{
+			crit.dateFrom = df.parse(request.queryParams("dateFrom"));
+		}
+		catch (NullPointerException | ParseException e)
+		{
+			crit.dateFrom = null;
+		}
+		try
+		{
+			crit.dateTo = df.parse(request.queryParams("dateTo"));
+		}
+		catch (NullPointerException | ParseException e)
+		{
+			crit.dateTo = null;
+		}
+		if("checked".equals(request.queryParams("counter0")))
+		{
+			crit.counterIds.add(0);
+		}
+		if("checked".equals(request.queryParams("counter1")))
+		{
+			crit.counterIds.add(1);
+		}
+		if("checked".equals(request.queryParams("counter2")))
+		{
+			crit.counterIds.add(2);
+		}
 		
 		List<PacketJournalEntry> result = jtable.query(crit);
 		request.attribute("result", result);
+		
+		for(String param: request.queryParams())
+		{
+			request.attribute(param, request.queryParams(param));
+		}
+		
 		return null;
 	}
 

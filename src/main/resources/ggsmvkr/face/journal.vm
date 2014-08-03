@@ -1,57 +1,54 @@
-#if ( $ch  )
-<a href="/view-$ch.type.name?id=$ch.id">Вернуться</a>&nbsp;&nbsp;
-<font size="+1">Журнал по СП-$ch.id</font>
-#else
-<font size="+1">Журнал</font>
-#end
-
-#macro( jtablehead )
-<tr>
-	<th>Ст.
-	<th>Время
-	<th>Тип
-	<th>Аварии
-</tr>
-#end
-
-<table>
-#foreach( $r in $list )
-	#if ( $velocityCount % 32 == 1 )
-		#jtablehead
-	#end
+<div id="journal">
+	<div id="filters">
+		<form method="get">
+			<div class="dateFrom">
+				<label for="dateFrom">Дата с</label>
+				<input type="date" name="dateFrom" id="dateFrom" value="$dateFrom">
+			</div>
+			<div class="dateTo">
+				<label for="dateTo">Дата по</label>
+				<input type="date" name="dateTo" id="dateTo" value="$dateTo">
+			</div>
+			<div class="buttons">
+				<input type="submit" value="Обновить" class="button"><br/>
+				<input type="button" value="Печать" class="button">
+			</div>
+			
+			
+			<div id="counters">
+				<label for="c[0]">Хлоргаз 1</label>
+				<input type="checkbox" name="counter1" value="checked" id="c[0]" $counter1 >
+				
+				<label for="c[1]">Хлоргаз 2</label>
+				<input type="checkbox" name="counter2" value="checked" id="c[1]" $counter2 >
+				
+				<label for="c[2]">Гипохлорид</label>
+				<input type="checkbox" name="counter3" value="checked" id="c[2]" $counter3 >
+			</div> 
+			
+			<div id="states">
+				<label for="s[0]">Расход</label>
+				<input type="checkbox" name="state0" value="checked" id="s[0]" $state0>
+				
+				<label for="s[1]">Питание</label>
+				<input type="checkbox" name="state1" value="checked" id="s[1]" $state1>
+				
+				<label for="s[2]">Авария</label>
+				<input type="checkbox" name="state2" value="checked" id="s[2]" $state2>
+			</div>
+		</form>
+	</div>
+	<table border="1">
+	<tr><th>Расходомер</th><th>Дата-время</th><th>Расход</th><th>Описание события</th></tr>
+	
+	#foreach( $r in $result )
 	<tr>
-	<td class="list" nowrap>$r.Id</td>
-	<td class="list" nowrap>$_dtf.format( $r.Date )</td>
-	<td class="list">#if ( $r.Submit ) Подтв. $r.Operator #else авария #end
-	<td class="list">
-		#if ( $r.Alert.Sys.VoltageFailure ) Напряжение 1 #end
-		#if ( $r.Alert.Sys.Voltage2Failure ) Напряжение 2 #end
-		#if ( $r.Alert.Sys.Failure ) Авария станции #end
-		#if ( $r.Alert.Sys.AdjPressed ) Нажат грибок #end
-		#if ( $r.Alert.Sys.ConnectFailure ) Нет связи по GMS #end
-		#if ( $r.Alert.Sys.ConnectOK ) Есть связь по GMS #end
-		#if ( $r.Alert.Tank.Failure ) Авария бака #end
-		#if ( $r.Alert.Tank.Level >= 0 ) Уровень бака $r.Alert.Tank.Level #end
-		#set ( $pn = 0 )
-		#foreach ( $p in $r.Alert.Pumps )
-			#set ( $pn = $pn + 1 )
-			#if ( $ch.type.name == "zelio" )
-				#if ( $p.EngineFailure ) Авария двигателя $pn #end
-				#if ( $p.StartFailure ) Авария ПП $pn #end
-			#else 
-				#if ( $p.Failure ) Состояние ПП $pn: Авария #end
-				#if ( $p.EngineFailure ) Авария РТС $pn #end
-				#if ( $p.StartFailure ) Авария ПП $pn #end
-				#if ( $p.HoursCounterOverflow ) Первышение счетчика моточасов $pn #end
-				#if ( $p.QFFailure ) Авария автомата QF $pn #end
-				#if ( $p.Modbus0Failure ) Авария связи с ПП $pn #end
-				#if ( $p.Modbus1Failure ) Состояние ПП $pn: Нет связи #end
-				#if ( $p.Modbus2Failure ) Режим работы $pn: Нет связи #end
-			#end
-		#end
-</tr>
-#end
-#if ( $list.size() == 0 )
-	#jtablehead
-#end
-</table>
+		<td>$r.counterId</td>
+		<td>$_dtf.format( $r.date )</td>
+		<td>$r.level</td>
+		<td>???</td>
+	</tr>
+	#end
+	
+	</table>
+</div>

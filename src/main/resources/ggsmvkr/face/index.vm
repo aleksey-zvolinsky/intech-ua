@@ -1,22 +1,9 @@
 <script type="text/javascript" src="/js/howler.min.js"></script>
 <script type="text/javascript" src="/js/index.js"></script>
-<script type="text/javascript">
-	var page = 0
-	var channels = [ #foreach ( $ch in $channels ) $ch.id, #end ]
-	function changePage( newpage ) {
-		if ( newpage >=0 && newpage < 2 ) {
-			page = newpage;
-			for ( i=1; i<=10; i++ ) {
-				idx = newpage*10 + i - 1;
-				if ( idx < channels.length ) {
-					$('frame'+i).src='view?id='+channels[idx];
-				} else {
-					$('frame'+i).src='empty';
-				}
-			}
-		}
-	}
-</script>
+
+<script type="text/javascript" src="/js/raphael-min.js"></script>
+<script type="text/javascript" src="/js/g.raphael-min.js"></script>
+<script type="text/javascript" src="/js/g.line-min.js"></script>
 
 <table id="main">
 	<tr class="all">
@@ -36,90 +23,40 @@
 			<div class="title">РАСХОДОМЕР ХЛОРГАЗ 1</div>
 			<div class="image" id="image1"></div>
 			<div class="indicators">
-				<div class="level"><div class="value" id="value1">123</div></div>
+				<div class="level"><div class="value" id="value1">-1</div></div>
 				<div class="power"></div>
 				<div class="error"></div>
-				<div class="journal"><button type="button" onclick="#">ЖУРНАЛ</button></div>
-				<div class="open"><button type="button" onclick="#">РАЗВЕРНУТЬ</button></div>
+				<div class="journal"><button type="button" onclick="onClickJournal(1)">ЖУРНАЛ</button></div>
+				<div class="open"><button type="button" onclick="onClickExpand(1)">РАЗВЕРНУТЬ</button></div>
 			</div>
-			<div class="graph">
-				<img src="/img/graph.png" />
+			<div class="graph" id="chart1">
 			</div>
 		</td>
 		<td class="column" id="column2">
 			<div class="title">РАСХОДОМЕР ХЛОРГАЗ 2</div>
 			<div class="image" id="image2"></div>
 			<div class="indicators">
-				<div class="level"><div class="value" id="value2">123</div></div>
+				<div class="level"><div class="value" id="value2">-1</div></div>
 				<div class="power"></div>
 				<div class="error"></div>
-				<div class="journal"><button type="button" onclick="#">ЖУРНАЛ</button></div>
-				<div class="open"><button type="button" onclick="#">РАЗВЕРНУТЬ</button></div>
+				<div class="journal"><button type="button" onclick="onClickJournal(2)">ЖУРНАЛ</button></div>
+				<div class="open"><button type="button" onclick="onClickExpand(2)">РАЗВЕРНУТЬ</button></div>
 			</div>
-			<div class="graph">
-				<img src="/img/graph.png" />
+			<div class="graph" id="chart2">
 			</div>
 		</td>
 		<td class="column" id="column3">
 			<div class="title">РАСХОДОМЕР ГИПОХЛОРИТ</div>
-			<div class="image"><div class="value" id="value3">123</div></div>
+			<div class="image"><div class="value" id="value3">-1</div></div>
 			<div class="indicators">
 				<div class="level hidden"></div>
 				<div class="power"></div>
 				<div class="error"></div>
-				<div class="journal"><button type="button" onclick="#">ЖУРНАЛ</button></div>
-				<div class="open"><button type="button" onclick="#">РАЗВЕРНУТЬ</button></div>
+				<div class="journal"><button type="button" onclick="onClickJournal(3)">ЖУРНАЛ</button></div>
+				<div class="open"><button type="button" onclick="onClickExpand(3)">РАЗВЕРНУТЬ</button></div>
 			</div>
-			<div class="graph">
-				<img src="/img/graph.png" />
+			<div class="graph" id="chart3">
 			</div>
 		</td>
 	</tr>
-</table>
-
-<table width="1900px" style="padding: 0" cellspacing="0">
-    <tr><td width="1700px" style="border: 1px solid black">
-
-<table>
-
-#foreach ( $ch in $channels ) #if ( $velocityCount < 11 )
-    #set ( $ccc = $velocityCount % 4 )
-    #if ( $ccc == 1 ) <tr valign="top"> #end
-    <td><iframe id="frame$velocityCount" width="420" height="250" src="view?id=$ch.id" style="padding-top: 0; margin-top: 0; border: 2px solid black; overflow:hidden" scrolling="no"></iframe></td>
-    #if ( $ccc == 0 ) </tr> #end
-#end #end
-</table>
-
-</td>
-<td valign="top" align="center" width="200px" style="border: 1px solid black;">
-
-$!operator.Name<br><br>
-
-<table>
-#foreach ( $ch in $channels ) 
-	#set( $ccc = $velocityCount % 2 )
-	#if ( $ccc == 1 )
-		<tr><td><input type="button" id="ch$ch.id" value="��-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td>
-	#else
-		<td><input type="button" id="ch$ch.id" value="��-$ch.id" style="width: 80px" onclick="var newtab = window.open( '/view-$ch.type.name?id=$ch.id', 'ggsm-vkr-2' )"></td></tr>
-	#end
-#end
-</table>
-<br>
-<br>
-##<input type="button" value="���������" onclick="var newtab = window.open( '/param', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="Таблица" onclick="var newtab = window.open( '/table', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="Журнал" onclick="var newtab = window.open( '/journal', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="Graphs" onclick="var newtab = window.open( '/graphslevel', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="Packets" onclick="var newtab = window.open( '/packets', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="Настройки" onclick="var newtab = window.open( '/sett/', 'ggsm-vkr-2' )" style="width: 160px"><br><br>
-<input type="button" value="1" onclick="changePage(0)" style="width: 80px">
-<input type="button" value="2" onclick="changePage(1)" style="width: 80px"><br>
-<span style="font-size: 8pt">
-&nbsp;<br>
-<img src="img/logo.png"><br>
-&nbsp;<br>
-<a href="http://eneteh.com.ua" target="_blank" style="font-size: 13pt">http://eneteh.com.ua</a>
-</span>
-</td>
 </table>

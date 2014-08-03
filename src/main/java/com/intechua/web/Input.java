@@ -12,9 +12,9 @@ import com.intechua.db.beans.PacketEntry;
 
 public class Input extends Route
 {
-	public Input()
+	public Input(String path)
 	{
-		super("/input");
+		super(path);
 	}
 
 	@Override

@@ -19,6 +19,11 @@ public class Tables {
 	public static final com.intechua.db.jooq.tables.Journal JOURNAL = com.intechua.db.jooq.tables.Journal.JOURNAL;
 
 	/**
+	 * The table PUBLIC.OPERATOR
+	 */
+	public static final com.intechua.db.jooq.tables.Operator OPERATOR = com.intechua.db.jooq.tables.Operator.OPERATOR;
+
+	/**
 	 * The table PUBLIC.PACKETS
 	 */
 	public static final com.intechua.db.jooq.tables.Packets PACKETS = com.intechua.db.jooq.tables.Packets.PACKETS;
