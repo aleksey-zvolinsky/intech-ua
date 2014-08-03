@@ -28,6 +28,7 @@ import org.rrd4j.graph.RrdGraph;
 import org.rrd4j.graph.RrdGraphDef;
 
 import com.intechua.HDatabase;
+import com.intechua.db.OperatorTable;
 import com.intechua.db.beans.PacketEntry;
 
 public class Server
@@ -111,61 +112,69 @@ public class Server
 			}
 		}
 		
-		hdb = new HDatabase("db/db");
-		db = new DB("db");
-		rrds = new RRDs(db);
-
-		processor = new Processor(db, rrds);
-		if (!debug)
+		try
 		{
-			List<org.apache.log4j.Logger> loggers = Collections.list(LogManager
-					.getCurrentLoggers());
-			loggers.add(LogManager.getRootLogger());
-			for (org.apache.log4j.Logger logger : loggers)
-			{
-				logger.setLevel(Level.OFF);
-			}
-			System.setOut(new PrintStream(new OutputStream()
-			{
-				@Override
-				public void write(int b)
-				{
-				}
-			}));
-		}
-		Face.init(db, processor, rrds, noauth);
-
-		beginLog("Starting server on "+ Setup.get().getPacketServerPort() +" port: ");
-		try(ServerSocket welcomeSocket = new ServerSocket(Setup.get().getPacketServerPort()))
-		{
-			endLog("OK");
-
-			for (;;)
-			{
-				log("Waiting connection");
-				Socket connectionSocket = welcomeSocket.accept();
-				beginLog("Connection from "
-						+ connectionSocket.getRemoteSocketAddress() + ":");
-				Stream ss;
-				try
-				{
-					connectionSocket.setSoTimeout(240000);
+			hdb = new HDatabase("db/db");
+			new OperatorTable();
+			db = new DB("db");
+			rrds = new RRDs(db);
 	
-					ss = new Stream(connectionSocket);
-					new Communicator(ss).start();
-					endLog("OK");
-				}
-				catch (Exception e)
+			processor = new Processor(db, rrds);
+			if (!debug)
+			{
+				List<org.apache.log4j.Logger> loggers = Collections.list(LogManager.getCurrentLoggers());
+				loggers.add(LogManager.getRootLogger());
+				for (org.apache.log4j.Logger logger : loggers)
 				{
-					endLog("Fail (" + e.getMessage() + ")");
+					logger.setLevel(Level.OFF);
 				}
-				continue;
+				System.setOut(new PrintStream(new OutputStream()
+				{
+					@Override
+					public void write(int b)
+					{
+					}
+				}));
+			}
+			Face.init(db, processor, rrds, noauth);
+	
+			beginLog("Starting server on "+ Setup.get().getPacketServerPort() +" port: ");
+			try(ServerSocket welcomeSocket = new ServerSocket(Setup.get().getPacketServerPort()))
+			{
+				endLog("OK");
+	
+				for (;;)
+				{
+					log("Waiting connection");
+					Socket connectionSocket = welcomeSocket.accept();
+					beginLog("Connection from "
+							+ connectionSocket.getRemoteSocketAddress() + ":");
+					Stream ss;
+					try
+					{
+						connectionSocket.setSoTimeout(240000);
+		
+						ss = new Stream(connectionSocket);
+						new Communicator(ss).start();
+						endLog("OK");
+					}
+					catch (Exception e)
+					{
+						endLog("Fail (" + e.getMessage() + ")");
+					}
+					continue;
+				}
+			}
+			catch (BindException e)
+			{
+				endLog("Fail (" + e.getMessage() + ")");
+				return;
 			}
 		}
-		catch (BindException e)
+		finally
 		{
-			endLog("Fail (" + e.getMessage() + ")");
-			return;
+			hdb.shutdown();
+			db.close();
 		}
 	}
 
@@ -228,30 +237,6 @@ public class Server
 				db.putPacket(pe.getDate().getTime(), idPacket, sb.toString());
 				this.ss.logger.log("getPacket: "+ db.getPacketString(0));
 				
-//				PacketJournalEntry pje = new PacketJournalEntry();
-//				pje.setDate(pe.getDate());
-//				pje.setLevel(pe.getLevel1());
-//				pje.setPower(pe.isPower1());
-//				pje.setState(pe.isFlowmeterState1());
-//				
-//				db.putPacketJournal(idPacketJournal++, pje);
-//				
-//				pje = new PacketJournalEntry();
-//				pje.setDate(pe.getDate());
-//				pje.setLevel(pe.getLevel2());
-//				pje.setPower(pe.isPower2());
-//				pje.setState(pe.isFlowmeterState2());
-//				
-//				db.putPacketJournal(idPacketJournal++, pje);
-//				
-//				pje = new PacketJournalEntry();
-//				pje.setDate(pe.getDate());
-//				pje.setLevel(pe.getLevel2());
-//				pje.setPower(pe.isPower2());
-//				pje.setState(pe.isFlowmeterState2());
-//				
-//				db.putPacketJournal(idPacketJournal++, pje);
-//				
 				if (valCRC == newBuffRead[lenBuff-1])
 				{// compared CRC
 					this.ss.logger.endLog("OK");

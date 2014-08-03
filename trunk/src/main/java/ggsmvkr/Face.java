@@ -1,46 +1,27 @@
 package ggsmvkr;
 
-import ggsmvkr.DB.ChannelAvgs;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.lf5.util.StreamUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
-import spark.Filter;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.Spark;
 
-import com.google.gson.Gson;
-import com.intechua.db.PacketsTable;
+import com.intechua.web.AfterFilter;
+import com.intechua.web.AuthFilter;
+import com.intechua.web.Graph;
+import com.intechua.web.IndexData;
 import com.intechua.web.IndexStatus;
 import com.intechua.web.Input;
 import com.intechua.web.Journal;
 
 class Face
 {
-	private static final String ENCODING = "UTF-8";
-
-	static void init(final DB db, final Processor processor, final RRDs rrds, boolean noauth)
+	
+	static void init(final DB db, final Processor processor, final RRDs rrds, final boolean noauth)
 	{
 		Velocity.setProperty("resource.loader", "class");
 		Velocity.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
@@ -50,54 +31,25 @@ class Face
 		
 
 		Spark.setPort(Setup.get().getWebServerPort());
-		if (!noauth)
-		{
-			Spark.before(new Filter()
-			{
-				@Override
-				public void handle(Request request, Response response)
-				{
-					String authorization = request.headers("Authorization");
-					if (authorization != null)
-					{
-						String userInfo = authorization.substring(6).trim();
-						String nameAndPassword = new String(Base64.decodeBase64(userInfo));
-						int index = nameAndPassword.indexOf(":");
-						String user = nameAndPassword.substring(0, index);
-						String passwd = nameAndPassword.substring(index + 1);
-						// FIXME
-						Operator oper = null;// = this.val$db.getOperator(user);
-						if ((oper != null) && (oper.getPasswd() != null) && (oper.getPasswd().equals(passwd)))
-						{
-							request.attribute("operator", oper);
-							return;
-						}
-					}
-					response.status(401);
-					response.header("WWW-Authenticate", "BASIC realm=\"GGSM vkr\"");
-				}
-			});
-		}
+
+		Spark.before(new AuthFilter("/op"));
 		
-		Spark.get(new Input());
-		Spark.get(new IndexStatus());
-		Spark.get(new Journal());
+		Spark.get(new Input("/input"));
+		Spark.get(new IndexStatus("/indexstatus"));
+		Spark.get(new IndexData("/indexdata"));
 		
-		Spark.get(new Route("/") // FIXME
+		Spark.get(new Journal("/journal"));
+
+		Spark.get(new Graph("/graph"));
+		
+		Spark.get(new Route("/")
 		{
 			@Override
 			public Object handle(Request request, Response response)
 			{
-				String sid = request.queryParams("id");
-				int id = sid == null ? 0 : Integer.parseInt(sid);
-				if (id > 0)
-				{
-					request.attribute("ch", db.getPacketList(id));
-				}
-				request.attribute("list", db.getPacketList(id));
 				return null;
 			}
-		}); // FIXME
+		});
 
 		Spark.get(new Route("/view")
 		{
@@ -111,29 +63,7 @@ class Face
 				return null;
 			}
 		});
-		Spark.get(new Route("/view-zelio")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				int id = Integer.parseInt(request.queryParams("id"));
-
-				ChannelInfo ci = db.getChannelInfo(id);
-				request.attribute("ch", ci);
-				return null;
-			}
-		});
-		Spark.get(new Route("/view-kinco")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				int id = Integer.parseInt(request.queryParams("id"));
-				ChannelInfo ci = db.getChannelInfo(id);
-				request.attribute("ch", ci);
-				return null;
-			}
-		});
+		
 		Spark.post(new Route("/journalize")
 		{
 			@Override
@@ -155,202 +85,7 @@ class Face
 				return null;
 			}
 		});
-		Spark.get(new Route("/status")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				try
-				{
-					int id = Integer.parseInt(request.queryParams("id"));
-					ChannelInfo ci = db.getChannelInfo(id);
-					Message lm = db.getLastMessage(id);
-					if (lm != null)
-					{
-						for (int p = 0; p < 4; p++)
-						{
-							if (ci.getPumpState(p) != ChannelInfo.PumpState.On)
-							{
-								lm.pumps[p] = null;
-							}
-						}
-					}
-					request.attribute("lm", lm);
-
-					request.attribute("connected", Boolean.valueOf(processor.isConnected(id)));
-					request.attribute("submitRequired", Boolean.valueOf(processor.isSubmitRequired(id)));
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				return null;
-			}
-		});
-		Spark.get(new Route("/history")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				synchronized (this)
-				{
-					int id = Integer.parseInt(request.queryParams("id"));
-
-					String sday = request.queryParams("day");
-					Date day;
-					try
-					{
-						day = Face.df.parse(sday);
-					} catch (Exception e)
-					{
-						day = new Date();
-					}
-					request.attribute("id", Integer.valueOf(id));
-					request.attribute("day", Face.df.format(day));
-
-					ArrayList<String> days = new ArrayList<String>();
-					Calendar cal = new GregorianCalendar();
-					cal.setTime(new Date());
-					for (int i = 0; i < 18; i++)
-					{
-						days.add(Face.df.format(cal.getTime()));
-						cal.add(5, -1);
-					}
-					request.attribute("days", days);
-					request.attribute("list", db.getMessages(id, day));
-					return null;
-				}
-			}
-		});
-		Spark.get(new Route("/packets") // FIXME
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				String sid = request.queryParams("id");
-				int id = sid == null ? 0 : Integer.parseInt(sid);
-				if (id > 0)
-				{
-					request.attribute("ch", db.getPacketList(id));
-				}
-				request.attribute("list", db.getPacketList(id));
-				return null;
-			}
-		}); // FIXME
-		Spark.get(new Route("/journal")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				String sid = request.queryParams("id");
-				int id = sid == null ? 0 : Integer.parseInt(sid);
-				if (id > 0)
-				{
-					request.attribute("ch", db.getChannelInfo(id));
-				}
-				request.attribute("list", db.getJournals(id));
-				return null;
-			}
-		});
-		Spark.get(new Route("/param")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				List<Object> channels = new ArrayList<Object>();
-				for (Iterator<?> i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
-				{
-					int id = ((Integer) i$.next()).intValue();
-					channels.add(new Face.CurrStatus(id, db.getLastMessage(id), processor.isConnected(id), processor.isSubmitRequired(id)));
-				}
-				request.attribute("channels", channels);
-				request.attribute("alarm", Boolean.valueOf(db.getSetting("alarm") != null));
-				return null;
-			}
-		});
-		Spark.get(new Route("/param2")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				PacketsTable table = new PacketsTable();
-				Gson gson = new Gson();
-				String gsonPacket = gson.toJson(table.getLastPacket());
-				request.attribute("packet", gsonPacket);
-
-				return null;
-			}
-		});
-		Spark.get(new Route("/connections")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				synchronized (this)
-				{
-					int id = Integer.parseInt(request.queryParams("id"));
-
-					String sday = request.queryParams("day");
-					Date day;
-					try
-					{
-						day = Face.df.parse(sday);
-					} catch (Exception e)
-					{
-						day = new Date();
-					}
-					request.attribute("id", Integer.valueOf(id));
-					request.attribute("day", Face.df.format(day));
-					ArrayList<String> days = new ArrayList<String>();
-					Calendar cal = new GregorianCalendar();
-					cal.setTime(new Date());
-					for (int i = 0; i < 18; i++)
-					{
-						days.add(Face.df.format(cal.getTime()));
-						cal.add(5, -1);
-					}
-					request.attribute("days", days);
-					request.attribute("list", db.getConnections(id, day));
-					return null;
-				}
-			}
-		});
-		Spark.get(new Route("/rrd")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				int id = Integer.parseInt(request.queryParams("id"));
-				String speriod = request.queryParams("period");
-				char period = speriod == null ? 'h' : speriod.charAt(0);
-				byte[] data = null;
-				String spump = request.queryParams("pump");
-				if (spump != null)
-				{
-					int pump = Integer.parseInt(spump);
-					String type = request.queryParams("type");
-					if ((type == null) || (type.equals("v")))
-					{
-						data = rrds.makePumpGraph(id, period, pump, true, new boolean[] { false, false, false });
-					} else
-					{
-						boolean[] ls = new boolean[3];
-						if (type.length() >= 3)
-						{
-							for (int l = 0; l < 3; l++)
-							{
-								ls[l] = (type.charAt(l) != '0' ? true : false);
-							}
-						}
-						data = rrds.makePumpGraph(id, period, pump, false, ls);
-					}
-				} else
-				{
-					data = rrds.makeTankGraph(id, period);
-				}
-				request.attribute("png", data);
-				return null;
-			}
-		});
+				
 		Spark.get(new Route("/graphslevel")
 		{
 			@Override
@@ -401,21 +136,6 @@ class Face
 				{
 					request.attribute("tank", "yes");
 				}
-				return null;
-			}
-		});
-		Spark.get(new Route("/table")
-		{
-			@Override
-			public Object handle(Request request, Response response)
-			{
-				List<DB.ChannelAvgs> result = new ArrayList<ChannelAvgs>(30);
-				for (Iterator<?> i$ = db.getWorkingChannels().iterator(); i$.hasNext();)
-				{
-					int id = ((Integer) i$.next()).intValue();
-					result.add(db.getChannelAvgs(id));
-				}
-				request.attribute("channels", result);
 				return null;
 			}
 		});
@@ -547,202 +267,6 @@ class Face
 				return null;
 			}
 		});
-		Spark.after(new Filter()
-		{
-			@Override
-			public void handle(Request request, Response response)
-			{
-				String path = request.pathInfo();
-				if (path.startsWith("/"))
-				{
-					path = path.substring(1);
-				}
-				String vmName = null;
-				String mime = "text/html; charset=utf-8";
-				if(path.endsWith(".ttf"))
-				{
-					mime = "application/octet-stream";
-				}
-				else if (path.startsWith("gimg/"))
-				{
-					request.attribute("png", readGraph(path));
-					mime = "image/png";
-				}
-				else if (path.startsWith("css/"))
-				{
-					vmName = path.substring(4);
-					mime = "text/css";
-				}
-				else if (path.startsWith("js/"))
-				{
-					vmName = path;
-					mime = "application/javascript";
-				}
-				else if (path.startsWith("img/"))
-				{
-					mime = "image/jpeg";
-				}
-				else if (path.startsWith("rrd"))
-				{
-					mime = "image/png";
-				}
-				else if (path.startsWith("favicon.ico"))
-				{
-					mime = "mage/x-icon";
-				}
-				else if (path.startsWith("alarm.mp3"))
-				{
-					mime = "audio/mpeg";
-				}
-				else
-				{
-					if (path.length() == 0)
-					{
-						vmName = "index";
-					} else
-					{
-						vmName = path.replace('/', '.');
-					}
-					if (request.queryParams("json") != null)
-					{
-						vmName = vmName + ".json";
-						mime = "application/json";
-					} else
-					{
-						vmName = vmName + ".vm";
-					}
-				}
-				if (vmName != null)
-				{
-					StringWriter sw = new StringWriter();
-					if (vmName.endsWith(".vm"))
-					{
-						Velocity.getTemplate("ggsmvkr/face/_head.vm", ENCODING).merge(new VelocityContext(), sw);
-					}
-					Template t = Velocity.getTemplate("ggsmvkr/face/" + vmName, ENCODING);
-					VelocityContext context = new VelocityContext();
-					for (String attr : request.attributes())
-					{
-						context.put(attr, request.attribute(attr));
-					}
-					context.put("_dtf", Face.dtf);
-					context.put("_df", Face.df);
-					context.put("_tf", Face.tf);
-					context.put("_ff1", new Face.FixedFormat1());
-					t.merge(context, sw);
-					if (vmName.endsWith(".vm"))
-					{
-						Velocity.getTemplate("ggsmvkr/face/_tail.vm", ENCODING).merge(new VelocityContext(), sw);
-					}
-					response.body(sw.toString());
-				}
-				else
-				{
-					try
-					{
-						byte[] png = (byte[]) request.attribute("png");
-						if (png == null)
-						{
-							InputStream fis = Face.class.getResourceAsStream("/ggsmvkr/face/" + path);
-
-							StreamUtils.copy(fis, response.raw().getOutputStream());
-							fis.close();
-						}
-						else
-						{
-							response.raw().getOutputStream().write(png);
-						}
-						response.body("");
-					}
-					catch (Exception e)
-					{
-						System.out.println("Failed to read file: /ggsmvkr/face/" + path);
-						e.printStackTrace(System.out);
-						halt(404);
-					}
-				}
-				response.type(mime);
-			}
-		});
+		Spark.after(new AfterFilter());
 	}
-	
-	private static byte[] readGraph(String path)
-	{
-		File file = new File(path);
-		try (InputStream is = new FileInputStream(file); 
-				ByteArrayOutputStream buffer = new ByteArrayOutputStream())
-		{
-
-			int nRead;
-			byte[] data = new byte[16384];
-
-			while ((nRead = is.read(data, 0, data.length)) != -1)
-			{
-				buffer.write(data, 0, nRead);
-			}
-
-			buffer.flush();
-
-			return buffer.toByteArray();
-		}
-		catch (IOException e1)
-		{
-			throw new RuntimeException("Failed to read " + path + " file", e1);
-		}
-	}
-	
-
-	public static class CurrStatus
-	{
-		int id;
-		Message lm;
-		boolean connected;
-		boolean submitRequired;
-
-		CurrStatus(int id, Message lm, boolean connected, boolean submitRequired)
-		{
-			this.id = id;
-			this.lm = lm;
-			this.connected = connected;
-			this.submitRequired = submitRequired;
-		}
-
-		public int getId()
-		{
-			return this.id;
-		}
-
-		public Message getLastMessage()
-		{
-			return this.lm;
-		}
-
-		public boolean isObsolete()
-		{
-			return (this.lm == null) || (System.currentTimeMillis() - this.lm.getDate().getTime() > 300000L);
-		}
-
-		public boolean isConnected()
-		{
-			return this.connected;
-		}
-
-		public boolean isSubmitRequired()
-		{
-			return this.submitRequired;
-		}
-	}
-
-	public static class FixedFormat1
-	{
-		public String format(int l)
-		{
-			return "" + (l / 10) + '.' + (l % 10);
-		}
-	}
-
-	private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
-	private static final SimpleDateFormat dtf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-	private static final NumberFormat nf2 = new DecimalFormat("00");
 }

@@ -1,12 +1,7 @@
 package com.intechua.db;
 
-import ggsmvkr.Server;
-
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,26 +11,22 @@ import org.jooq.Result;
 import org.jooq.SelectConditionStep;
 import org.jooq.util.hsqldb.HSQLDBDSL;
 
-import com.intechua.HDatabase;
 import com.intechua.db.beans.PacketEntry;
 import com.intechua.db.beans.PacketJournalEntry;
 import com.intechua.db.jooq.tables.Journal;
 
-public class JournalTable
+public class JournalTable extends AbstractTable
 {
-	private final HDatabase db;
-	private static SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-	public JournalTable()
-	{
-		this.db = Server.getHdb();
-	}
 	
-	public void save(PacketJournalEntry entry)
+
+	/* (non-Javadoc)
+	 * @see com.intechua.db.Table#create()
+	 */
+	@Override
+	public void create()
 	{
 		try
 		{
-
 			// make an empty table
 			//
 			// by declaring the id column IDENTITY, the db will automatically
@@ -52,17 +43,18 @@ public class JournalTable
 			//
 			// this will have no effect on the db
 		}
-
-		try
-		{
-			db.update(MessageFormat.format("INSERT INTO journal(date, counter_id, level, state, power) VALUES(TO_DATE(''{0}'', ''DD.MM.YYYY HH:MI:SS''), {1}, {2}, {3}, {4})", 
-					df.format(entry.getDate()), entry.getCounterId(), entry.getLevel(), entry.getState(), entry.getPower()));
-		}
-		catch (SQLException ex3)
-		{
-			ex3.printStackTrace();
-		}
 	}
+	
+	public void save(PacketJournalEntry entry)
+	{
+
+		HSQLDBDSL.using(db.getConn())
+			.insertInto(Journal.JOURNAL, 
+					Journal.JOURNAL.DATE, Journal.JOURNAL.COUNTER_ID, Journal.JOURNAL.LEVEL, Journal.JOURNAL.STATE, Journal.JOURNAL.POWER)
+			.values(new Timestamp(entry.getDate().getTime()), entry.getCounterId(), entry.getLevel(), entry.getState(), entry.getPower())
+			.execute();
+	}
+
 
 	public void save(PacketEntry entry)
 	{
@@ -134,7 +126,7 @@ public class JournalTable
 		{
 			entry = new PacketJournalEntry();
 			
-			entry.setDate(r.getValue(Journal.JOURNAL.DATE, Date.class));
+			entry.setDate(r.getValue(Journal.JOURNAL.DATE, Timestamp.class));
 			entry.setCounterId(r.getValue(Journal.JOURNAL.COUNTER_ID, Integer.class));
 			entry.setLevel(r.getValue(Journal.JOURNAL.LEVEL, Integer.class));
 			entry.setState(r.getValue(Journal.JOURNAL.STATE, Integer.class));

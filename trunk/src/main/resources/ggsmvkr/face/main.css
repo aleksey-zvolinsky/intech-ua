@@ -16,12 +16,15 @@ body
 	background-color: white;
 }
 
+#main .column .title
+{
+	min-width: 530px;
+}
+
 #main .column
 {
 	width: 33%;
     text-align: center;
-    padding-left: 40px;
-	padding-right: 40px;
 }
 
 #main .image, #main .image.l0
@@ -31,6 +34,7 @@ body
 	float: left;
 	height: 379px;
 	width: 236px;
+	margin-left: 10px;
 }
 
 #main .image.l10
@@ -92,11 +96,17 @@ body
 {
 	background-image: url(../img/rgh.png);
 	width: 337px;
+	margin-left: 10px;
 }
 
 #main .hidden
 {
 	visibility: hidden;
+}
+
+#main .indicators
+{
+	margin-right: 10px;
 }
 
 #main .indicators div
@@ -273,14 +283,112 @@ body
 #journal
 {
 	font-size: 16pt;
+	margin: auto;
+	width: 800px;
 }
 
 #journal table 
 {
+	border-color: black;
+	border-width: 2px;
 	padding: 5px;
+	clear: both;
+	width: 100%;
 }
 
 #journal table th, #journal table td
 {
 	padding: 5px;
+}
+
+#journal .dateFrom, #journal .dateTo
+{
+	float: left;
+	margin: 10px;
+}
+
+#journal #counters
+{
+	float: left;
+	clear: both;
+	margin: 10px;
+}
+
+#journal #states 
+{
+	float: right;
+	margin: 10px;
+}
+
+
+#journal .buttons
+{
+	float: right;
+}
+
+#journal .button
+{
+	height: 36px;
+	width: 148px;
+	font-size: 15pt;
+	float: right;
+	margin: 5px;
+	display: inline-block;
+}
+
+#graph .dates
+{
+	float: left;
+}
+
+#graph .dates div
+{
+	float: right;
+	clear: both;
+	margin: 5px;
+	font-size: 15pt;
+}
+
+#graph .dates input
+{
+	height: 36px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15pt;
+}
+
+#graph .buttons
+{
+	float: right;
+	margin: 20px;
+}
+
+#graph #submit
+{
+	margin 5px;
+	height: 86px;	
+}
+
+#graph .button
+{
+	height: 36px;
+	width: 148px;
+	font-size: 15pt;
+	margin: 5px;
+	display: inline-block;
+}
+
+#graph .buttons .button
+{
+	width: 125px;
+}
+
+#graph #chart
+{
+ 	height: 700px 
+}
+
+#graph
+{
+	margin: auto;
+	width: 1200px;
 }

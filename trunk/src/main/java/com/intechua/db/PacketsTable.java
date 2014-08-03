@@ -5,8 +5,7 @@ import ggsmvkr.Server;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,10 +17,10 @@ import com.intechua.HDatabase;
 import com.intechua.db.beans.PacketEntry;
 import com.intechua.db.jooq.tables.Packets;
 
+
 public class PacketsTable
 {
 	private final HDatabase db;
-	private static SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	
 	public PacketsTable()
 	{
@@ -50,16 +49,12 @@ public class PacketsTable
 			// this will have no effect on the db
 		}
 
-		try
-		{
+		HSQLDBDSL.using(db.getConn())
+			.insertInto(Packets.PACKETS, 
+					Packets.PACKETS.DATE, Packets.PACKETS.LEVEL1, Packets.PACKETS.LEVEL2, Packets.PACKETS.LEVEL3)
+			.values(new Timestamp(entry.getDate().getTime()), entry.getLevel1(), entry.getLevel2(), entry.getLevel3())
+			.execute();
 
-			db.update(MessageFormat.format("INSERT INTO packets(date, level1, level2, level3) VALUES(TO_DATE(''{0}'', ''DD.MM.YYYY HH:MI:SS''), {1}, {2}, {3})", 
-					df.format(entry.getDate()), entry.getLevel1(), entry.getLevel2(), entry.getLevel3()));
-		}
-		catch (SQLException ex3)
-		{
-			ex3.printStackTrace();
-		}
 	}
 	
 	public PacketEntry getLastPacket()
@@ -68,6 +63,7 @@ public class PacketsTable
 			.select()
 			.from(Packets.PACKETS)
 			.orderBy(Packets.PACKETS.DATE.desc())
+			.limit(1)
 			.fetchOne();
 		
 		return currentToEntry(record); 
