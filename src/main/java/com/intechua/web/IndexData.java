@@ -15,7 +15,7 @@ import com.intechua.db.beans.PacketJournalEntry;
 
 public class IndexData extends Route
 {
-	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public IndexData(String path)
 	{
@@ -32,8 +32,12 @@ public class IndexData extends Route
 		
 		try
 		{
-			crit.dateFrom = df.parse("2013-12-31");
-			crit.dateTo = df.parse("2014-01-15");
+			synchronized (DF)
+			{
+				//TODO setup proper dates
+				crit.dateFrom = DF.parse("2013-12-31");
+				crit.dateTo = DF.parse("2014-01-15");
+			}
 		}
 		catch (ParseException e)
 		{
