@@ -1,4 +1,4 @@
-package ggsmvkr;
+package com.intechua;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +35,9 @@ public class Setup
 		return Integer.parseInt(props.getProperty("web.server.port", "8050"));
 	}
 
-	public int getPacketServerPort()
+	public String getWebServerAddress()
 	{
-		return Integer.parseInt(props.getProperty("packet.server.port", "8129"));
+		return props.getProperty("web.server.address", "0.0.0.0");
 	}
 	
 	

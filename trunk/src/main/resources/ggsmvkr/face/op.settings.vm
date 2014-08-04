@@ -1,0 +1,13 @@
+<div id="settings">
+	<table border="1">
+		<tr><th>Настройка<th>Описание<th>Значение<th>Редактировать</tr>
+		#foreach( $r in $result )
+		<tr>
+			<td>$r.name</td>
+			<td>$r.desc</td>
+			<td>$r.value</td>
+			<td><a href="/op/settings/edit?name=$r.name">Редактировать</a></td>
+		</tr>
+		#end
+	</table>
+</div>

@@ -1,0 +1,12 @@
+<div id="settings">
+	<form method="get">
+		<table border="1">
+			<tr><th>Имя настройки<th>Значение</tr>
+			<tr>
+				<td>$name<input type="hidden" value="$name" name="name"></td>
+				<td><input type="text" value="$value" name="value"></td>
+			</tr>
+		</table>
+		<input type="submit" value="Сохранить">
+	</form>
+</div>

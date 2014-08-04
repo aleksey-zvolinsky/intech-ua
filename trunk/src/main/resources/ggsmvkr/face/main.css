@@ -392,3 +392,30 @@ body
 	margin: auto;
 	width: 1200px;
 }
+
+#settings
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15pt;	
+}
+
+#settings
+{
+	font-size: 16pt;
+	margin: auto;
+	width: 800px;
+}
+
+#settings table 
+{
+	border-color: black;
+	border-width: 2px;
+	padding: 5px;
+	clear: both;
+	width: 100%;
+}
+
+#settings table th, #journal table td
+{
+	padding: 5px;
+}

@@ -11,7 +11,7 @@ package com.intechua.db.jooq.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables.records.PacketsRecord> {
 
-	private static final long serialVersionUID = -1196747645;
+	private static final long serialVersionUID = 1391408163;
 
 	/**
 	 * The singleton instance of <code>PUBLIC.PACKETS</code>
@@ -86,7 +86,7 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 */
 	@Override
 	public org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord> getPrimaryKey() {
-		return com.intechua.db.jooq.Keys.SYS_PK_10096;
+		return com.intechua.db.jooq.Keys.SYS_PK_10103;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10096);
+		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10103);
 	}
 
 	/**
