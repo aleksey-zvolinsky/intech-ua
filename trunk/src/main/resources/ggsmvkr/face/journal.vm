@@ -1,17 +1,19 @@
 <div id="journal">
 	<div id="filters">
 		<form method="get">
-			<div class="dateFrom">
-				<label for="dateFrom">Дата с</label>
-				<input type="date" name="dateFrom" id="dateFrom" value="$dateFrom">
-				<label for="timeFrom">Время с</label>
-				<input type="time" name="timeFrom" id="timeFrom" value="$timeFrom">
-			</div>
-			<div class="dateTo">
-				<label for="dateTo">Дата по</label>
-				<input type="date" name="dateTo" id="dateTo" value="$dateTo">
-				<label for="timeTo">Время по</label>
-				<input type="time" name="timeTo" id="timeTo" value="$timeTo">
+			<div class="dates">
+				<div class="dateFrom">
+					<label for="dateFrom">Дата с</label>
+					<input type="date" name="dateFrom" id="dateFrom" value="$dateFrom">
+					<label for="timeFrom">Время с</label>
+					<input type="time" name="timeFrom" id="timeFrom" value="$timeFrom">
+				</div>
+				<div class="dateTo">
+					<label for="dateTo">Дата по</label>
+					<input type="date" name="dateTo" id="dateTo" value="$dateTo">
+					<label for="timeTo">Время по</label>
+					<input type="time" name="timeTo" id="timeTo" value="$timeTo">
+				</div>
 			</div>
 			<div class="buttons">
 				<input type="submit" value="Обновить" class="button"><br/>

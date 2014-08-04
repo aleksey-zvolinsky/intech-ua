@@ -20,13 +20,19 @@ public class ConverterFilter extends Filter
 	{
 		LOG.debug("Received request "+ request.pathInfo());
 		
-		Integer crc = Integer.parseInt(request.queryParams("B"+1));
+		request.attribute("lost_connection", request.pathInfo().contains("&&"));
+		
+		request.attribute("modemid", Integer.parseInt(request.queryParams("ID"), 16));
+		request.attribute("connection_level", Integer.parseInt(request.queryParams("CSQ"), 16));
+		
+		
+		Integer crc = Integer.parseInt(request.queryParams("B"+1), 16);
 		for(int i=2; i <= 7; i++)
 		{
-			crc = crc ^ Integer.parseInt(request.queryParams("B"+i));
+			crc = crc ^ Integer.parseInt(request.queryParams("B"+i), 16);
 		}
 		
-		if(crc != Integer.parseInt(request.queryParams("B8")))
+		if(crc != Integer.parseInt(request.queryParams("B8"), 16))
 		{
 			LOG.error("CRC check failed");
 			request.attribute("crc", "failed");
@@ -36,10 +42,9 @@ public class ConverterFilter extends Filter
 			request.attribute("crc", "success");
 		}
 		
-		Integer.toString(Integer.parseInt(request.queryParams("B1")), 2);
-		
-		
-		
+		String b1 = Integer.toString(Integer.parseInt(request.queryParams("B1"), 16), 2);
+		request.attribute("power", ('1' == b1.charAt(6) && '1' == b1.charAt(7)));
+				
 		Integer level1 = getLevel(request, "B2", "B3");
 		Integer level2 = getLevel(request, "B4", "B5");
 		Integer level3 = getLevel(request, "B6", "B7");
@@ -54,11 +59,11 @@ public class ConverterFilter extends Filter
 		return Integer.parseInt(
 				Integer.toString(
 						Integer.parseInt(request.queryParams(param1)),
-						2) 
+						16) 
 				+ Integer.toString(
 						Integer.parseInt(request.queryParams(param2)),
-						2), 
-				2);
+						16), 
+				16);
 	}
 
 }

@@ -19,6 +19,7 @@ import com.intechua.db.beans.PacketJournalEntry;
 public class Graph extends Route
 {
 	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Graph(String path)
 	{
@@ -60,24 +61,43 @@ public class Graph extends Route
 		}
 		else
 		{
+			SimpleDateFormat df = null;
+			String date = null;
+			
+			if(request.queryParams("timeFrom") != null && request.queryParams("dateFrom") != null)
+			{
+				df = DTF;
+				date = request.queryParams("dateFrom") + " " + request.queryParams("timeFrom");
+			}
+			else if(request.queryParams("dateFrom") != null)
+			{
+				df = DF;
+				date = request.queryParams("dateFrom");
+			}
+			
 			try
 			{
-				synchronized (DF)
-				{
-					crit.dateFrom = DF.parse(request.queryParams("dateFrom"));
-				}
-				
+				crit.dateFrom = df.parse(date);
 			}
 			catch (NullPointerException | ParseException e)
 			{
 				crit.dateFrom = null;
 			}
+			
+			if(request.queryParams("timeTo") != null && request.queryParams("dateTo") != null)
+			{
+				df = DTF;
+				date = request.queryParams("dateTo") + " " + request.queryParams("timeTo");
+			}
+			else if(request.queryParams("dateTo") != null)
+			{
+				df = DF;
+				date = request.queryParams("dateTo");
+			}
+			
 			try
 			{
-				synchronized (DF)
-				{
-					crit.dateTo = DF.parse(request.queryParams("dateTo"));
-				}				
+				crit.dateTo = DF.parse(date);
 			}
 			catch (NullPointerException | ParseException e)
 			{

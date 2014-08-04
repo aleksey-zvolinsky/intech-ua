@@ -40,6 +40,8 @@ public class PacketEntry {
 	int level1;
 	int level2;
 	int level3;
+	private int connectionLevel;
+	private boolean isLostConnection;
 
 	public boolean isPower1()
 	{
@@ -167,36 +169,25 @@ public class PacketEntry {
 	public void setReserve2(boolean reserve2) {
 		this.reserve2 = reserve2;
 	}
-	
-	public static PacketEntry fromString(String strPacket)
-	{
-		PacketEntry pe = new PacketEntry();
-		int intValue = Integer.parseInt(strPacket.substring(0, 2), 16);  
-//		bit7 Электропитание в норме
-//		bit6 Электропитание датчиков в норме
-//		bit5 Состояние расходомера №1
-//		bit4 Состояние расходомера №2
-//		bit3 Состояние расходомера №3
-//		bit2 Обобщенный сигнал Авария
-//		bit1 Резерв
-//		bit0 Резерв
 
-		pe.setPower1( ((intValue & 0x80) > 0 ? true : false));
-		pe.setPower2(pe.isPower1());
-		pe.setPower3(pe.isPower1());
-		pe.setSensorPower ( ((intValue & 0x40) > 0 ? true : false));
-		pe.setFlowmeterState1 ( ((intValue & 0x20) > 0 ? true : false));
-		pe.setFlowmeterState2 ( ((intValue & 0x10) > 0 ? true : false));
-		pe.setFlowmeterState3 ( ((intValue & 0x08) > 0 ? true : false));
-		pe.setAlert ( ((intValue & 0x04) > 0 ? true : false));
-		pe.setReserve1 ( ((intValue & 0x02) > 0 ? true : false));
-		pe.setReserve2 ( ((intValue & 0x01) > 0 ? true : false));
-		
-		pe.setLevel1 ( Integer.parseInt(strPacket.substring(2, 6), 16));
-		pe.setLevel2 ( Integer.parseInt(strPacket.substring(6, 10), 16));
-		pe.setLevel3 ( Integer.parseInt(strPacket.substring(10, 14), 16));
-		
-		return pe;
+	public void setConnectionLevel(int connectionLevel)
+	{
+		this.connectionLevel = connectionLevel;
+	}
+	
+	public int getConnectionLevel()
+	{
+		return connectionLevel;
+	}
+
+	public void setLostConnection(boolean isLostConnection)
+	{
+		this.isLostConnection = isLostConnection;
+	}
+	
+	public boolean getLostConnection()
+	{
+		return isLostConnection;
 	}
 
 }

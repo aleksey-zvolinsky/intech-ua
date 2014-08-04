@@ -1,8 +1,9 @@
 package com.intechua.web;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang.time.DateUtils;
 
 import spark.Request;
 import spark.Response;
@@ -15,7 +16,6 @@ import com.intechua.db.beans.PacketJournalEntry;
 
 public class IndexData extends Route
 {
-	private static SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public IndexData(String path)
 	{
@@ -30,20 +30,9 @@ public class IndexData extends Route
 		JournalTable table = new JournalTable();
 		PacketJournalCriteria crit = new PacketJournalCriteria();
 		
-		try
-		{
-			synchronized (DF)
-			{
-				//TODO setup proper dates
-				crit.dateFrom = DF.parse("2013-12-31");
-				crit.dateTo = DF.parse("2014-01-15");
-			}
-		}
-		catch (ParseException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Date date = new Date();
+		crit.dateFrom = DateUtils.addHours(date, -6);
+		crit.dateTo = date;
 		
 		for(int i = 0; i < 3; i++)
 		{

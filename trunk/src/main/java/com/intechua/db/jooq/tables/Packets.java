@@ -11,7 +11,7 @@ package com.intechua.db.jooq.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables.records.PacketsRecord> {
 
-	private static final long serialVersionUID = 1391408163;
+	private static final long serialVersionUID = 1322614630;
 
 	/**
 	 * The singleton instance of <code>PUBLIC.PACKETS</code>
@@ -37,6 +37,11 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.sql.Timestamp> DATE = createField("DATE", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
 	/**
+	 * The column <code>PUBLIC.PACKETS.MODEMID</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> MODEMID = createField("MODEMID", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
 	 * The column <code>PUBLIC.PACKETS.LEVEL1</code>.
 	 */
 	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> LEVEL1 = createField("LEVEL1", org.jooq.impl.SQLDataType.INTEGER, this, "");
@@ -50,6 +55,31 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 * The column <code>PUBLIC.PACKETS.LEVEL3</code>.
 	 */
 	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> LEVEL3 = createField("LEVEL3", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.RAWLEVEL1</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> RAWLEVEL1 = createField("RAWLEVEL1", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.RAWLEVEL2</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> RAWLEVEL2 = createField("RAWLEVEL2", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.RAWLEVEL3</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> RAWLEVEL3 = createField("RAWLEVEL3", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.STATE</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> STATE = createField("STATE", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.CONNECTION_LEVEL</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> CONNECTION_LEVEL = createField("CONNECTION_LEVEL", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
 	 * Create a <code>PUBLIC.PACKETS</code> table reference
@@ -86,7 +116,7 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 */
 	@Override
 	public org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord> getPrimaryKey() {
-		return com.intechua.db.jooq.Keys.SYS_PK_10103;
+		return com.intechua.db.jooq.Keys.SYS_PK_10097;
 	}
 
 	/**
@@ -94,7 +124,7 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10103);
+		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10097);
 	}
 
 	/**
