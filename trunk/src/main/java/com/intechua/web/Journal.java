@@ -10,12 +10,13 @@ import spark.Route;
 
 import com.intechua.db.JournalTable;
 import com.intechua.db.PacketJournalCriteria;
-import com.intechua.db.beans.PacketJournalEntry;
+import com.intechua.db.jooq.tables.records.JournalRecord;
 
 public class Journal extends Route
 {
 	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 	private static final SimpleDateFormat DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private final JournalTable jtable = new JournalTable();
 	
 	public Journal(String path)
 	{
@@ -25,7 +26,6 @@ public class Journal extends Route
 	@Override
 	public synchronized Object handle(Request request, Response response)
 	{
-		JournalTable jtable = new JournalTable();
 		PacketJournalCriteria crit = new PacketJournalCriteria();
 		
 		SimpleDateFormat df = null;
@@ -85,7 +85,7 @@ public class Journal extends Route
 			crit.counterIds.add(2);
 		}
 		
-		List<PacketJournalEntry> result = jtable.query(crit);
+		List<JournalRecord> result = jtable.query(crit);
 		request.attribute("result", result);
 		
 		for(String param: request.queryParams())

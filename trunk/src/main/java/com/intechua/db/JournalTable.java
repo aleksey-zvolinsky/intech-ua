@@ -2,18 +2,16 @@ package com.intechua.db;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jooq.Condition;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.SelectConditionStep;
 import org.jooq.util.hsqldb.HSQLDBDSL;
 
-import com.intechua.db.beans.PacketEntry;
-import com.intechua.db.beans.PacketJournalEntry;
 import com.intechua.db.jooq.tables.Journal;
+import com.intechua.db.jooq.tables.records.JournalRecord;
+import com.intechua.db.jooq.tables.records.PacketsRecord;
 
 public class JournalTable extends AbstractTable
 {
@@ -45,52 +43,59 @@ public class JournalTable extends AbstractTable
 		}
 	}
 	
-	public void save(PacketJournalEntry entry)
+	public void save(JournalRecord entry)
 	{
 
 		HSQLDBDSL.using(db.getConn())
-			.insertInto(Journal.JOURNAL, 
-					Journal.JOURNAL.DATE, Journal.JOURNAL.COUNTER_ID, Journal.JOURNAL.LEVEL, Journal.JOURNAL.STATE, Journal.JOURNAL.POWER)
-			.values(new Timestamp(entry.getDate().getTime()), entry.getCounterId(), entry.getLevel(), entry.getState(), entry.getPower())
+			.insertInto(Journal.JOURNAL)
+			.values(entry)
 			.execute();
 	}
-
-
-	public void save(PacketEntry entry)
+	
+	public void save(PacketsRecord entry)
 	{
-		PacketJournalEntry pje = new PacketJournalEntry();
-		pje.setCounterId(1);
-		pje.setDate(entry.getDate());
-		pje.setLevel(entry.getLevel1());
-		pje.setPower(entry.isPower1());
-		pje.setState(entry.isFlowmeterState1());
-		save(pje);
+		JournalRecord record = new JournalRecord(); 
+
+		record.setCounterId(1);
+		record.setDate(entry.getDate());
+		record.setLevel(entry.getLevel1());
+		record.setPower(entry.getRawlevel1()>200?1:0);
+		//TODO Where is this state
+		//pje.setState(entry.isFlowmeterState1());
 		
-		pje = new PacketJournalEntry();
-		pje.setCounterId(2);
-		pje.setDate(entry.getDate());
-		pje.setLevel(entry.getLevel2());
-		pje.setPower(entry.isPower2());
-		pje.setState(entry.isFlowmeterState2());
-		save(pje);
+		record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+		record.insert();
 		
-		pje = new PacketJournalEntry();
-		pje.setCounterId(3);
-		pje.setDate(entry.getDate());
-		pje.setLevel(entry.getLevel3());
-		pje.setPower(entry.isPower3());
-		pje.setState(entry.isFlowmeterState3());
-		save(pje);
+		record = new JournalRecord(); 
+		
+		record.setCounterId(2);
+		record.setDate(entry.getDate());
+		record.setLevel(entry.getLevel2());
+		record.setPower(entry.getRawlevel2()>200?1:0);
+		//TODO Where is this state
+		//pje.setState(entry.isFlowmeterState1());
+		
+		record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+		record.insert();
+
+		
+		record = new JournalRecord(); 
+		
+		record.setCounterId(3);
+		record.setDate(entry.getDate());
+		record.setLevel(entry.getLevel3());
+		record.setPower(entry.getRawlevel3()>200?1:0);
+		//TODO Where is this state
+		//pje.setState(entry.isFlowmeterState1());
+		
+		record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+		record.insert();
 	}
 	
-	public List<PacketJournalEntry> query(PacketJournalCriteria crit)
+	public List<JournalRecord> query(PacketJournalCriteria crit)
 	{
-		PacketJournalEntry entry = null;
-		
-
-		SelectConditionStep<Record> q = HSQLDBDSL.using(db.getConn())
-			.select()
-			.from(Journal.JOURNAL)
+		SelectConditionStep<JournalRecord> q = HSQLDBDSL.using(db.getConn())
+			.selectFrom(Journal.JOURNAL)
 			.where("1=1");
 		
 		if(null != crit.dateFrom)
@@ -119,22 +124,8 @@ public class JournalTable extends AbstractTable
 			q.and(cond);
 		}
 		
-		Result<Record> result = q.fetch(); 
-
-		List<PacketJournalEntry> list = new ArrayList<PacketJournalEntry>(result.size());
-		for (Record r : result)
-		{
-			entry = new PacketJournalEntry();
-			
-			entry.setDate(r.getValue(Journal.JOURNAL.DATE, Timestamp.class));
-			entry.setCounterId(r.getValue(Journal.JOURNAL.COUNTER_ID, Integer.class));
-			entry.setLevel(r.getValue(Journal.JOURNAL.LEVEL, Integer.class));
-			entry.setState(r.getValue(Journal.JOURNAL.STATE, Integer.class));
-			entry.setPower(r.getValue(Journal.JOURNAL.POWER, Integer.class));
-			list.add(entry);
-		}
+		Result<JournalRecord> result = q.fetch(); 
 		
-		
-		return list; 
+		return result; 
 	}
 }

@@ -11,7 +11,7 @@ package com.intechua.db.jooq.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables.records.PacketsRecord> {
 
-	private static final long serialVersionUID = 1322614630;
+	private static final long serialVersionUID = -9161822;
 
 	/**
 	 * The singleton instance of <code>PUBLIC.PACKETS</code>
@@ -80,6 +80,16 @@ public class Packets extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 * The column <code>PUBLIC.PACKETS.CONNECTION_LEVEL</code>.
 	 */
 	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> CONNECTION_LEVEL = createField("CONNECTION_LEVEL", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.POWER</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.Integer> POWER = createField("POWER", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.PACKETS.B1</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.PacketsRecord, java.lang.String> B1 = createField("B1", org.jooq.impl.SQLDataType.VARCHAR.length(256), this, "");
 
 	/**
 	 * Create a <code>PUBLIC.PACKETS</code> table reference
