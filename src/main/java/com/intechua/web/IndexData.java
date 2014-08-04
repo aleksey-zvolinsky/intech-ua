@@ -12,7 +12,7 @@ import spark.Route;
 import com.google.gson.Gson;
 import com.intechua.db.JournalTable;
 import com.intechua.db.PacketJournalCriteria;
-import com.intechua.db.beans.PacketJournalEntry;
+import com.intechua.db.jooq.tables.records.JournalRecord;
 
 public class IndexData extends Route
 {
@@ -38,7 +38,7 @@ public class IndexData extends Route
 		{
 			crit.counterIds.clear();
 			crit.counterIds.add(i);
-			List<PacketJournalEntry> res = table.query(crit);
+			List<JournalRecord> res = table.query(crit);
 	
 			json = gson.toJson(res);
 			

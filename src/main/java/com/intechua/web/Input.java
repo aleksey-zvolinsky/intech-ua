@@ -1,5 +1,6 @@
 package com.intechua.web;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import spark.Request;
@@ -8,10 +9,13 @@ import spark.Route;
 
 import com.intechua.db.JournalTable;
 import com.intechua.db.PacketsTable;
-import com.intechua.db.beans.PacketEntry;
+import com.intechua.db.jooq.tables.records.PacketsRecord;
 
 public class Input extends Route
 {
+	private final PacketsTable table = new PacketsTable();
+	private final JournalTable jtable = new JournalTable();	
+	
 	public Input(String path)
 	{
 		super(path);
@@ -21,49 +25,55 @@ public class Input extends Route
 	public Object handle(Request request, Response response)
 	{
 		// receiving packet
-		PacketEntry entry = new PacketEntry();
+		PacketsRecord entry = new PacketsRecord();
 		
 		String connectionLevel = (request.attribute("connection_level") == null) ? request.queryParams("connection_level") : "" + request.attribute("connection_level");
 		entry.setConnectionLevel(Integer.parseInt(connectionLevel));
+		entry.setB1("" + request.attribute("b1"));
 		
 		Boolean isLostConnection = Boolean.parseBoolean((request.attribute("lost_connection") == null) ? request.queryParams("lost_connection") : "false" + request.attribute("connection_level"));
-		entry.setLostConnection(isLostConnection);
+		
 		if(isLostConnection)
 		{
-			
+			entry.setState(2);
 		}
 		else
 		{
+			entry.setState(1);
+			
 		
 			String level1 = (request.attribute("level1") == null) ? request.queryParams("level1") : "" + request.attribute("level1");
 			String level2 = (request.attribute("level2") == null) ? request.queryParams("level2") : "" + request.attribute("level2");
 			String level3 = (request.attribute("level3") == null) ? request.queryParams("level3") : "" + request.attribute("level3");
-			
-			String isPower = (request.attribute("power") == null) ? request.queryParams("power") : "false" + request.attribute("power");
-			
+
 			entry.setLevel1(Integer.parseInt(level1));
 			entry.setLevel2(Integer.parseInt(level2));
 			entry.setLevel3(Integer.parseInt(level3));
-			entry.setSensorPower(Boolean.parseBoolean(isPower));
+			
+			String rawlevel1 = (request.attribute("rawlevel1") == null) ? request.queryParams("rawlevel1") : "" + request.attribute("rawlevel1");
+			String rawlevel2 = (request.attribute("rawlevel2") == null) ? request.queryParams("rawlevel2") : "" + request.attribute("rawlevel2");
+			String rawlevel3 = (request.attribute("rawlevel3") == null) ? request.queryParams("rawlevel3") : "" + request.attribute("rawlevel3");
+			
+			entry.setRawlevel1(Integer.parseInt(rawlevel1));
+			entry.setRawlevel2(Integer.parseInt(rawlevel2));
+			entry.setRawlevel3(Integer.parseInt(rawlevel3));
+
 		}
 		
 		
 		// for debug purposes can set time
 		if(request.queryParams().contains("timestamp"))
 		{
-			entry.setDate(new Date(Long.parseLong(request.queryParams("timestamp"))));
+			entry.setDate(new Timestamp(Long.parseLong(request.queryParams("timestamp"))));
 		}
 		else
 		{
-			entry.setDate(new Date());
+			Date date = new Date();
+			entry.setDate(new Timestamp(date.getTime()));
 		}
-		
-		PacketsTable table = new PacketsTable();
-		table.save(entry);
-		
-		JournalTable jtable = new JournalTable();
-		jtable.save(entry);
 
+		table.save(entry);		
+		jtable.save(entry);
 		 
 		request.attribute("result", (request.attribute("crc") == null) ? "success" : request.attribute("crc"));
 		

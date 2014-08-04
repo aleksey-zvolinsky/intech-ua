@@ -6,9 +6,12 @@ import spark.Filter;
 import spark.Request;
 import spark.Response;
 
+import com.intechua.db.SettingsTable;
+
 public class ConverterFilter extends Filter
 {
 	private final static Logger LOG = Logger.getLogger(ConverterFilter.class);
+	private final SettingsTable settings = new SettingsTable();
 
 	public ConverterFilter(String path)
 	{
@@ -44,17 +47,36 @@ public class ConverterFilter extends Filter
 		
 		String b1 = Integer.toString(Integer.parseInt(request.queryParams("B1"), 16), 2);
 		request.attribute("power", ('1' == b1.charAt(6) && '1' == b1.charAt(7)));
+		request.attribute("b1", b1);
 				
-		Integer level1 = getLevel(request, "B2", "B3");
-		Integer level2 = getLevel(request, "B4", "B5");
-		Integer level3 = getLevel(request, "B6", "B7");
+		Integer rawlevel1 = getRawLevel(request, "B2", "B3");
+		Integer rawlevel2 = getRawLevel(request, "B4", "B5");
+		Integer rawlevel3 = getRawLevel(request, "B6", "B7");
 		
-		request.attribute("level1", level1);
-		request.attribute("level2", level2);
-		request.attribute("level3", level3);
+		request.attribute("rawlevel1", rawlevel1);
+		request.attribute("rawlevel2", rawlevel2);
+		request.attribute("rawlevel3", rawlevel3);
+		
+		
+		request.attribute("level1", getLevel(rawlevel1, 1));
+		request.attribute("level2", getLevel(rawlevel2, 2));
+		request.attribute("level3", getLevel(rawlevel3, 3));
+		
+		
+
 	}
 
-	public int getLevel(Request request, String param1, String param2)
+	private int getLevel(Integer rawlevel1, int counter)
+	{
+		//(А-B)*C
+
+		Float c = Float.parseFloat(settings.get("c"+counter));
+		Float b = Float.parseFloat(settings.get("b"+counter));
+		
+		return Math.round((rawlevel1 - b) * c);
+	}
+	
+	public int getRawLevel(Request request, String param1, String param2)
 	{
 		return Integer.parseInt(
 				Integer.toString(
