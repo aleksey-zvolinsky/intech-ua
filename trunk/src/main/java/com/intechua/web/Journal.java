@@ -22,7 +22,7 @@ public class Journal extends Route
 	}
 
 	@Override
-	public Object handle(Request request, Response response)
+	public synchronized Object handle(Request request, Response response)
 	{
 		JournalTable jtable = new JournalTable();
 		PacketJournalCriteria crit = new PacketJournalCriteria();

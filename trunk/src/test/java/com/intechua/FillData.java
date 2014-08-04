@@ -14,8 +14,6 @@ import java.util.Locale;
 
 public class FillData
 {
-	// 02.01.2014 00:00:00
-	public static DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.ENGLISH);
 	
 	public static void main(String[] args) throws IOException
 	{
@@ -48,12 +46,13 @@ public class FillData
 
 	private static String makeParams(String line)
 	{
+		DateFormat DF = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.ENGLISH);
 		String[] values = line.split("\t");
 //		int number = Integer.parseInt(values[0]);
 		Date date = null;
 		try
 		{
-			date = df.parse(values[1]);
+			date = DF.parse(values[1]);
 		} 
 		catch (ParseException e)
 		{

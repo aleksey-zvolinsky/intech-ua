@@ -18,7 +18,7 @@ import com.intechua.db.beans.PacketJournalEntry;
 
 public class Graph extends Route
 {
-	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 
 	public Graph(String path)
 	{
@@ -62,7 +62,11 @@ public class Graph extends Route
 		{
 			try
 			{
-				crit.dateFrom = df.parse(request.queryParams("dateFrom"));
+				synchronized (DF)
+				{
+					crit.dateFrom = DF.parse(request.queryParams("dateFrom"));
+				}
+				
 			}
 			catch (NullPointerException | ParseException e)
 			{
@@ -70,7 +74,10 @@ public class Graph extends Route
 			}
 			try
 			{
-				crit.dateTo = df.parse(request.queryParams("dateTo"));
+				synchronized (DF)
+				{
+					crit.dateTo = DF.parse(request.queryParams("dateTo"));
+				}				
 			}
 			catch (NullPointerException | ParseException e)
 			{
