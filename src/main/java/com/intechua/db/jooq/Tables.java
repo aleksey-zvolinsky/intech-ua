@@ -29,7 +29,7 @@ public class Tables {
 	public static final com.intechua.db.jooq.tables.Packets PACKETS = com.intechua.db.jooq.tables.Packets.PACKETS;
 
 	/**
-	 * The table PUBLIC.SAMPLE_TABLE
+	 * The table PUBLIC.SETTINGS
 	 */
-	public static final com.intechua.db.jooq.tables.SampleTable SAMPLE_TABLE = com.intechua.db.jooq.tables.SampleTable.SAMPLE_TABLE;
+	public static final com.intechua.db.jooq.tables.Settings SETTINGS = com.intechua.db.jooq.tables.Settings.SETTINGS;
 }

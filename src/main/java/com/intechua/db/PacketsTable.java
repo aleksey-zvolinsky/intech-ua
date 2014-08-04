@@ -1,7 +1,5 @@
 package com.intechua.db;
 
-import ggsmvkr.Server;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,21 +11,15 @@ import java.util.List;
 import org.jooq.Record;
 import org.jooq.util.hsqldb.HSQLDBDSL;
 
-import com.intechua.HDatabase;
 import com.intechua.db.beans.PacketEntry;
 import com.intechua.db.jooq.tables.Packets;
 
 
-public class PacketsTable
+public class PacketsTable extends AbstractTable
 {
-	private final HDatabase db;
 	
-	public PacketsTable()
-	{
-		this.db = Server.getHdb();
-	}
-	
-	public void save(PacketEntry entry)
+	@Override
+	public void create()
 	{
 		try
 		{
@@ -47,7 +39,11 @@ public class PacketsTable
 			// already there
 			//
 			// this will have no effect on the db
-		}
+		}		
+	}
+	
+	public void save(PacketEntry entry)
+	{
 
 		HSQLDBDSL.using(db.getConn())
 			.insertInto(Packets.PACKETS, 
@@ -123,5 +119,6 @@ public class PacketsTable
 		entry.setLevel3(r.getValue(Packets.PACKETS.LEVEL3, Integer.class));
 		return entry;
 	}
+
 	
 }

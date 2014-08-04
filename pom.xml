@@ -22,18 +22,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.rrd4j</groupId>
-			<artifactId>rrd4j</artifactId>
-			<version>2.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sleepycat</groupId>
-			<artifactId>je</artifactId>
-			<version>5.0.73</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>2.3.2</version>
@@ -96,7 +84,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ggsmvkr.Server</mainClass>
+							<mainClass>com.intechua.Server</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

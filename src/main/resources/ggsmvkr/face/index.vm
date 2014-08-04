@@ -9,7 +9,7 @@
 	<tr class="all">
 		<td class="column"></td>
 		<td class="column" id="central_column">
-			<div>
+			<div class="centre">
 				<div class="power"></div>
 				<div class="general_alert"></div>
 			</div>

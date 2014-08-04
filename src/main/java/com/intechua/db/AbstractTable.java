@@ -1,8 +1,7 @@
 package com.intechua.db;
 
-import ggsmvkr.Server;
-
 import com.intechua.HDatabase;
+import com.intechua.Server;
 
 public abstract class AbstractTable implements Table
 {

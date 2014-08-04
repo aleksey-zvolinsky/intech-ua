@@ -11,7 +11,7 @@ package com.intechua.db.jooq;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends org.jooq.impl.SchemaImpl {
 
-	private static final long serialVersionUID = -920680433;
+	private static final long serialVersionUID = 1147349752;
 
 	/**
 	 * The singleton instance of <code>PUBLIC</code>
@@ -37,6 +37,6 @@ public class Public extends org.jooq.impl.SchemaImpl {
 			com.intechua.db.jooq.tables.Journal.JOURNAL,
 			com.intechua.db.jooq.tables.Operator.OPERATOR,
 			com.intechua.db.jooq.tables.Packets.PACKETS,
-			com.intechua.db.jooq.tables.SampleTable.SAMPLE_TABLE);
+			com.intechua.db.jooq.tables.Settings.SETTINGS);
 	}
 }
