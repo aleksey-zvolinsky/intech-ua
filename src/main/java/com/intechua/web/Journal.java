@@ -14,7 +14,8 @@ import com.intechua.db.beans.PacketJournalEntry;
 
 public class Journal extends Route
 {
-	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
+	private static final SimpleDateFormat DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
 	public Journal(String path)
 	{
@@ -26,22 +27,51 @@ public class Journal extends Route
 	{
 		JournalTable jtable = new JournalTable();
 		PacketJournalCriteria crit = new PacketJournalCriteria();
+		
+		SimpleDateFormat df = null;
+		String date = null;
+		
+		if(request.queryParams("timeFrom") != null && request.queryParams("dateFrom") != null)
+		{
+			df = DTF;
+			date = request.queryParams("dateFrom") + " " + request.queryParams("timeFrom");
+		}
+		else if(request.queryParams("dateFrom") != null)
+		{
+			df = DF;
+			date = request.queryParams("dateFrom");
+		}
+		
 		try
 		{
-			crit.dateFrom = df.parse(request.queryParams("dateFrom"));
+			crit.dateFrom = df.parse(date);
 		}
 		catch (NullPointerException | ParseException e)
 		{
 			crit.dateFrom = null;
 		}
+		
+		if(request.queryParams("timeTo") != null && request.queryParams("dateTo") != null)
+		{
+			df = DTF;
+			date = request.queryParams("dateTo") + " " + request.queryParams("timeTo");
+		}
+		else if(request.queryParams("dateTo") != null)
+		{
+			df = DF;
+			date = request.queryParams("dateTo");
+		}
+		
 		try
 		{
-			crit.dateTo = df.parse(request.queryParams("dateTo"));
+			crit.dateTo = DF.parse(date);
 		}
 		catch (NullPointerException | ParseException e)
 		{
 			crit.dateTo = null;
 		}
+		
+
 		if("checked".equals(request.queryParams("counter0")))
 		{
 			crit.counterIds.add(0);

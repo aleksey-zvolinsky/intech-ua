@@ -28,7 +28,7 @@ public class PacketsTable extends AbstractTable
 			//
 			// by declaring the id column IDENTITY, the db will automatically
 			// generate unique values for new rows- useful for row keys
-			db.update("CREATE TABLE packets ( id INTEGER IDENTITY, date TIMESTAMP, level1 INTEGER, level2 INTEGER, level3 INTEGER)");
+			db.update("CREATE TABLE packets ( id INTEGER IDENTITY, date TIMESTAMP, modemid INTEGER, level1 INTEGER, level2 INTEGER, level3 INTEGER, rawlevel1 INTEGER, rawlevel2 INTEGER, rawlevel3 INTEGER, state INTEGER, connection_level INTEGER)");
 		}
 		catch (SQLException ex2)
 		{
@@ -47,7 +47,8 @@ public class PacketsTable extends AbstractTable
 
 		HSQLDBDSL.using(db.getConn())
 			.insertInto(Packets.PACKETS, 
-					Packets.PACKETS.DATE, Packets.PACKETS.LEVEL1, Packets.PACKETS.LEVEL2, Packets.PACKETS.LEVEL3)
+					Packets.PACKETS.DATE, 
+					Packets.PACKETS.LEVEL1, Packets.PACKETS.LEVEL2, Packets.PACKETS.LEVEL3)
 			.values(new Timestamp(entry.getDate().getTime()), entry.getLevel1(), entry.getLevel2(), entry.getLevel3())
 			.execute();
 
@@ -79,7 +80,7 @@ public class PacketsTable extends AbstractTable
 
 			// repeated calls to execute but we
 			// choose to make a new one each time
-			rs = st.executeQuery("select date, level1, level2, level3 from packets order by date"); // run the query
+			rs = st.executeQuery("select date, level1, level2, level3, rawlevel1, rawlevel2, rawlevel3 from packets order by date"); // run the query
 	
 			// do something with the result set.
 
@@ -93,7 +94,6 @@ public class PacketsTable extends AbstractTable
 		}
 		catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return list; 

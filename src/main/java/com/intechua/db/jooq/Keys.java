@@ -27,10 +27,10 @@ public class Keys {
 	// UNIQUE and PRIMARY KEY definitions
 	// -------------------------------------------------------------------------
 
-	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord> SYS_PK_10100 = UniqueKeys0.SYS_PK_10100;
-	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord> SYS_PK_10092 = UniqueKeys0.SYS_PK_10092;
-	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord> SYS_PK_10103 = UniqueKeys0.SYS_PK_10103;
-	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord> SYS_PK_10096 = UniqueKeys0.SYS_PK_10096;
+	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord> SYS_PK_10095 = UniqueKeys0.SYS_PK_10095;
+	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord> SYS_PK_10091 = UniqueKeys0.SYS_PK_10091;
+	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord> SYS_PK_10097 = UniqueKeys0.SYS_PK_10097;
+	public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord> SYS_PK_10093 = UniqueKeys0.SYS_PK_10093;
 
 	// -------------------------------------------------------------------------
 	// FOREIGN KEY definitions
@@ -49,9 +49,9 @@ public class Keys {
 	}
 
 	private static class UniqueKeys0 extends org.jooq.impl.AbstractKeys {
-		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord> SYS_PK_10100 = createUniqueKey(com.intechua.db.jooq.tables.Journal.JOURNAL, com.intechua.db.jooq.tables.Journal.JOURNAL.ID);
-		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord> SYS_PK_10092 = createUniqueKey(com.intechua.db.jooq.tables.Operator.OPERATOR, com.intechua.db.jooq.tables.Operator.OPERATOR.ID);
-		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord> SYS_PK_10103 = createUniqueKey(com.intechua.db.jooq.tables.Packets.PACKETS, com.intechua.db.jooq.tables.Packets.PACKETS.ID);
-		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord> SYS_PK_10096 = createUniqueKey(com.intechua.db.jooq.tables.Settings.SETTINGS, com.intechua.db.jooq.tables.Settings.SETTINGS.ID);
+		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord> SYS_PK_10095 = createUniqueKey(com.intechua.db.jooq.tables.Journal.JOURNAL, com.intechua.db.jooq.tables.Journal.JOURNAL.ID);
+		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord> SYS_PK_10091 = createUniqueKey(com.intechua.db.jooq.tables.Operator.OPERATOR, com.intechua.db.jooq.tables.Operator.OPERATOR.ID);
+		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.PacketsRecord> SYS_PK_10097 = createUniqueKey(com.intechua.db.jooq.tables.Packets.PACKETS, com.intechua.db.jooq.tables.Packets.PACKETS.ID);
+		public static final org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord> SYS_PK_10093 = createUniqueKey(com.intechua.db.jooq.tables.Settings.SETTINGS, com.intechua.db.jooq.tables.Settings.SETTINGS.ID);
 	}
 }

@@ -31,7 +31,7 @@ public class JournalTable extends AbstractTable
 			//
 			// by declaring the id column IDENTITY, the db will automatically
 			// generate unique values for new rows- useful for row keys
-			db.update("CREATE TABLE journal ( id INTEGER IDENTITY, date TIMESTAMP, counter_id INTEGER, level INTEGER, state INTEGER, power INTEGER)");
+			db.update("CREATE TABLE journal ( id INTEGER IDENTITY, date TIMESTAMP, counter_id INTEGER, level INTEGER, rawlevel INTEGER, state INTEGER, power INTEGER)");
 		}
 		catch (SQLException ex2)
 		{

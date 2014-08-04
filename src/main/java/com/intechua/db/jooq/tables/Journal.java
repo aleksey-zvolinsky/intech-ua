@@ -11,7 +11,7 @@ package com.intechua.db.jooq.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Journal extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables.records.JournalRecord> {
 
-	private static final long serialVersionUID = 1795568309;
+	private static final long serialVersionUID = -1426617749;
 
 	/**
 	 * The singleton instance of <code>PUBLIC.JOURNAL</code>
@@ -45,6 +45,11 @@ public class Journal extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 * The column <code>PUBLIC.JOURNAL.LEVEL</code>.
 	 */
 	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.JournalRecord, java.lang.Integer> LEVEL = createField("LEVEL", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>PUBLIC.JOURNAL.RAWLEVEL</code>.
+	 */
+	public final org.jooq.TableField<com.intechua.db.jooq.tables.records.JournalRecord, java.lang.Integer> RAWLEVEL = createField("RAWLEVEL", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
 	 * The column <code>PUBLIC.JOURNAL.STATE</code>.
@@ -91,7 +96,7 @@ public class Journal extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 */
 	@Override
 	public org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord> getPrimaryKey() {
-		return com.intechua.db.jooq.Keys.SYS_PK_10100;
+		return com.intechua.db.jooq.Keys.SYS_PK_10095;
 	}
 
 	/**
@@ -99,7 +104,7 @@ public class Journal extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10100);
+		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.JournalRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10095);
 	}
 
 	/**
