@@ -216,18 +216,20 @@ function refreshData(pe) {
                     // Creates a simple line chart at 10, 10
                     // width 300, height 220
                     // x-values: [1,2,3,4,5], y-values: [10,20,15,35,30]
-            	lines = r.linechart(20,20,el.getWidth()-30,el.getHeight()-100,x,y, {axis:"0 0 1 1"});
+            	lines = r.linechart(20,20,el.getWidth()-30,el.getHeight()-100,x,y, {axis:"0 0 1 1", axisystep: 10});
                 
                 lines.axis[1].text.attr({font:"16px Arial"});
                 lines.axis[0].text.attr({font:"16px Arial"});
-                lines.axis[0].text.items.each( function ( label, index ) {
-                    //Get the timestamp you saved
-                    var originalText = label.attr('text');
-                    var originalY = label.attr('y');
-                    var date = new Date(parseInt(originalText))
-                    label.rotate(20);
-                    label.attr({'text': date.toLocaleString(), 'y': originalY+30 });
-                  });
+                lines.axis[0].text.items.each( 
+                	function ( label, index ) 
+                	{
+	                    //Get the timestamp you saved
+	                    var originalText = label.attr('text');
+	                    var originalY = label.attr('y');
+	                    var date = new Date(parseInt(originalText))
+	                    label.rotate(20);
+	                    label.attr({'text': date.toLocaleTimeString(), 'y': originalY+20 });
+                    });
             }
             
 			dataFailureCount = 0;

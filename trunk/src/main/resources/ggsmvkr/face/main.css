@@ -9,9 +9,17 @@ body
 	src: url(../lets-go-digital-regular.ttf);
 }
 
+html, body
+{
+	height: 100%;
+	margin: 0px; 
+	padding: 0px;
+}
+
 #main 
 {
 	width: 100%;
+	/*height: 100%;*/
 	min-width:1px; 
 	background-color: white;
 }
@@ -25,6 +33,14 @@ body
 {
 	width: 33%;
     text-align: center;
+}
+
+#main #column1, #main #column2, #main #column3
+{
+	  border-style: solid;
+	  border-width: 2px;
+	  border-color: black;
+	  vertical-align: top;
 }
 
 #main .image, #main .image.l0
@@ -172,6 +188,7 @@ body
 #main .graph
 {
 	clear: both;
+	min-height: 500px;
 }
 
 #main .indicators div
@@ -202,6 +219,11 @@ body
 	font-family: "Courier New", Courier, monospace;
 	font-size: 30pt;
 	padding-bottom: 20px;
+}
+
+#main .all
+{
+	height: 120px;
 }
 
 #main .all .power, #main .all .power.off
@@ -240,7 +262,15 @@ body
 
 #main .all #central_column
 {
-	padding-left: 215px;
+	/*padding-left: 215px;*/
+	text-align: center;
+}
+
+#main #central_column .centre
+{
+	margin-left: auto; 
+	margin-right: auto;
+	width: 270px;
 }
 
 #main .all #central_column div div
@@ -360,6 +390,20 @@ body
 	font-size: 15pt;
 }
 
+
+#graph
+{
+	margin: auto;
+	width: 1200px;
+	height: 90%;
+}
+
+
+#graph #chart
+{
+ 	height: 100%; 
+}
+
 #graph .dates
 {
 	float: left;
@@ -406,16 +450,7 @@ body
 	width: 125px;
 }
 
-#graph #chart
-{
- 	height: 700px 
-}
 
-#graph
-{
-	margin: auto;
-	width: 1400px;
-}
 
 #settings
 {
