@@ -11,7 +11,7 @@ package com.intechua.db.jooq.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Settings extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables.records.SettingsRecord> {
 
-	private static final long serialVersionUID = 44516708;
+	private static final long serialVersionUID = -1005201724;
 
 	/**
 	 * The singleton instance of <code>PUBLIC.SETTINGS</code>
@@ -81,7 +81,7 @@ public class Settings extends org.jooq.impl.TableImpl<com.intechua.db.jooq.table
 	 */
 	@Override
 	public org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord> getPrimaryKey() {
-		return com.intechua.db.jooq.Keys.SYS_PK_10093;
+		return com.intechua.db.jooq.Keys.SYS_PK_10096;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class Settings extends org.jooq.impl.TableImpl<com.intechua.db.jooq.table
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10093);
+		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.SettingsRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10096);
 	}
 
 	/**

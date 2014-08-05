@@ -41,7 +41,7 @@ public class PacketsTable extends AbstractTable
 
 		HSQLDBDSL.using(db.getConn())
 			.insertInto(Packets.PACKETS)
-			.values(entry)
+			.set(entry)
 			.execute();
 	}
 	

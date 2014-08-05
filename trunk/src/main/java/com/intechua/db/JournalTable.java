@@ -54,42 +54,59 @@ public class JournalTable extends AbstractTable
 	
 	public void save(PacketsRecord entry)
 	{
-		JournalRecord record = new JournalRecord(); 
-
-		record.setCounterId(1);
-		record.setDate(entry.getDate());
-		record.setLevel(entry.getLevel1());
-		record.setPower(entry.getRawlevel1()>200?1:0);
-		//TODO Where is this state
-		//pje.setState(entry.isFlowmeterState1());
+		if(entry.getState() == 2)//no power
+		{
+			JournalRecord record = new JournalRecord(); 
+			
+			record.setCounterId(-1);
+			record.setDate(entry.getDate());
+			record.setState(200);
+			
+			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+			record.insert();
+		}
+		if(entry.getState() == 1)//ok
+		{
+			JournalRecord record = new JournalRecord(); 
 		
-		record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-		record.insert();
+			record.setCounterId(1);
+			record.setDate(entry.getDate());
+			record.setRawlevel(entry.getRawlevel1());
+			record.setLevel(entry.getLevel1());
+			record.setPower(entry.getRawlevel1()>200?1:0);
+			//TODO Where is this state
+			record.setState(100);
+			
+			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+			record.insert();
+			
+			record = new JournalRecord(); 
+			
+			record.setCounterId(2);
+			record.setDate(entry.getDate());
+			record.setRawlevel(entry.getRawlevel2());
+			record.setLevel(entry.getLevel2());
+			record.setPower(entry.getRawlevel2()>200?1:0);
+			//TODO Where is this state
+			record.setState(100);
+			
+			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+			record.insert();
 		
-		record = new JournalRecord(); 
-		
-		record.setCounterId(2);
-		record.setDate(entry.getDate());
-		record.setLevel(entry.getLevel2());
-		record.setPower(entry.getRawlevel2()>200?1:0);
-		//TODO Where is this state
-		//pje.setState(entry.isFlowmeterState1());
-		
-		record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-		record.insert();
-
-		
-		record = new JournalRecord(); 
-		
-		record.setCounterId(3);
-		record.setDate(entry.getDate());
-		record.setLevel(entry.getLevel3());
-		record.setPower(entry.getRawlevel3()>200?1:0);
-		//TODO Where is this state
-		//pje.setState(entry.isFlowmeterState1());
-		
-		record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-		record.insert();
+			
+			record = new JournalRecord(); 
+			
+			record.setCounterId(3);
+			record.setDate(entry.getDate());
+			record.setRawlevel(entry.getRawlevel3());
+			record.setLevel(entry.getLevel3());
+			record.setPower(entry.getRawlevel3()>200?1:0);
+			//TODO Where is this state
+			record.setState(100);
+			
+			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
+			record.insert();
+		}
 	}
 	
 	public List<JournalRecord> query(PacketJournalCriteria crit)

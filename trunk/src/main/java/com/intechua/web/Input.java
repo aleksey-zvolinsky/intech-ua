@@ -13,8 +13,8 @@ import com.intechua.db.jooq.tables.records.PacketsRecord;
 
 public class Input extends Route
 {
-	private final PacketsTable table = new PacketsTable();
-	private final JournalTable jtable = new JournalTable();	
+	private final PacketsTable packetsTable = new PacketsTable();
+	private final JournalTable journalTable = new JournalTable();	
 	
 	public Input(String path)
 	{
@@ -71,9 +71,15 @@ public class Input extends Route
 			Date date = new Date();
 			entry.setDate(new Timestamp(date.getTime()));
 		}
+		
+		String modemid = (request.attribute("modemid") == null) ? request.queryParams("modemid") : "" + request.attribute("modemid");
+		entry.setModemid(Integer.parseInt(modemid));
+		
+		String power = (request.attribute("power") == null) ? request.queryParams("power") : "" + request.attribute("power");
+		entry.setPower(Integer.parseInt(power));
 
-		table.save(entry);		
-		jtable.save(entry);
+		packetsTable.save(entry);		
+		journalTable.save(entry);
 		 
 		request.attribute("result", (request.attribute("crc") == null) ? "success" : request.attribute("crc"));
 		
