@@ -11,7 +11,7 @@ package com.intechua.db.jooq.tables;
 @java.lang.SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Operator extends org.jooq.impl.TableImpl<com.intechua.db.jooq.tables.records.OperatorRecord> {
 
-	private static final long serialVersionUID = -329346108;
+	private static final long serialVersionUID = -679252252;
 
 	/**
 	 * The singleton instance of <code>PUBLIC.OPERATOR</code>
@@ -76,7 +76,7 @@ public class Operator extends org.jooq.impl.TableImpl<com.intechua.db.jooq.table
 	 */
 	@Override
 	public org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord> getPrimaryKey() {
-		return com.intechua.db.jooq.Keys.SYS_PK_10091;
+		return com.intechua.db.jooq.Keys.SYS_PK_10092;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class Operator extends org.jooq.impl.TableImpl<com.intechua.db.jooq.table
 	 */
 	@Override
 	public java.util.List<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord>> getKeys() {
-		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10091);
+		return java.util.Arrays.<org.jooq.UniqueKey<com.intechua.db.jooq.tables.records.OperatorRecord>>asList(com.intechua.db.jooq.Keys.SYS_PK_10092);
 	}
 
 	/**

@@ -1,6 +1,9 @@
 package com.intechua.web;
 
+import java.text.MessageFormat;
+
 import org.apache.log4j.Logger;
+import org.jooq.tools.StringUtils;
 
 import spark.Filter;
 import spark.Request;
@@ -21,9 +24,9 @@ public class ConverterFilter extends Filter
 	@Override
 	public void handle(Request request, Response response)
 	{
-		LOG.debug("Received request "+ request.pathInfo());
+		LOG.debug("Received request "+ request.pathInfo() + "?" + request.queryString());
 		
-		request.attribute("lost_connection", request.pathInfo().contains("&&"));
+		request.attribute("lost_connection", request.queryString().contains("&&"));
 		
 		request.attribute("modemid", Integer.parseInt(request.queryParams("ID"), 16));
 		request.attribute("connection_level", Integer.parseInt(request.queryParams("CSQ"), 16));
@@ -45,8 +48,8 @@ public class ConverterFilter extends Filter
 			request.attribute("crc", "success");
 		}
 		
-		String b1 = Integer.toString(Integer.parseInt(request.queryParams("B1"), 16), 2);
-		request.attribute("power", ('1' == b1.charAt(6) && '1' == b1.charAt(7)));
+		String b1 = StringUtils.leftPad(Integer.toString(Integer.parseInt(request.queryParams("B1"), 16), 2), 8, "0");
+		request.attribute("power", ('1' == b1.charAt(6) && '1' == b1.charAt(7))?1:0);
 		request.attribute("b1", b1);
 				
 		Integer rawlevel1 = getRawLevel(request, "B2", "B3");
@@ -57,35 +60,32 @@ public class ConverterFilter extends Filter
 		request.attribute("rawlevel2", rawlevel2);
 		request.attribute("rawlevel3", rawlevel3);
 		
+		LOG.debug(MessageFormat.format("rawlevel1 = {0}, rawlevel2 = {1}, rawlevel3 = {2}", rawlevel1, rawlevel2, rawlevel3));
 		
-		request.attribute("level1", getLevel(rawlevel1, 1));
-		request.attribute("level2", getLevel(rawlevel2, 2));
-		request.attribute("level3", getLevel(rawlevel3, 3));
+		int level1 = getLevel(rawlevel1, 1);
+		int level2 = getLevel(rawlevel2, 2);
+		int level3 = getLevel(rawlevel3, 3);
 		
+		request.attribute("level1", level1);
+		request.attribute("level2", level2);
+		request.attribute("level3", level3);
 		
-
+		LOG.debug(MessageFormat.format("level1 = {0}, level2 = {1}, level3 = {2}", level1, level2, level3));
 	}
 
 	private int getLevel(Integer rawlevel1, int counter)
 	{
 		//(А-B)*C
-
-		Float c = Float.parseFloat(settings.get("c"+counter));
-		Float b = Float.parseFloat(settings.get("b"+counter));
+		
+		float c = Float.parseFloat(settings.get("c"+counter).replace(",", "."));
+		float b = Float.parseFloat(settings.get("b"+counter).replace(",", "."));
 		
 		return Math.round((rawlevel1 - b) * c);
 	}
 	
 	public int getRawLevel(Request request, String param1, String param2)
 	{
-		return Integer.parseInt(
-				Integer.toString(
-						Integer.parseInt(request.queryParams(param1)),
-						16) 
-				+ Integer.toString(
-						Integer.parseInt(request.queryParams(param2)),
-						16), 
-				16);
+		return Integer.parseInt(StringUtils.leftPad(request.queryParams(param1), 2, "0") + StringUtils.leftPad(request.queryParams(param2), 2, "0"),16);
 	}
 
 }
