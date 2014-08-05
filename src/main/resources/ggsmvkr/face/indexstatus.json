@@ -1,3 +1,4 @@
 {
-	"last_packet": $packet
+	"last_packet": $packet,
+	"volume": $volume_enabled
 }

@@ -233,6 +233,11 @@ body
 	background-image: url(../img/topllon.png);
 }
 
+#main .all .general_alert.woff
+{
+	background-image: url(../img/toplwoff.png);
+}
+
 #main .all #central_column
 {
 	padding-left: 215px;
@@ -285,6 +290,12 @@ body
 	font-size: 16pt;
 	margin: auto;
 	width: 800px;
+}
+
+#journal input[type="checkbox"]
+{
+	width: 20px;
+	height: 20px;
 }
 
 #journal table 
@@ -403,7 +414,7 @@ body
 #graph
 {
 	margin: auto;
-	width: 1200px;
+	width: 1400px;
 }
 
 #settings

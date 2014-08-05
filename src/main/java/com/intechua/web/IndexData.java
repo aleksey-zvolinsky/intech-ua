@@ -1,21 +1,22 @@
 package com.intechua.web;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
+import org.jooq.Result;
 
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.google.gson.Gson;
+import com.intechua.db.JournalCriteria;
 import com.intechua.db.JournalTable;
-import com.intechua.db.PacketJournalCriteria;
 import com.intechua.db.jooq.tables.records.JournalRecord;
 
 public class IndexData extends Route
 {
+	private final static Logger LOG = Logger.getLogger(IndexData.class);
 	
 	public IndexData(String path)
 	{
@@ -25,26 +26,28 @@ public class IndexData extends Route
 	@Override
 	public Object handle(Request request, Response response)
 	{
-		String json;
-		Gson gson = new Gson();
-		JournalTable table = new JournalTable();
-		PacketJournalCriteria crit = new PacketJournalCriteria();
-		
-		Date date = new Date();
-		crit.dateFrom = DateUtils.addHours(date, -6);
-		crit.dateTo = date;
-		
-		for(int i = 0; i < 3; i++)
+		try
 		{
-			crit.counterIds.clear();
-			crit.counterIds.add(i);
-			List<JournalRecord> res = table.query(crit);
-	
-			json = gson.toJson(res);
+			JournalTable table = new JournalTable();
+			JournalCriteria crit = new JournalCriteria();
 			
-			request.attribute("list"+i, json);
+			Date date = new Date();
+			crit.dateFrom = DateUtils.addHours(date, -6);
+			crit.dateTo = date;
+			
+			for(int i = 1; i <= 3; i++)
+			{
+				crit.counterIds.clear();
+				crit.counterIds.add(i);
+				Result<JournalRecord> res = table.query(crit);
+				
+				request.attribute("list"+i, res.formatJSON());
+			}
 		}
-		
+		catch(Throwable th)
+		{
+			LOG.error("Failed to get index data", th);
+		}
 		return null;
 	}
 }

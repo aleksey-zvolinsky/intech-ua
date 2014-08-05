@@ -31,6 +31,10 @@ public class FillHexData
 			    	{
 			    		
 			    	}
+			    	catch (Exception e) 
+			    	{
+						// TODO: handle exception
+					}
 			    	
 			    	System.out.printf("%06d: %s%n", ++lineNumber, line);
 			    	

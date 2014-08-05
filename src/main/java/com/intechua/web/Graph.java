@@ -3,23 +3,21 @@ package com.intechua.web;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.jooq.Result;
 
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.google.gson.Gson;
+import com.intechua.db.JournalCriteria;
 import com.intechua.db.JournalTable;
-import com.intechua.db.PacketJournalCriteria;
 import com.intechua.db.jooq.tables.records.JournalRecord;
 
 public class Graph extends Route
 {
-	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
-	private static final SimpleDateFormat DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private final JournalTable journal = new JournalTable();
 
 	public Graph(String path)
 	{
@@ -29,8 +27,10 @@ public class Graph extends Route
 	@Override
 	public Object handle(Request request, Response response)
 	{
-		JournalTable jtable = new JournalTable();
-		PacketJournalCriteria crit = new PacketJournalCriteria();
+		SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		JournalCriteria crit = new JournalCriteria();
 		
 		if(null != request.queryParams("fixedPeriod"))
 		{
@@ -107,9 +107,8 @@ public class Graph extends Route
 		
 		crit.counterIds.add(Integer.parseInt(request.queryParams("counter")));
 		
-		List<JournalRecord> result = jtable.query(crit);
-		Gson gson = new Gson();
-		request.attribute("result", gson.toJson(result));
+		Result<JournalRecord> result = journal.query(crit);
+		request.attribute("result", result.formatJSON());
 		
 		for(String param: request.queryParams())
 		{
