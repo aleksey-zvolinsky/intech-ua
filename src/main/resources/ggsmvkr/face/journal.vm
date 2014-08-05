@@ -5,14 +5,10 @@
 				<div class="dateFrom">
 					<label for="dateFrom">Дата с</label>
 					<input type="date" name="dateFrom" id="dateFrom" value="$dateFrom">
-					<label for="timeFrom">Время с</label>
-					<input type="time" name="timeFrom" id="timeFrom" value="$timeFrom">
 				</div>
 				<div class="dateTo">
 					<label for="dateTo">Дата по</label>
 					<input type="date" name="dateTo" id="dateTo" value="$dateTo">
-					<label for="timeTo">Время по</label>
-					<input type="time" name="timeTo" id="timeTo" value="$timeTo">
 				</div>
 			</div>
 			<div class="buttons">
@@ -28,7 +24,7 @@
 				<label for="c[1]">Хлоргаз 2</label>
 				<input type="checkbox" name="counter2" value="checked" id="c[1]" $counter2 >
 				
-				<label for="c[2]">Гипохлорид</label>
+				<label for="c[2]">Гипохлорит</label>
 				<input type="checkbox" name="counter3" value="checked" id="c[2]" $counter3 >
 			</div> 
 			

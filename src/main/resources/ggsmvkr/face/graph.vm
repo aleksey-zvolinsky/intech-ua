@@ -10,25 +10,21 @@
 			<div class="dateFrom">
 				<label for="dateFrom">Дата с</label> 
 				<input type="date" name="dateFrom" id="dateFrom" value="$dateFrom">
-				<label for="timeFrom">Время с</label>
-				<input type="time" name="timeFrom" id="timeFrom" value="$timeFrom">
 			</div>
 			<div class="dateTo">
 				<label for="dateTo">Дата по</label>
 				<input type="date" name="dateTo" id="dateTo" value="$dateTo">
-				<label for="timeTo">Время по</label>
-				<input type="time" name="timeTo" id="timeTo" value="$timeTo">
 			</div>
 			
 		</div>
-		<input type="submit" value="Обновить" class="button" id="submit">
+		<input type="submit" value="Обновить" class="button" id="submit" >
 		<div class="buttons">
 			<input type="button" value="Часы" class="button" alt="последние 6 часов"  onclick="onClick('hour')">
 			<input type="button" value="Сутки" class="button" alt="последние 24 часа"  onclick="onClick('day')">
 			<input type="button" value="Неделя" class="button" alt="последние 7 дней"  onclick="onClick('week')">
 			<input type="button" value="Месяц" class="button" alt="последние 30 дней"  onclick="onClick('month')">
 			<input type="button" value="Год" class="button" alt="последние 365 дней" onclick="onClick('year')">
-			<input type="hidden" name="fixedPeriod" value="hour" id="fixedPeriod">
+			<input type="hidden" name="fixedPeriod" value="" id="fixedPeriod">
 		</div>
 	</form>
 	<div id="chart">
@@ -39,8 +35,8 @@
 
 function onClick(fixedPeriod)
 {
-	$("fixedPeriod").value=fixedPeriod;
-	document.getElementById("form1").submit();
+	$("fixedPeriod").value = fixedPeriod;
+	$("submit").click();
 }
 
 function drawChart()
@@ -63,9 +59,9 @@ function drawChart()
     // Creates a simple line chart at 10, 10
     // width 300, height 220
     // x-values: [1,2,3,4,5], y-values: [10,20,15,35,30]
-    lines = r.linechart(20,20,el.getWidth()-30,el.getHeight()-100,x,y, {axis:"0 0 1 1"});
-    lines.axis[1].text.attr({font:"16px Arial"});
-    lines.axis[0].text.attr({font:"16px Arial"});
+    lines = r.linechart(20,20,el.getWidth()-30,el.getHeight()-100,x,y, {axis:"0 0 1 1", axisystep: 20});
+    lines.axis[1].text.attr({font:"16pt Arial"});
+    lines.axis[0].text.attr({font:"16pt Arial"});
     lines.axis[0].text.items.each( function ( label, index ) {
         //Get the timestamp you saved
         var originalText = label.attr('text');
