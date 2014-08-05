@@ -9,7 +9,7 @@ import spark.Response;
 import spark.Route;
 
 import com.intechua.db.JournalTable;
-import com.intechua.db.PacketJournalCriteria;
+import com.intechua.db.JournalCriteria;
 import com.intechua.db.jooq.tables.records.JournalRecord;
 
 public class Journal extends Route
@@ -26,7 +26,7 @@ public class Journal extends Route
 	@Override
 	public synchronized Object handle(Request request, Response response)
 	{
-		PacketJournalCriteria crit = new PacketJournalCriteria();
+		JournalCriteria crit = new JournalCriteria();
 		
 		SimpleDateFormat df = null;
 		String date = null;

@@ -6,7 +6,7 @@ var alarm_audio = new Howl({
 alarm_audio.mute();
 
 var failureCount = 0;
-var dateFailureCount = 0;
+var dataFailureCount = 0;
 
 function onClickJournal(counter)
 {
@@ -32,32 +32,121 @@ function refreshStatus(pe) {
 		onSuccess: function(transport)
 		{
 			var param = transport.responseText.evalJSON();
-			var packet = param.last_packet;
-			if(packet.flowmeterState1)
+			var packet = param.last_packet.records[0];
+			
+			packet.failure = false;
+//			param.volume = true;
+			
+			packet.date = new Date(packet[1]);
+			packet.level1 = packet[3];
+			packet.level2 = packet[4];
+			packet.level3 = packet[5];
+			
+			packet.rawlevel1 = packet[6];
+			packet.rawlevel2 = packet[7];
+			packet.rawlevel3 = packet[8];
+			
+			packet.power = packet[11];
+			packet.flowmeterState1 = (packet.power == 1);
+			packet.flowmeterState2 = (packet.power == 1);
+			packet.flowmeterState3 = (packet.power == 1);
+			
+			packet.state = packet[9];
+			packet.connection_level = packet[10];
+			
+			
+			if(param.volume.toString() == "true")
 			{
-				$$("#column1 .error").invoke('addClassName','on');
+				$$(".all .voice").invoke('addClassName','on');
 			}
 			else
 			{
-				$$("#column1 .error").invoke('removeClassName','on');
+				$$(".all .voice").invoke('removeClassName','on');
+			}
+			
+			
+			
+			var diff = new Date() - packet.date;
+			var diffminutes = Math.floor((diff/1000)/60);
+			
+			$$(".all .general_alert").invoke('removeClassName','off');
+			$$(".all .general_alert").invoke('removeClassName','on');
+			$$(".all .general_alert").invoke('removeClassName','woff');
+			if(packet.state == 200)
+			{
+				$$(".all .general_alert").invoke('addClassName','woff');
+				packet.failure = true;
+			}
+			else if(diffminutes > 5)
+			{
+				$$(".all .general_alert").invoke('addClassName','off');
+			}
+			else
+			{
+				$$(".all .general_alert").invoke('addClassName','on');
+			}
+			
+			if(packet.power == 1)
+			{
+				$$(".all .power").invoke('addClassName','on');
+			}
+			else
+			{
+				$$(".all .power").invoke('removeClassName','on');
+			}
+			
+			if(packet.rawlevel1 > 200)
+			{
+				$$("#column1 .power").invoke('addClassName','on');
+			}
+			else
+			{
+				$$("#column1 .power").invoke('removeClassName','on');
+			}
+			
+			if(packet.rawlevel2 > 200)
+			{
+				$$("#column2 .power").invoke('addClassName','on');
+			}
+			else
+			{
+				$$("#column2 .power").invoke('removeClassName','on');
+			}
+			
+			if(packet.rawlevel3 > 200)
+			{
+				$$("#column3 .power").invoke('addClassName','on');
+			}
+			else
+			{
+				$$("#column3 .power").invoke('removeClassName','on');
+			}
+			
+			if(packet.flowmeterState1)
+			{
+				$$("#column1 .error").invoke('addClassName','off');
+			}
+			else
+			{
+				$$("#column1 .error").invoke('removeClassName','off');
 			}
 			
 			if(packet.flowmeterState2)
 			{
-				$$("#column2 .error").invoke('addClassName','on');
+				$$("#column2 .error").invoke('addClassName','off');
 			}
 			else
 			{
-				$$("#column2 .error").invoke('removeClassName','on');
+				$$("#column2 .error").invoke('removeClassName','off');
 			}	
 			
 			if(packet.flowmeterState3)
 			{
-				$$("#column3 .error").invoke('addClassName','on');
+				$$("#column3 .error").invoke('addClassName','off');
 			}
 			else
 			{
-				$$("#column3 .error").invoke('removeClassName','on');
+				$$("#column3 .error").invoke('removeClassName','off');
 			}
 			
 			$("value1").update(packet.level1);
@@ -69,34 +158,16 @@ function refreshStatus(pe) {
 			
 			$w($("image2").className).each(function(a){if(a != "image")$("image2").removeClassName(a);});
 			$("image2").addClassName("l"+Math.round(packet.level2/10)*10);
-			//;
 			
-			/*
+			
+			if ( packet.failure && (param.volume.toString() == "true") )
 			{
-				last_packet: {
-					id: 0,
-					power: false,
-					sensorPower: false,
-					flowmeterState1: false,
-					flowmeterState2: false,
-					flowmeterState3: false,
-					alert: false,
-					reserve1: false,
-					reserve2: false,
-					level1: 33,
-					level2: 55,
-					level3: 66
-				}
-			} */
-			
-//			if ( failure && param.settings.alarm_enabled )
-//			{
-//				alarm_audio.unmute();
-//			}
-//			else
-//			{
-//				alarm_audio.mute();
-//			}
+				alarm_audio.unmute();
+			}
+			else
+			{
+				alarm_audio.mute();
+			}
 			
 			failureCount = 0;
 		}
@@ -124,20 +195,22 @@ function refreshData(pe) {
 		},
 		onSuccess: function(transport)
 		{
+			var LEVEL = 3;
+			var DATE = 1;
 			var param = transport.responseText.evalJSON();
 			
             for(var j=0; j < param.data.size(); j++)
             {
                 var el = $("chart" + (j+1));
-                var list = param.data[1];
+                var list = param.data[j].records;
                 el.innerHTML = '';
             	var r = Raphael(el);
             	var y = [];
             	var x = [];
             	for(i=0; i < list.size(); i++ )
             	{
-            		y.push(list[i].level);
-            		x.push(new Date(list[i].date));
+            		y.push(list[i][LEVEL]);
+            		x.push(new Date(list[i][DATE]));
             	}
             	
                     // Creates a simple line chart at 10, 10

@@ -2,7 +2,6 @@ package com.intechua.db;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Result;
@@ -109,7 +108,7 @@ public class JournalTable extends AbstractTable
 		}
 	}
 	
-	public List<JournalRecord> query(PacketJournalCriteria crit)
+	public Result<JournalRecord> query(JournalCriteria crit)
 	{
 		SelectConditionStep<JournalRecord> q = HSQLDBDSL.using(db.getConn())
 			.selectFrom(Journal.JOURNAL)

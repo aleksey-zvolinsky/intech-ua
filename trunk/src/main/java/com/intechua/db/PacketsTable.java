@@ -2,7 +2,7 @@ package com.intechua.db;
 
 import java.sql.SQLException;
 
-import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.util.hsqldb.HSQLDBDSL;
 
 import com.intechua.db.jooq.tables.Packets;
@@ -45,16 +45,15 @@ public class PacketsTable extends AbstractTable
 			.execute();
 	}
 	
-	public Record getLastPacket()
+	public  Result<PacketsRecord> getLastPacket()
 	{		
-		Record record = HSQLDBDSL.using(db.getConn())
-			.select()
-			.from(Packets.PACKETS)
+		Result<PacketsRecord> result = HSQLDBDSL.using(db.getConn())
+			.selectFrom(Packets.PACKETS)
 			.orderBy(Packets.PACKETS.DATE.desc())
 			.limit(1)
-			.fetchOne();
+			.fetch();
 		
-		return record; 
+		return result; 
 	}
 		
 }
