@@ -15,6 +15,7 @@ import spark.Response;
 
 public class AfterFilter extends Filter
 {
+	private static final String PATH_TO_FACE = "ggsmvkr/face/";
 	private static final String ENCODING = "UTF-8";
 	private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
@@ -85,9 +86,9 @@ public class AfterFilter extends Filter
 			StringWriter sw = new StringWriter();
 			if (vmName.endsWith(".vm"))
 			{
-				Velocity.getTemplate("ggsmvkr/face/_head.vm", ENCODING).merge(new VelocityContext(), sw);
+				Velocity.getTemplate(PATH_TO_FACE + "_head.vm", ENCODING).merge(new VelocityContext(), sw);
 			}
-			Template t = Velocity.getTemplate("ggsmvkr/face/" + vmName, ENCODING);
+			Template t = Velocity.getTemplate(PATH_TO_FACE + vmName, ENCODING);
 			VelocityContext context = new VelocityContext();
 			for (String attr : request.attributes())
 			{
@@ -100,7 +101,7 @@ public class AfterFilter extends Filter
 			t.merge(context, sw);
 			if (vmName.endsWith(".vm"))
 			{
-				Velocity.getTemplate("ggsmvkr/face/_tail.vm", ENCODING).merge(new VelocityContext(), sw);
+				Velocity.getTemplate(PATH_TO_FACE + "_tail.vm", ENCODING).merge(new VelocityContext(), sw);
 			}
 			response.body(sw.toString());
 		}
@@ -112,7 +113,7 @@ public class AfterFilter extends Filter
 				byte[] png = (byte[]) request.attribute("png");
 				if (png == null)
 				{
-					InputStream fis = this.getClass().getResourceAsStream("/ggsmvkr/face/" + path);
+					InputStream fis = this.getClass().getResourceAsStream("/" + PATH_TO_FACE + path);
 
 					StreamUtils.copy(fis, response.raw().getOutputStream());
 					fis.close();
@@ -125,7 +126,7 @@ public class AfterFilter extends Filter
 			}
 			catch (Exception e)
 			{
-				System.out.println("Failed to read file: /ggsmvkr/face/" + path);
+				System.out.println("Failed to read file: /"+PATH_TO_FACE + path);
 				e.printStackTrace(System.out);
 				halt(404);
 			}
