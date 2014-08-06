@@ -451,15 +451,9 @@ html, body
 }
 
 
-
 #settings
 {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 15pt;	
-}
-
-#settings
-{
 	font-size: 16pt;
 	margin: auto;
 	width: 800px;
@@ -477,4 +471,44 @@ html, body
 #settings table th, #journal table td
 {
 	padding: 5px;
+}
+
+#settings #content div
+{
+	float: left;
+	padding-right: 10px;
+}
+
+#settings #content div#k1, #settings #content div#k2, #settings #content div#k3,
+#settings #content div#a1, #settings #content div#a2, #settings #content div#a3
+{
+	float: right;
+}
+
+#settings #content input
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16pt;
+}
+
+#settings #content tr
+{
+	height: 40px;
+	vertical-align: center;
+}
+#settings #content td
+{
+	min-width: 200px;
+}
+
+
+#settings #content .counter .column2 input
+{
+	width: 70px;
+	height: 25px;
+}
+
+#settings #content .counter .column2 div.a, #settings #content .counter .column2 div.k
+{
+	padding-top: 1px;
 }

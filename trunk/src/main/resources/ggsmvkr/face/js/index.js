@@ -227,8 +227,12 @@ function refreshData(pe) {
 	                    var originalText = label.attr('text');
 	                    var originalY = label.attr('y');
 	                    var date = new Date(parseInt(originalText))
-	                    label.rotate(20);
-	                    label.attr({'text': date.toLocaleTimeString(), 'y': originalY+20 });
+	                    if(date.toString() != "Invalid Date")
+	                    {
+	                    	label.rotate(20);
+		                    label.attr({'text': date.toLocaleTimeString(), 'y': originalY+20 });	
+	                    }
+	                    
                     });
             }
             

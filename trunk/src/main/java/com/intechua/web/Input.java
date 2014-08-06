@@ -11,12 +11,15 @@ import spark.Route;
 
 import com.intechua.db.JournalTable;
 import com.intechua.db.PacketsTable;
+import com.intechua.db.SettingsTable;
 import com.intechua.db.jooq.tables.records.PacketsRecord;
 
 public class Input extends Route
 {
 	private final PacketsTable packetsTable = new PacketsTable();
 	private final JournalTable journalTable = new JournalTable();
+	private final SettingsTable settingsTable = new SettingsTable();
+	
 	private final static Logger LOG = Logger.getLogger(Input.class);
 	
 	public Input(String path)
@@ -83,8 +86,13 @@ public class Input extends Route
 			String power = (request.attribute("power") == null) ? request.queryParams("power") : "" + request.attribute("power");
 			entry.setPower(Integer.parseInt(power));
 	
-			packetsTable.save(entry);		
+			packetsTable.save(entry);
+			LOG.debug("Packet stored succesfully");
 			journalTable.save(entry);
+			LOG.debug("Journals stored succesfully");
+			settingsTable.update("connection_level", "" + request.attribute("connection_level"));
+			LOG.debug("Connection level stored succesfully");
+			
 			 
 			request.attribute("result", (request.attribute("crc") == null) ? "success" : request.attribute("crc"));
 		}
