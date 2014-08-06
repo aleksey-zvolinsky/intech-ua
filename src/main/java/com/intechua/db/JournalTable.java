@@ -44,27 +44,24 @@ public class JournalTable extends AbstractTable
 	
 	public void save(JournalRecord entry)
 	{
-
 		HSQLDBDSL.using(db.getConn())
 			.insertInto(Journal.JOURNAL)
-			.values(entry)
+			.set(entry)
 			.execute();
 	}
 	
 	public void save(PacketsRecord entry)
 	{
-		if(entry.getState() == 2)//no power
+		if(entry.getState() == 200)//no power
 		{
 			JournalRecord record = new JournalRecord(); 
 			
 			record.setCounterId(-1);
 			record.setDate(entry.getDate());
-			record.setState(200);
-			
-			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-			record.insert();
+			record.setState(entry.getState());
+			save(record);
 		}
-		if(entry.getState() == 1)//ok
+		if(entry.getState() == 100)//ok
 		{
 			JournalRecord record = new JournalRecord(); 
 		
@@ -74,10 +71,8 @@ public class JournalTable extends AbstractTable
 			record.setLevel(entry.getLevel1());
 			record.setPower(entry.getRawlevel1()>200?1:0);
 			//TODO Where is this state
-			record.setState(100);
-			
-			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-			record.insert();
+			record.setState(entry.getState());
+			save(record);
 			
 			record = new JournalRecord(); 
 			
@@ -88,9 +83,7 @@ public class JournalTable extends AbstractTable
 			record.setPower(entry.getRawlevel2()>200?1:0);
 			//TODO Where is this state
 			record.setState(100);
-			
-			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-			record.insert();
+			save(record);
 		
 			
 			record = new JournalRecord(); 
@@ -102,9 +95,7 @@ public class JournalTable extends AbstractTable
 			record.setPower(entry.getRawlevel3()>200?1:0);
 			//TODO Where is this state
 			record.setState(100);
-			
-			record.attach(HSQLDBDSL.using(db.getConn()).configuration());
-			record.insert();
+			save(record);
 		}
 	}
 	

@@ -45,10 +45,30 @@
 	
 	#foreach( $r in $result )
 	<tr>
-		<td>$r.counterId</td>
+		<td>
+			#if ($r.counterId == "1")
+				Хлоргаз 1
+		    #elseif ($r.counterId == "2")
+				Хлоргаз 2
+			#elseif ($r.counterId == "3")
+				Гипохлорит
+		    #else
+		    	Нет описания
+		    #end
+			
+		</td>
 		<td>$_dtf.format( $r.date )</td>
 		<td>$r.level</td>
-		<td>???</td>
+		<td>
+		    #if ($r.state == "100")
+				Прием данных
+		    #elseif ($r.state == "200")
+				Потеря связи с модема с контроллером
+		    #else
+		    	Нет описания
+		    #end
+		
+		</td>
 	</tr>
 	#end
 	

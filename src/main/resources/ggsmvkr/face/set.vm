@@ -1,0 +1,65 @@
+<form method="get">
+	<div id="settings">
+		<h1>Настройки</h1>
+		<table id="content">
+			<tr>
+				<td class="column1">Уровень связи:<td class="column2">$connection_level
+			</tr>
+			<tr>
+				<td class="column1">Звук:
+				    #if ($volume_enabled == "true")
+				      Вкл.
+				    #else
+				      Выкл.
+				    #end
+				<td class="column2"><input type="submit" name="on" value="Вкл."><input type="submit" name="off" value="Выкл.">
+			</tr>
+			<tr>
+				<td class="column1">Пароль:<td class="column2"><input type="text" name="password" value="$password">
+			</tr>
+			<tr class="counter">
+				<td class="column1">Хлоргаз 1:
+				<td class="column2">
+					<div class="a">A1=<div id="a1">$a1</div></div>
+					<div class="b">B1=<input type="text" name="b1" id="b1" value="$b1" onkeypress="updateValues();" onchange="updateValues();"></div>
+					<div class="c">C1=<input type="text" name="c1" id="c1" value="$c1" onkeypress="updateValues();" onchange="updateValues();"></div>
+					<div class="k">K1=<div id="k1"></div></div>
+			</tr>
+			<tr class="counter">
+				<td class="column1">Хлоргаз 2:
+				<td class="column2">
+					<div class="a">A2=<div id="a2">$a2</div></div>
+					<div class="b">B2=<input type="text" name="b2" id="b2" value="$b2" onkeypress="updateValues();" onchange="updateValues();"></div>
+					<div class="c">C2=<input type="text" name="c2" id="c2" value="$c2" onkeypress="updateValues();" onchange="updateValues();"></div>
+					<div class="k">K2=<div id="k2"></div></div>
+			</tr>
+			<tr class="counter">
+				<td class="column1">Гипохлорит:
+				<td class="column2">
+					<div class="a">A3=<div id="a3">$a3</div></div>
+					<div class="b">B3=<input type="text" name="b3" id="b3" value="$b3" onkeypress="updateValues();" onchange="updateValues();"></div>
+					<div class="c">C3=<input type="text" name="c3" id="c3" value="$c3" onkeypress="updateValues();" onchange="updateValues();"></div>
+					<div class="k">K3=<div id="k3"></div></div>
+			</tr>
+			<tr>
+				<td class="column1"><td class="column2"><input type="submit" value="Отправить">
+			</tr>
+		</table>
+	</div>
+</form>
+
+<script type="text/javascript">
+
+updateValues = function()
+{
+	for(var i = 1; i<=3; i++)
+	{
+		var a = parseFloat($("a"+i).innerText);
+		var b = parseFloat($("b"+i).value);
+		var c = parseFloat($("c"+i).value.replace(",","."));
+		$("k"+i).update(Math.round((a-b)*c));
+	}
+}
+
+updateValues();
+</script>

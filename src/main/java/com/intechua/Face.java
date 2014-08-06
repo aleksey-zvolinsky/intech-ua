@@ -34,6 +34,8 @@ class Face
 		Spark.get(new Settings("/op/settings"));
 		Spark.get(new SettingsEdit("/op/settings/edit"));
 		
+		Spark.before(new AuthFilter("/set"));
+		Spark.get(new Settings("/set"));
 
 		Spark.before(new ConverterFilter("/input"));
 		Spark.get(new Input("/input"));
