@@ -1,0 +1,1 @@
+nohup /home/intechua/jdk/bin/java -Djava.net.preferIPv4Stack=true -jar server-1.0-SNAPSHOT-jar-with-dependencies.jar &

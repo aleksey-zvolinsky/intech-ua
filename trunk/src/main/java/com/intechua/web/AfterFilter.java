@@ -15,7 +15,7 @@ import spark.Response;
 
 public class AfterFilter extends Filter
 {
-	private static final String PATH_TO_FACE = "ggsmvkr/face/";
+	private static final String PATH_TO_FACE = "intechua/face/";
 	private static final String ENCODING = "UTF-8";
 	private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
