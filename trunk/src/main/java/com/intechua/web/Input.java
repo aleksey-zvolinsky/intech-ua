@@ -39,7 +39,7 @@ public class Input extends Route
 			entry.setConnectionLevel(Integer.parseInt(connectionLevel));
 			entry.setB1("" + request.attribute("b1"));
 			
-			Boolean isLostConnection = Boolean.parseBoolean((request.attribute("lost_connection") == null) ? request.queryParams("lost_connection") : "false" + request.attribute("connection_level"));
+			Boolean isLostConnection = Boolean.parseBoolean((request.attribute("lost_connection") == null) ? request.queryParams("lost_connection") : "" + request.attribute("lost_connection"));
 			
 			if(isLostConnection)
 			{
@@ -49,6 +49,8 @@ public class Input extends Route
 			{
 				entry.setState(100);
 				
+				String power = (request.attribute("power") == null) ? request.queryParams("power") : "" + request.attribute("power");
+				entry.setPower(Integer.parseInt(power));
 			
 				String level1 = (request.attribute("level1") == null) ? request.queryParams("level1") : "" + request.attribute("level1");
 				String level2 = (request.attribute("level2") == null) ? request.queryParams("level2") : "" + request.attribute("level2");
@@ -82,9 +84,6 @@ public class Input extends Route
 			
 			String modemid = (request.attribute("modemid") == null) ? request.queryParams("modemid") : "" + request.attribute("modemid");
 			entry.setModemid(Integer.parseInt(modemid));
-			
-			String power = (request.attribute("power") == null) ? request.queryParams("power") : "" + request.attribute("power");
-			entry.setPower(Integer.parseInt(power));
 	
 			packetsTable.save(entry);
 			LOG.debug("Packet stored succesfully");
