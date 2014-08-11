@@ -131,6 +131,15 @@ public class JournalTable extends AbstractTable
 			q.and(cond);
 		}
 		
+		if("desc".equals(crit.order))
+		{
+			q.orderBy(Journal.JOURNAL.DATE.desc());
+		}
+		else
+		{
+			q.orderBy(Journal.JOURNAL.DATE.asc());
+		}
+		
 		Result<JournalRecord> result = q.fetch(); 
 		
 		return result; 

@@ -28,9 +28,9 @@ public class Graph extends Route
 	public Object handle(Request request, Response response)
 	{
 		SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat DTF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		JournalCriteria crit = new JournalCriteria();
+		crit.order = "asc";
 		
 		if(null != request.queryParams("fixedPeriod"))
 		{
@@ -64,12 +64,7 @@ public class Graph extends Route
 			SimpleDateFormat df = null;
 			String date = null;
 			
-			if(request.queryParams("timeFrom") != null && request.queryParams("dateFrom") != null)
-			{
-				df = DTF;
-				date = request.queryParams("dateFrom") + " " + request.queryParams("timeFrom");
-			}
-			else if(request.queryParams("dateFrom") != null)
+			if(request.queryParams("dateFrom") != null)
 			{
 				df = DF;
 				date = request.queryParams("dateFrom");
@@ -84,12 +79,7 @@ public class Graph extends Route
 				crit.dateFrom = null;
 			}
 			
-			if(request.queryParams("timeTo") != null && request.queryParams("dateTo") != null)
-			{
-				df = DTF;
-				date = request.queryParams("dateTo") + " " + request.queryParams("timeTo");
-			}
-			else if(request.queryParams("dateTo") != null)
+			if(request.queryParams("dateTo") != null)
 			{
 				df = DF;
 				date = request.queryParams("dateTo");
@@ -102,6 +92,18 @@ public class Graph extends Route
 			catch (NullPointerException | ParseException e)
 			{
 				crit.dateTo = null;
+			}
+		}
+		
+		if(null == crit.dateFrom && null == crit.dateTo)
+		{
+			try
+			{
+				crit.dateFrom = DF.parse(DF.format(new Date()));
+			}
+			catch (ParseException e)
+			{
+				e.printStackTrace();
 			}
 		}
 		

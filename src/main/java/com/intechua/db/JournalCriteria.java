@@ -8,4 +8,5 @@ public class JournalCriteria
 {
 	public Date dateFrom, dateTo;
 	public Set<Integer> counterIds = new HashSet<Integer>();
+	public String order;
 }
