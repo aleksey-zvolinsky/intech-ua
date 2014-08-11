@@ -10,7 +10,7 @@ var dataFailureCount = 0;
 
 function onClickJournal(counter)
 {
-	var newtab = window.open( '/journal?counter'+counter+'=checked', 'intechua-tab-2' )
+	var newtab = window.open( '/journal?counter'+counter+'=checked&order=desc', 'intechua-tab-2' )
 }
 
 function onClickExpand(counter)

@@ -2,6 +2,7 @@ package com.intechua.web;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
 import org.apache.log4j.lf5.util.StreamUtils;
@@ -13,17 +14,23 @@ import spark.Filter;
 import spark.Request;
 import spark.Response;
 
+import com.intechua.db.SettingsTable;
+import com.intechua.db.jooq.tables.records.SettingsRecord;
+
 public class AfterFilter extends Filter
 {
 	private static final String PATH_TO_FACE = "intechua/face/";
-	private static final String ENCODING = "UTF-8";
+	private static final String ENCODING = StandardCharsets.UTF_8.name();
 	private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 	private static final SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
 	private static final SimpleDateFormat dtf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	private static final SettingsTable SETTINGS = new SettingsTable();
+	
 	
 	@Override
 	public void handle(Request request, Response response)
 	{
+	
 		String path = request.pathInfo();
 		if (path.startsWith("/"))
 		{
@@ -86,10 +93,21 @@ public class AfterFilter extends Filter
 			StringWriter sw = new StringWriter();
 			if (vmName.endsWith(".vm"))
 			{
-				Velocity.getTemplate(PATH_TO_FACE + "_head.vm", ENCODING).merge(new VelocityContext(), sw);
+				VelocityContext context = new VelocityContext();
+				//include settings
+				for(SettingsRecord setting : SETTINGS.getList())
+				{
+					context.put(setting.getName(), setting.getValue());
+				}
+				Velocity.getTemplate(PATH_TO_FACE + "_head.vm", ENCODING).merge(context, sw);
 			}
 			Template t = Velocity.getTemplate(PATH_TO_FACE + vmName, ENCODING);
 			VelocityContext context = new VelocityContext();
+			//include settings
+			for(SettingsRecord setting : SETTINGS.getList())
+			{
+				context.put(setting.getName(), setting.getValue());
+			}
 			for (String attr : request.attributes())
 			{
 				context.put(attr, request.attribute(attr));

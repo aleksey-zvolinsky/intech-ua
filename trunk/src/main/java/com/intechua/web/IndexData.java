@@ -30,6 +30,7 @@ public class IndexData extends Route
 		{
 			JournalTable table = new JournalTable();
 			JournalCriteria crit = new JournalCriteria();
+			crit.order = "asc";
 			
 			Date date = new Date();
 			crit.dateFrom = DateUtils.addHours(date, -6);
