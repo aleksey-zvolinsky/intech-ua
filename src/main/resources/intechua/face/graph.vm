@@ -1,7 +1,7 @@
 <script type="text/javascript" src="/js/raphael-min.js"></script>
 <script type="text/javascript" src="/js/g.raphael-min.js"></script>
 <script type="text/javascript" src="/js/g.line-min.js"></script>
-
+<script type="text/javascript" src="/js/graph.js"></script>
 
 <div id="graph">
 	<form method="get" id="form1">
@@ -29,73 +29,15 @@
 	</form>
 	<div id="chart">
 	</div>
+	<span id="chartlabel"></span> 
 </div>
 
 <script type="text/javascript">
-
-function onClick(fixedPeriod)
-{
-	$("fixedPeriod").value = fixedPeriod;
-	$("submit").click();
-}
-
-function drawChart()
-{
-	var fixedPeriod = "$fixedPeriod";
-	var LEVEL = 3;
-	var DATE = 1;
-	
-	var list = $result;
-
-    var el = $("chart");
-    el.innerHTML = '';
-   	var r = Raphael(el);
-   	var y = [];
-   	var x = [];
-   	for(i=0; i < list.records.size(); i++ )
-   	{
-   		y.push(list.records[i][LEVEL]);
-   		x.push(new Date(list.records[i][DATE]));
-   	}
-    // Creates a simple line chart at 10, 10
-    // width 300, height 220
-    // x-values: [1,2,3,4,5], y-values: [10,20,15,35,30]
-    var xstep = null; 
-    if(fixedPeriod == "hour")
-    {
-    	xstep = Math.max(1, x[x.length-1].getHours() - x[0].getHours()); 
-    }
-    
-    lines = r.linechart(20,20,el.getWidth()-30,el.getHeight()-100,x,y, {axis:"0 0 1 1", axisystep: 20, axisxstep: xstep});
-    lines.axis[1].text.attr({font:"16pt Arial"});
-    lines.axis[0].text.attr({font:"16pt Arial"});
-    
-    if(fixedPeriod == "hour")
-    {
-	    lines.axis[0].text.items.each( function ( label, index ) {
-	        //Get the timestamp you saved
-	        var originalText = label.attr('text');
-	        var originalY = label.attr('y');
-	        var date = new Date(parseInt(originalText))
-	        label.attr({'text': date.getHours(), 'y': originalY+30 });
-	      });
-    }
-    else
-    {
-	    lines.axis[0].text.items.each( function ( label, index ) {
-	        //Get the timestamp you saved
-	        var originalText = label.attr('text');
-	        var originalY = label.attr('y');
-	        var date = new Date(parseInt(originalText))
-	        label.rotate(20);
-	        label.attr({'text': date.toLocaleString(), 'y': originalY+30 });
-	      });
-    }
-
-};
+var list = $result;
+var fixedPeriod = "$fixedPeriod";
+var counter = "$counter";
 
 document.observe("dom:loaded", 
-		function() { drawChart();}
-		);
-//new PeriodicalExecuter( drawChart, 0.1 );
+	function() { drawChart(list, fixedPeriod, counter);}
+	);
 </script>

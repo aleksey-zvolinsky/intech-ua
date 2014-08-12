@@ -29,6 +29,7 @@ public class Server
 	
 			while(true)
 			{
+				Thread.sleep(100);
 				// wait for application termination
 			}
 		}
