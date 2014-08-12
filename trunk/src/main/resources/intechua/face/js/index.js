@@ -10,12 +10,12 @@ var dataFailureCount = 0;
 
 function onClickJournal(counter)
 {
-	var newtab = window.open( '/journal?counter'+counter+'=checked&order=desc', 'intechua-tab-2' )
+	var newtab = window.open( '/journal?counter'+counter+'=checked', 'intechua-tab-2' )
 }
 
 function onClickExpand(counter)
 {
-	var newtab = window.open( '/graph?counter='+counter, 'intechua-tab-2' )
+	var newtab = window.open( '/graph?counter='+counter+'&fixedPeriod=hour', 'intechua-tab-2' )
 }
 
 function refreshStatus(pe) {
@@ -198,7 +198,7 @@ function refreshData(pe) {
 			var LEVEL = 3;
 			var DATE = 1;
 			var param = transport.responseText.evalJSON();
-			
+			var max = [120,120,90];
             for(var j=0; j < param.data.size(); j++)
             {
                 var el = $("chart" + (j+1));
@@ -213,11 +213,34 @@ function refreshData(pe) {
             		x.push(new Date(list[i][DATE]));
             	}
             	
+            	
+            	var dateEnd = new Date();
+            	dateEnd.setMinutes(0,0,0);
+            	dateEnd.setHours(dateEnd.getHours()+1);
+            	
+            	var dateBegin = new Date(dateEnd.toString());
+            	dateBegin.setHours(dateBegin.getHours()-6);
+
+            	xstep = 6;
+            	
                     // Creates a simple line chart at 10, 10
                     // width 300, height 220
                     // x-values: [1,2,3,4,5], y-values: [10,20,15,35,30]
-            	lines = r.linechart(20,20,el.getWidth()-30,el.getHeight()-100,x,y, {axis:"0 0 1 1", axisystep: 10});
+            	lines = r.linechart(30,30,el.getWidth()-30,el.getHeight()-100,
+            			[x, [dateBegin, dateEnd]],
+            			[y, [0, max[j]]], 
+            			{
+            				axis:"0 0 1 1", 
+            				axisystep: 10, 
+            				axisxstep: xstep,
+            				colors: [
+            				         "#555599",       // the second line is blue
+            				         "transparent"    // the third line is invisible
+            				         ]});
                 
+
+            	
+            	
                 lines.axis[1].text.attr({font:"16px Arial"});
                 lines.axis[0].text.attr({font:"16px Arial"});
                 lines.axis[0].text.items.each( 
@@ -229,8 +252,8 @@ function refreshData(pe) {
 	                    var date = new Date(parseInt(originalText))
 	                    if(date.toString() != "Invalid Date")
 	                    {
-	                    	label.rotate(20);
-		                    label.attr({'text': date.toLocaleTimeString(), 'y': originalY+20 });	
+	                    	//label.rotate(20);
+		                    label.attr({'text': date.getHours(), 'y': originalY+20 });	
 	                    }
 	                    
                     });

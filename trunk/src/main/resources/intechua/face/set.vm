@@ -1,3 +1,9 @@
+<style>
+body
+{
+	background-color: $color;
+} 
+</style>
 <form method="get">
 	<div id="settings">
 		<h1>Настройки</h1>

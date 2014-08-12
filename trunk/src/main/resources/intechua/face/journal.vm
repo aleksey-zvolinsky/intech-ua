@@ -1,3 +1,9 @@
+<style>
+body
+{
+	background-color: $color;
+}
+</style>
 <div id="journal">
 	<div id="filters">
 		<form method="get">
