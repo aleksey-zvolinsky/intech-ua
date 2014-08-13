@@ -198,7 +198,7 @@ function refreshData(pe) {
 			var LEVEL = 3;
 			var DATE = 1;
 			var param = transport.responseText.evalJSON();
-			var max = [120,120,90];
+			var max = [110,110,90];
             for(var j=0; j < param.data.size(); j++)
             {
                 var el = $("chart" + (j+1));
@@ -226,12 +226,12 @@ function refreshData(pe) {
                     // Creates a simple line chart at 10, 10
                     // width 300, height 220
                     // x-values: [1,2,3,4,5], y-values: [10,20,15,35,30]
-            	lines = r.linechart(30,30,el.getWidth()-30,el.getHeight()-100,
+            	lines = r.linechart(30,30,el.getWidth()-40,el.getHeight()-100,
             			[x, [dateBegin, dateEnd]],
             			[y, [0, max[j]]], 
             			{
             				axis:"0 0 1 1", 
-            				axisystep: 10, 
+            				axisystep: max[j]/10, 
             				axisxstep: xstep,
             				colors: [
             				         "#555599",       // the second line is blue

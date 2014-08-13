@@ -14,10 +14,12 @@ function onClick(fixedPeriod)
 
 function drawChart(list, fixedPeriod, counter)
 {
-	var maxY = 120;
+	var maxY = 110;
+	var ystep = 11;
 	if(counter == "3")
 	{
 		maxY = 90;
+		ystep = 9;
 	}
 	var LEVEL = 3;
 	var DATE = 1;
@@ -49,9 +51,6 @@ function drawChart(list, fixedPeriod, counter)
 
     	xstep = 6;
 
-//    	10 августа 2014
-//    	(Текущая дата в таком формате)
-    	setChartLabel(dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear());
     }
     else if(fixedPeriod == "day")
     {
@@ -64,9 +63,6 @@ function drawChart(list, fixedPeriod, counter)
 
     	xstep = 24;
     	
-//    	10 августа 2014
-//    	(Текущая дата в таком формате)
-    	setChartLabel(dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear());
     }
     else if(fixedPeriod == "week")
     {
@@ -78,9 +74,6 @@ function drawChart(list, fixedPeriod, counter)
     	dateBegin.setDate(dateBegin.getDate()-7);
 
     	xstep = 7;
-    	
-    	//17 февраля - 16 марта 2014
-    	setChartLabel(dateBegin.getDate() + " " + ofMounth[dateBegin.getMonth()] + " " + dateBegin.getFullYear() + " - " + dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear());
     }
     else if(fixedPeriod == "month")
     {
@@ -96,8 +89,6 @@ function drawChart(list, fixedPeriod, counter)
     	var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     	xstep = diffDays;
-    	//17 февраля - 16 марта 2014
-    	setChartLabel(dateBegin.getDate() + " " + ofMounth[dateBegin.getMonth()] + " " + dateBegin.getFullYear() + " - " + dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear());
     }
     else if(fixedPeriod == "year")
     {
@@ -110,8 +101,6 @@ function drawChart(list, fixedPeriod, counter)
     	dateBegin.setMonth(dateBegin.getMonth()-12);
 
     	xstep = 12;
-    	//август 2013 - июль 2014 
-    	setChartLabel(ofMounth[dateBegin.getMonth()] + " " + dateBegin.getFullYear() + " - " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear());
     }
     
     console.log("dateBegin=" + dateBegin);
@@ -122,7 +111,7 @@ function drawChart(list, fixedPeriod, counter)
     		[y, [0, maxY]], 
     		{
     			axis:"0 0 1 1", 
-    			axisystep: 20, 
+    			axisystep: ystep, 
     			axisxstep: xstep,
     			colors: [
     			          "#555599",       // the second line is blue
@@ -132,6 +121,8 @@ function drawChart(list, fixedPeriod, counter)
     lines.axis[1].text.attr({font:"16pt Arial"});
     lines.axis[0].text.attr({font:"16pt Arial"});
     
+    var yShift = 40;
+    
     if(fixedPeriod == "hour")
     {
 	    lines.axis[0].text.items.each( function ( label, index ) {
@@ -140,8 +131,11 @@ function drawChart(list, fixedPeriod, counter)
 	        var originalY = label.attr('y');
 	        var date = new Date(parseInt(originalText));
 	        console.log(date);
-	        label.attr({'text': date.getHours(), 'y': originalY+30 });
+	        label.attr({'text': date.getHours(), 'y': originalY+yShift });
 	      });
+//    	10 августа 2014
+//    	(Текущая дата в таком формате)
+    	setChartLabel(r, dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear(), lines);
     }
     else if(fixedPeriod == "day")
     {
@@ -151,8 +145,11 @@ function drawChart(list, fixedPeriod, counter)
 	        var originalY = label.attr('y');
 	        var date = new Date(parseInt(originalText));
 	        console.log(date);
-	        label.attr({'text': date.getHours(), 'y': originalY+30 });
+	        label.attr({'text': date.getHours(), 'y': originalY+yShift });
 	      });
+//    	10 августа 2014
+//    	(Текущая дата в таком формате)
+    	setChartLabel(r, dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear(), lines);
     }
     else if(fixedPeriod == "week")
     {
@@ -162,8 +159,10 @@ function drawChart(list, fixedPeriod, counter)
 	        var originalY = label.attr('y');
 	        var date = new Date(parseInt(originalText));
 	        console.log(date);
-	        label.attr({'text': date.getDate(), 'y': originalY+30 });
+	        label.attr({'text': date.getDate(), 'y': originalY+yShift });
 	      });
+    	//17 февраля - 16 марта 2014
+    	setChartLabel(r, dateBegin.getDate() + " " + ofMounth[dateBegin.getMonth()] + " " + dateBegin.getFullYear() + " - " + dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear(), lines);
     }
     else if(fixedPeriod == "month")
     {
@@ -173,8 +172,11 @@ function drawChart(list, fixedPeriod, counter)
 	        var originalY = label.attr('y');
 	        var date = new Date(parseInt(originalText));
 	        console.log(date);
-	        label.attr({'text': date.getDate(), 'y': originalY+30 });
+	        label.attr({'text': date.getDate(), 'y': originalY+yShift });
 	      });
+
+	    //17 февраля - 16 марта 2014
+    	setChartLabel(r, dateBegin.getDate() + " " + ofMounth[dateBegin.getMonth()] + " " + dateBegin.getFullYear() + " - " + dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear(), lines);
     }
     else if(fixedPeriod == "year")
     {
@@ -184,8 +186,11 @@ function drawChart(list, fixedPeriod, counter)
 	        var originalY = label.attr('y');
 	        var date = new Date(parseInt(originalText));
 	        console.log(date);
-	        label.attr({'text': monthNames[date.getMonth()], 'y': originalY+30 });
+	        label.attr({'text': monthNames[date.getMonth()], 'y': originalY+yShift });
 	      });
+	    
+    	//август 2013 - июль 2014 
+    	setChartLabel(r, monthNames[dateBegin.getMonth()] + " " + dateBegin.getFullYear() + " - " + monthNames[dateEnd.getMonth()] + " " + dateEnd.getFullYear(), lines);
     }
     else
     {
@@ -195,13 +200,16 @@ function drawChart(list, fixedPeriod, counter)
 	        var originalY = label.attr('y');
 	        var date = new Date(parseInt(originalText))
 	        label.rotate(20);
-	        label.attr({'text': date.toLocaleString(), 'y': originalY+30 });
+	        label.attr({'text': date.toLocaleString(), 'y': originalY+yShift });
 	      });
     }
 
 };
 
-function setChartLabel(/*String*/ text)
+function setChartLabel(raphael, /*String*/ text, /*chart*/ chart)
 {
-	$("chartlabel").update(text);
+	//$("chartlabel").update(text);
+    var el = $("chart");
+
+   	raphael.text(el.getWidth()/2, el.getHeight()-60, text).attr({ font: "16pt Arial" });
 }
