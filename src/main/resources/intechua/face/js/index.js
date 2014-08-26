@@ -1,3 +1,10 @@
+var monthNames = [ "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+    "Июль", "Август", "Сентябрь", "Окрябрь", "Ноябрь", "Декабрь" ];
+
+var ofMounth = monthNames.map(function(mounth) {
+    return (mounth + 'а').replace(/[ьй]а$/, 'я');
+}); 
+
 var alarm_audio = new Howl({
 	urls: ['/alarm.mp3'],
 	loop: true,
@@ -223,26 +230,50 @@ function refreshData(pe) {
 
             	xstep = 6;
             	
+            	var xTransp = [dateBegin, dateBegin, dateEnd, dateEnd];
+            	var yTransp = [0, max[j], max[j], 0];
+            	
+            	var xLines = [];
+            	var yLines = [];
+            	var lineColors = [];
+            	
+            	if(x.length < 4)
+            	{
+            		xLines = [xTransp, x];
+            		yLines = [yTransp, y];
+                	lineColors = [
+                	             "transparent",    // the first line is invisible
+         				         "#555599"       // the second line is blue
+        				         ];
+            	}
+            	else
+            	{
+            		xLines = [x, xTransp];
+            		yLines = [y, yTransp];
+                	lineColors = [
+         				         "#555599",       // the first line is blue
+        				         "transparent"    // the second line is invisible
+        				         ];
+            	}
+
+            	
                     // Creates a simple line chart at 10, 10
                     // width 300, height 220
                     // x-values: [1,2,3,4,5], y-values: [10,20,15,35,30]
             	lines = r.linechart(30,30,el.getWidth()-40,el.getHeight()-100,
-            			[x, [dateBegin, dateEnd]],
-            			[y, [0, max[j]]], 
+            			xLines,
+            			yLines, 
             			{
             				axis:"0 0 1 1", 
             				axisystep: max[j]/10, 
             				axisxstep: xstep,
-            				colors: [
-            				         "#555599",       // the second line is blue
-            				         "transparent"    // the third line is invisible
-            				         ]});
+            				colors: lineColors});
                 
 
             	
             	
-                lines.axis[1].text.attr({font:"16px Arial"});
-                lines.axis[0].text.attr({font:"16px Arial"});
+                lines.axis[1].text.attr({font:"16pt Arial"});
+                lines.axis[0].text.attr({font:"16pt Arial"});
                 lines.axis[0].text.items.each( 
                 	function ( label, index ) 
                 	{
@@ -253,10 +284,12 @@ function refreshData(pe) {
 	                    if(date.toString() != "Invalid Date")
 	                    {
 	                    	//label.rotate(20);
-		                    label.attr({'text': date.getHours(), 'y': originalY+20 });	
+		                    label.attr({'text': date.getHours(), 'y': originalY+40 });	
 	                    }
 	                    
                     });
+                
+                r.text(el.getWidth()/2, el.getHeight()-60, dateEnd.getDate() + " " + ofMounth[dateEnd.getMonth()] + " " + dateEnd.getFullYear()).attr({ font: "16pt Arial" });
             }
             
 			dataFailureCount = 0;

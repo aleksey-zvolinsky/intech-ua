@@ -106,17 +106,41 @@ function drawChart(list, fixedPeriod, counter)
     console.log("dateBegin=" + dateBegin);
     console.log("dateEnd=" + dateEnd);
     
+    
+    var xTransp = [dateBegin, dateBegin, dateEnd, dateEnd];
+	var yTransp = [0, maxY, maxY, 0];
+	
+	var xLines = [];
+	var yLines = [];
+	var lineColors = [];
+	
+	if(x.length < 4)
+	{
+		xLines = [xTransp, x];
+		yLines = [yTransp, y];
+    	lineColors = [
+    	              	"transparent",    // the first line is invisible
+				         "#555599"       // the second line is blue
+			         ];
+	}
+	else
+	{
+		xLines = [x, xTransp];
+		yLines = [y, yTransp];
+    	lineColors = [
+    	              	"#555599",       // the first line is blue
+    	              	"transparent"    // the second line is invisible
+			         ];
+	}
+    
     lines = r.linechart(30,30,el.getWidth()-70,el.getHeight()-100,
-    		[x, [dateBegin, dateEnd]],
-    		[y, [0, maxY]], 
+    		xLines,
+    		yLines, 
     		{
     			axis:"0 0 1 1", 
     			axisystep: ystep, 
     			axisxstep: xstep,
-    			colors: [
-    			          "#555599",       // the second line is blue
-    			          "transparent"    // the third line is invisible
-    			        ]
+    			colors: lineColors
     		});
     lines.axis[1].text.attr({font:"16pt Arial"});
     lines.axis[0].text.attr({font:"16pt Arial"});
