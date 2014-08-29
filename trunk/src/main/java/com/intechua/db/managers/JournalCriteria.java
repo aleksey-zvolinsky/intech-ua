@@ -1,4 +1,4 @@
-package com.intechua.db;
+package com.intechua.db.managers;
 
 import java.util.Date;
 import java.util.HashSet;

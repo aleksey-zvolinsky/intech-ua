@@ -1,4 +1,4 @@
-package com.intechua.db;
+package com.intechua.db.managers;
 
 import java.io.IOException;
 import java.io.InputStream;

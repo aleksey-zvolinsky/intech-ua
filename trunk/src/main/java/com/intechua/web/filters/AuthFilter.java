@@ -1,4 +1,4 @@
-package com.intechua.web;
+package com.intechua.web.filters;
 
 import java.util.UUID;
 
@@ -8,7 +8,7 @@ import spark.Filter;
 import spark.Request;
 import spark.Response;
 
-import com.intechua.db.OperatorTable;
+import com.intechua.db.managers.OperatorTable;
 
 public class AuthFilter extends Filter
 {

@@ -1,14 +1,10 @@
 package com.intechua;
 
-import com.intechua.db.JournalTable;
-import com.intechua.db.OperatorTable;
-import com.intechua.db.PacketsTable;
-import com.intechua.db.SettingsTable;
 
 public class Server
 {
-	private static HDatabase hdb;
-	public static HDatabase getHdb()
+	private static DatabaseServer hdb;
+	public static DatabaseServer getHdb()
 	{
 		return hdb;
 	}
@@ -18,14 +14,9 @@ public class Server
 
 		try
 		{
-			hdb = new HDatabase("db/db");
+			hdb = new DatabaseServer("db/db");
 
-			new OperatorTable();
-			new SettingsTable();
-			new JournalTable();
-			new PacketsTable();
-
-			Face.init();
+			WebServer.init();
 	
 			while(true)
 			{

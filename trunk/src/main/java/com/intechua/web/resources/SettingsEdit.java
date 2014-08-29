@@ -1,10 +1,10 @@
-package com.intechua.web;
+package com.intechua.web.resources;
 
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.intechua.db.SettingsTable;
+import com.intechua.db.managers.SettingsTable;
 
 public class SettingsEdit extends Route
 {

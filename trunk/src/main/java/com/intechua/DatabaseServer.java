@@ -7,7 +7,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class HDatabase
+import com.intechua.db.managers.JournalTable;
+import com.intechua.db.managers.OperatorTable;
+import com.intechua.db.managers.PacketsTable;
+import com.intechua.db.managers.SettingsTable;
+
+public class DatabaseServer
 {
 
 	Connection conn; // our connnection to the db - presist for life of program
@@ -18,7 +23,7 @@ public class HDatabase
 	}
 
 	// we dont want this garbage collected until we are done
-	public HDatabase(String db_file_name_prefix) throws Exception
+	public DatabaseServer(String db_file_name_prefix) throws Exception
 	{ // note more general exception
 
 		// Load the HSQL Database Engine JDBC driver
@@ -36,6 +41,12 @@ public class HDatabase
 		conn = DriverManager.getConnection("jdbc:hsqldb:" + db_file_name_prefix, // filenames
 				"sa", // username
 				""); // password
+		
+		// init database
+		new OperatorTable();
+		new SettingsTable();
+		new JournalTable();
+		new PacketsTable();
 	}
 
 	public void shutdown() throws SQLException
@@ -125,11 +136,11 @@ public class HDatabase
 	public static void main(String[] args)
 	{
 
-		HDatabase db = null;
+		DatabaseServer db = null;
 
 		try
 		{
-			db = new HDatabase("db/db");
+			db = new DatabaseServer("db/db");
 		}
 		catch (Exception ex1)
 		{

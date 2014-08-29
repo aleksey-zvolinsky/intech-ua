@@ -1,4 +1,4 @@
-package com.intechua.web;
+package com.intechua.web.filters;
 
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -14,8 +14,8 @@ import spark.Filter;
 import spark.Request;
 import spark.Response;
 
-import com.intechua.db.SettingsTable;
 import com.intechua.db.jooq.tables.records.SettingsRecord;
+import com.intechua.db.managers.SettingsTable;
 
 public class AfterFilter extends Filter
 {

@@ -1,4 +1,4 @@
-package com.intechua.web;
+package com.intechua.web.filters;
 
 import java.text.MessageFormat;
 
@@ -9,7 +9,7 @@ import spark.Filter;
 import spark.Request;
 import spark.Response;
 
-import com.intechua.db.SettingsTable;
+import com.intechua.db.managers.SettingsTable;
 
 public class ConverterFilter extends Filter
 {

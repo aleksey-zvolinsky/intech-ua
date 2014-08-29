@@ -1,12 +1,12 @@
-package com.intechua.db;
+package com.intechua.db.managers;
 
-import com.intechua.HDatabase;
+import com.intechua.DatabaseServer;
 import com.intechua.Server;
 
 public abstract class AbstractTable implements Table
 {
 
-	protected final HDatabase db;
+	protected final DatabaseServer db;
 
 	public AbstractTable()
 	{
