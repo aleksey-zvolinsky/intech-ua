@@ -1,4 +1,4 @@
-package com.intechua.web;
+package com.intechua.web.resources;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,9 +9,9 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.intechua.db.JournalCriteria;
-import com.intechua.db.JournalTable;
 import com.intechua.db.jooq.tables.records.JournalRecord;
+import com.intechua.db.managers.JournalCriteria;
+import com.intechua.db.managers.JournalTable;
 
 public class Journal extends Route
 {

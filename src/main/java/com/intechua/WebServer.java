@@ -7,18 +7,18 @@ import spark.Response;
 import spark.Route;
 import spark.Spark;
 
-import com.intechua.web.AfterFilter;
-import com.intechua.web.AuthFilter;
-import com.intechua.web.ConverterFilter;
-import com.intechua.web.Graph;
-import com.intechua.web.IndexData;
-import com.intechua.web.IndexStatus;
-import com.intechua.web.Input;
-import com.intechua.web.Journal;
-import com.intechua.web.Settings;
-import com.intechua.web.SettingsEdit;
+import com.intechua.web.filters.AfterFilter;
+import com.intechua.web.filters.AuthFilter;
+import com.intechua.web.filters.ConverterFilter;
+import com.intechua.web.resources.Graph;
+import com.intechua.web.resources.IndexData;
+import com.intechua.web.resources.IndexStatus;
+import com.intechua.web.resources.Input;
+import com.intechua.web.resources.Journal;
+import com.intechua.web.resources.Settings;
+import com.intechua.web.resources.SettingsEdit;
 
-class Face
+class WebServer
 {
 	static void init()
 	{

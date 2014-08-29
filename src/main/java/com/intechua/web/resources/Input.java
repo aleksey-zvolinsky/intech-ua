@@ -1,4 +1,4 @@
-package com.intechua.web;
+package com.intechua.web.resources;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -9,10 +9,10 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.intechua.db.JournalTable;
-import com.intechua.db.PacketsTable;
-import com.intechua.db.SettingsTable;
 import com.intechua.db.jooq.tables.records.PacketsRecord;
+import com.intechua.db.managers.JournalTable;
+import com.intechua.db.managers.PacketsTable;
+import com.intechua.db.managers.SettingsTable;
 
 public class Input extends Route
 {
