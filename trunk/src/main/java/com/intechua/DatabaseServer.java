@@ -41,7 +41,10 @@ public class DatabaseServer
 		conn = DriverManager.getConnection("jdbc:hsqldb:" + db_file_name_prefix, // filenames
 				"sa", // username
 				""); // password
-		
+	}
+
+	public void init()
+	{
 		// init database
 		new OperatorTable();
 		new SettingsTable();
@@ -65,8 +68,8 @@ public class DatabaseServer
 	public synchronized void query(String expression) throws SQLException
 	{
 
-		Statement st = null;
-		ResultSet rs = null;
+		Statement st;
+		ResultSet rs;
 
 		st = conn.createStatement(); // statement objects can be reused with
 
@@ -90,7 +93,7 @@ public class DatabaseServer
 	public synchronized void update(String expression) throws SQLException
 	{
 
-		Statement st = null;
+		Statement st;
 
 		st = conn.createStatement(); // statements
 
@@ -112,7 +115,7 @@ public class DatabaseServer
 		ResultSetMetaData meta = rs.getMetaData();
 		int colmax = meta.getColumnCount();
 		int i;
-		Object o = null;
+		Object o;
 
 		// the result set is a cursor into the data. You can only
 		// point to one row at a time
@@ -136,7 +139,7 @@ public class DatabaseServer
 	public static void main(String[] args)
 	{
 
-		DatabaseServer db = null;
+		DatabaseServer db;
 
 		try
 		{
