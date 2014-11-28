@@ -10,6 +10,19 @@
 	<name>com.intech-ua</name>
 	<url>http://maven.apache.org</url>
 
+	<developers>
+		<developer>
+			<email>Aleksey@Zvolinsky.name</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:svn:http://127.0.0.1/dummy</connection>
+		<developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+		<tag>HEAD</tag>
+		<url>http://127.0.0.1/dummy</url>
+	</scm>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -79,9 +92,69 @@
 			<artifactId>jssc</artifactId>
 			<version>2.8.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<!--<phase>package</phase>-->
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<revisionOnScmFailure/>
+					<providerImplementations>
+						<svn>javasvn</svn>
+					</providerImplementations>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+						<artifactId>maven-scm-provider-svnjava</artifactId>
+						<version>2.1.1</version>
+					</dependency>
+					<dependency>
+						<groupId>org.tmatesoft.svnkit</groupId>
+						<artifactId>svnkit</artifactId>
+						<version>1.8.5</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -92,11 +165,16 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.2</version>
 				<configuration>
 					<archive>
 						<manifest>
 							<mainClass>com.intechua.Server</mainClass>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
+						<manifestEntries>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+						</manifestEntries>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
@@ -148,7 +226,7 @@
 						<driver>org.hsqldb.jdbcDriver</driver>
 						<url>jdbc:hsqldb:db/db</url>
 						<user>sa</user>
-						<password></password>
+						<password/>
 					</jdbc>
 
 					<!-- Generator parameters -->
@@ -157,7 +235,7 @@
 						<database>
 							<name>org.jooq.util.hsqldb.HSQLDBDatabase</name>
 							<includes>.*</includes>
-							<excludes></excludes>
+							<excludes/>
 							<inputSchema>PUBLIC</inputSchema>
 						</database>
 						<target>
@@ -192,7 +270,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
